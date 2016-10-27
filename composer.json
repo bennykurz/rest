@@ -1,0 +1,29 @@
+{
+  "name": "n86io/rest",
+  "description": "Currently not standalone working php rest-library.",
+  "license": "GPL-3.0+",
+  "keywords": [
+    "rest",
+    "api"
+  ],
+  "authors": [
+    {
+      "name": "Viktor Firus",
+      "email": "v@n86.io"
+    }
+  ],
+  "require": {
+    "symfony/dependency-injection": "^3.1",
+    "symfony/yaml": "^3.1",
+    "lcobucci/jwt": ">= 3.2.0 < 4.0.0",
+    "php": ">= 5.5"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.8.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "N86io\\Rest\\": "src"
+    }
+  }
+}
