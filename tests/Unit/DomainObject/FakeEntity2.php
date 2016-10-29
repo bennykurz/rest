@@ -21,7 +21,7 @@ namespace N86io\Rest\Tests\DomainObject;
 /**
  * Class FakeEntity2
  * @package N86io\Rest\Tests\DomainObject
- * @mode read write
+ * @mode read
  */
 class FakeEntity2 extends FakeEntity1
 {

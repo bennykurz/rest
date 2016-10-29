@@ -19,7 +19,7 @@
 namespace N86io\Rest\Tests\DomainObject\PropertyInfo;
 
 use N86io\Rest\DomainObject\PropertyInfo\RelationOnForeignField;
-use N86io\Rest\RestObjectManager;
+use N86io\Rest\ObjectContainer;
 
 /**
  * Class RelationOnForeignFieldTest
@@ -41,7 +41,7 @@ class RelationOnForeignFieldTest extends \PHPUnit_Framework_TestCase
                 'foreignField' => 'some_thing',
             ]
         ];
-        $this->propertyInfo = (new RestObjectManager)->get(RelationOnForeignField::class, $params);
+        $this->propertyInfo = ObjectContainer::make(RelationOnForeignField::class, $params);
     }
 
     public function testConstructor()

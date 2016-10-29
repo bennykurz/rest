@@ -19,7 +19,7 @@
 namespace N86io\Rest\Tests\DomainObject\PropertyInfo;
 
 use N86io\Rest\DomainObject\PropertyInfo\JoinAliasStorage;
-use N86io\Rest\RestObjectManager;
+use N86io\Rest\ObjectContainer;
 
 /**
  * Class JoinAliasStorageTest
@@ -30,14 +30,14 @@ class JoinAliasStorageTest extends \PHPUnit_Framework_TestCase
     public function testGet()
     {
         /** @var JoinAliasStorage $joinAliasStorage */
-        $joinAliasStorage = (new RestObjectManager)->get(JoinAliasStorage::class);
+        $joinAliasStorage = ObjectContainer::get(JoinAliasStorage::class);
         $joinAliasStorage->reset();
         $this->assertEquals('j1', $joinAliasStorage->get('tableA'));
         $this->assertEquals('j2', $joinAliasStorage->get('tableB'));
-        $joinAliasStorage = (new RestObjectManager)->get(JoinAliasStorage::class);
+        $joinAliasStorage = ObjectContainer::get(JoinAliasStorage::class);
         $this->assertEquals('j1', $joinAliasStorage->get('tableA'));
         $this->assertEquals('j3', $joinAliasStorage->get('tableC'));
-        $joinAliasStorage = (new RestObjectManager)->get(JoinAliasStorage::class);
+        $joinAliasStorage = ObjectContainer::get(JoinAliasStorage::class);
         $this->assertEquals('j2', $joinAliasStorage->get('tableB'));
     }
 }

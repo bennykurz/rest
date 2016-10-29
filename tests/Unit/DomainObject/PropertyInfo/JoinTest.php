@@ -20,8 +20,7 @@ namespace N86io\Rest\Tests\DomainObject\PropertyInfo;
 
 use N86io\Rest\DomainObject\PropertyInfo\Join;
 use N86io\Rest\DomainObject\PropertyInfo\JoinAliasStorage;
-use N86io\Rest\RestObjectManager;
-use N86io\Rest\ServiceManager;
+use N86io\Rest\ObjectContainer;
 
 /**
  * Class JoinTest
@@ -45,9 +44,9 @@ class JoinTest extends \PHPUnit_Framework_TestCase
             ]
         ];
         /** @var JoinAliasStorage $joinAliasStorage */
-        $joinAliasStorage = (new RestObjectManager)->get(JoinAliasStorage::class);
+        $joinAliasStorage = ObjectContainer::get(JoinAliasStorage::class);
         $joinAliasStorage->reset();
-        $this->propertyInfo = (new RestObjectManager)->get(Join::class, $params);
+        $this->propertyInfo = ObjectContainer::make(Join::class, $params);
     }
 
     public function testGetTable()

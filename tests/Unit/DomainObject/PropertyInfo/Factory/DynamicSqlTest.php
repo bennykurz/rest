@@ -20,7 +20,7 @@ namespace N86io\Rest\Tests\DomainObject\PropertyInfo\Factory;
 
 use N86io\Rest\DomainObject\PropertyInfo\Factory\DynamicSql;
 use N86io\Rest\DomainObject\PropertyInfo\Factory\FactoryInterface;
-use N86io\Rest\RestObjectManager;
+use N86io\Rest\ObjectContainer;
 
 /**
  * Class DynamicSqlTest
@@ -40,7 +40,7 @@ class DynamicSqlTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->factory = $this->factory = (new RestObjectManager)->get(DynamicSql::class);
+        $this->factory = $this->factory = ObjectContainer::get(DynamicSql::class);
     }
 
     public function testBuild()

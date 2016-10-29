@@ -24,9 +24,12 @@ use N86io\Rest\Tests\DomainObject as Test;
 
 /**
  * Class FakeEntity1
+ *
+ * Some description
+ *
  * @package N86io\Rest\Tests\DomainObject
- * @table tx_restfulwebservice_domain_model_fake
- * @mode read
+ * @table table_fake
+ * @mode read write
  */
 class FakeEntity1 extends AbstractEntity
 {
@@ -96,7 +99,7 @@ class FakeEntity1 extends AbstractEntity
     }
 
     /**
-     * @return true;
+     * @return boolean
      */
     public function setInteger()
     {
@@ -117,5 +120,13 @@ class FakeEntity1 extends AbstractEntity
     public function setDateTimeTimestamp()
     {
         return true;
+    }
+
+    /**
+     * @return int
+     */
+    protected function getSomething()
+    {
+        return 123;
     }
 }

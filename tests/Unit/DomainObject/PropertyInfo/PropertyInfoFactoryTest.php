@@ -21,7 +21,7 @@ namespace N86io\Rest\Tests\DomainObject\PropertyInfo;
 use N86io\Rest\DomainObject\PropertyInfo\Common;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoFactory;
 use N86io\Rest\DomainObject\PropertyInfo\Relation;
-use N86io\Rest\RestObjectManager;
+use N86io\Rest\ObjectContainer;
 use N86io\Rest\Tests\DomainObject\FakeEntity1;
 
 /**
@@ -37,7 +37,7 @@ class PropertyInfoFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->propertyInfoFactory = (new RestObjectManager)->get(PropertyInfoFactory::class);
+        $this->propertyInfoFactory = ObjectContainer::get(PropertyInfoFactory::class);
     }
 
     /**

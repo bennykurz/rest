@@ -16,40 +16,11 @@
  * along with N86io/Rest or see <http://www.gnu.org/licenses/>.
  */
 
-namespace N86io\Rest\DomainObject;
+namespace N86io\Rest\Tests\DomainObject;
 
 /**
- * Class AbstractEntity
- * @package N86io\Rest\DomainObject
+ * @package N86io\Rest\Tests\DomainObject
  */
-abstract class AbstractEntity
+class FakeEntity3 extends FakeEntity1
 {
-    /**
-     * @param string $propertyName
-     * @param mixed $propertyValue
-     * @internal
-     */
-    public function _setProperty($propertyName, $propertyValue)
-    {
-        $this->{$propertyName} = $propertyValue;
-    }
-
-    /**
-     * @param $propertyName
-     * @return mixed
-     * @internal
-     */
-    public function _getProperty($propertyName)
-    {
-        return $this->{$propertyName};
-    }
-
-    /**
-     * @return array
-     * @internal
-     */
-    public function _getProperties()
-    {
-        return get_object_vars($this);
-    }
 }

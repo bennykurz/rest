@@ -20,8 +20,7 @@ namespace N86io\Rest\Tests\DomainObject\PropertyInfo\Factory;
 
 use N86io\Rest\DomainObject\PropertyInfo\Factory\FactoryInterface;
 use N86io\Rest\DomainObject\PropertyInfo\Factory\Relation;
-use N86io\Rest\RestObjectManager;
-use N86io\Rest\ServiceManager;
+use N86io\Rest\ObjectContainer;
 use N86io\Rest\Tests\DomainObject\FakeEntity1;
 
 /**
@@ -46,7 +45,7 @@ class RelationTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->factory = (new RestObjectManager)->get(Relation::class);
+        $this->factory = ObjectContainer::get(Relation::class);
     }
 
     public function testBuild()

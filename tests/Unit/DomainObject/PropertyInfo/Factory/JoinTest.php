@@ -20,7 +20,7 @@ namespace N86io\Rest\Tests\DomainObject\PropertyInfo\Factory;
 
 use N86io\Rest\DomainObject\PropertyInfo\Factory\FactoryInterface;
 use N86io\Rest\DomainObject\PropertyInfo\Factory\Join;
-use N86io\Rest\RestObjectManager;
+use N86io\Rest\ObjectContainer;
 
 /**
  * Class JoinTest
@@ -41,7 +41,7 @@ class JoinTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->factory = $this->factory = (new RestObjectManager)->get(Join::class);
+        $this->factory = $this->factory = ObjectContainer::get(Join::class);
     }
 
     public function testBuild()

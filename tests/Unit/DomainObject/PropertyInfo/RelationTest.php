@@ -19,7 +19,7 @@
 namespace N86io\Rest\Tests\DomainObject\PropertyInfo;
 
 use N86io\Rest\DomainObject\PropertyInfo\Relation;
-use N86io\Rest\RestObjectManager;
+use N86io\Rest\ObjectContainer;
 
 /**
  * Class RelationTest
@@ -41,7 +41,7 @@ class RelationTest extends \PHPUnit_Framework_TestCase
                 'constraint' => true,
             ]
         ];
-        $this->propertyInfo = (new RestObjectManager)->get(Relation::class, $params);
+        $this->propertyInfo = ObjectContainer::make(Relation::class, $params);
     }
 
     public function testIsConstraint()

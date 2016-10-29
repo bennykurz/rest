@@ -25,10 +25,10 @@ use Doctrine\Common\Cache\Cache;
 use Interop\Container\ContainerInterface;
 
 /**
- * Class RestObjectManager
+ * Class ObjectContainer
  * @package N86io\Rest
  */
-class RestObjectManager
+class ObjectContainer
 {
     /**
      * @var Container
@@ -36,42 +36,63 @@ class RestObjectManager
     private static $container;
 
     /**
-     * RestObjectManager constructor.
+     * @var Cache
+     */
+    private static $cache;
+
+    /**
      * @param Cache $cache
      */
-    public function __construct(Cache $cache = null)
+    public static function setCache(Cache $cache)
     {
-        if (!self::$container) {
-            $containerBuilder = (new ContainerBuilder)
-                ->addDefinitions([ContainerInterface::class => \DI\get(Container::class)])
-                ->useAnnotations(true)
-                ->useAutowiring(true);
-            if ($cache) {
-                self::$container = $containerBuilder->setDefinitionCache($cache)->build();
-                return;
-            }
-            self::$container = $containerBuilder->setDefinitionCache(new ArrayCache)->build();
-        }
+        self::$cache = $cache;
+    }
+
+    /**
+     * @param $className
+     * @return mixed
+     */
+    public static function get($className)
+    {
+        self::initialize();
+        return self::$container->get($className);
     }
 
     /**
      * @param string $className
      * @param array $parameters
-     * @return object
+     * @return mixed
      */
-    public function get($className, array $parameters = [])
+    public static function make($className, array $parameters)
     {
-        if (empty($parameters)) {
-            return self::$container->get($className);
-        }
+        self::initialize();
         return self::$container->make($className, $parameters);
     }
 
     /**
      * @return Container
      */
-    public function getContainer()
+    public static function getContainer()
     {
+        self::initialize();
         return self::$container;
+    }
+
+    /**
+     * ObjectContainer constructor.
+     */
+    protected static function initialize()
+    {
+        if (!self::$container) {
+            $containerBuilder = (new ContainerBuilder)
+                ->addDefinitions([ContainerInterface::class => \DI\get(Container::class)])
+                ->useAnnotations(true)
+                ->useAutowiring(true);
+            if (self::$cache) {
+                self::$container = $containerBuilder->setDefinitionCache(self::$cache)->build();
+                return;
+            }
+            self::$container = $containerBuilder->setDefinitionCache(new ArrayCache)->build();
+        }
     }
 }
