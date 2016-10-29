@@ -61,14 +61,6 @@ class PropertyInfoFactoryTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testBuildLanguageFieldPropertyInfo()
-    {
-        $this->assertEquals(
-            Common::class,
-            get_class($this->propertyInfoFactory->buildLanguageFieldPropertyInfo('language_uid_field'))
-        );
-    }
-
     /**
      * @return array
      */

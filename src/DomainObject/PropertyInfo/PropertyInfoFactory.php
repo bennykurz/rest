@@ -82,18 +82,4 @@ class PropertyInfoFactory
         ];
         return new PropertyInfo\Common('_uid', $attributes);
     }
-
-    /**
-     * @param string $resourcePropertyName
-     * @return Common
-     */
-    public function buildLanguageFieldPropertyInfo($resourcePropertyName)
-    {
-        $attributes = [
-            'type' => 'int',
-            'resourcePropertyName' => $resourcePropertyName,
-            'hide' => true
-        ];
-        return new PropertyInfo\Common('_sysLanguageUid', $attributes);
-    }
 }
