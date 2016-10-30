@@ -19,7 +19,7 @@
 namespace N86io\Rest\Tests\DomainObject\EntityInfo;
 
 use N86io\Rest\DomainObject\EntityInfo\EntityInfo;
-use N86io\Rest\DomainObject\EntityInfo\EntityInfoFactory;
+use N86io\Rest\DomainObject\EntityInfo\EntityInfoFactoryInterface;
 use N86io\Rest\ObjectContainer;
 use N86io\Rest\Tests\DomainObject\FakeEntity1;
 use N86io\Rest\Tests\DomainObject\FakeEntity4;
@@ -31,13 +31,13 @@ use N86io\Rest\Tests\DomainObject\FakeEntity4;
 class EntityInfoFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var EntityInfoFactory
+     * @var EntityInfoFactoryInterface
      */
     protected $factory;
 
     public function setUp()
     {
-        $this->factory = ObjectContainer::get(EntityInfoFactory::class);
+        $this->factory = ObjectContainer::get(EntityInfoFactoryInterface::class);
     }
 
     public function test()

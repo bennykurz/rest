@@ -18,6 +18,8 @@
 
 namespace N86io\Rest;
 
+use N86io\Rest\DomainObject\EntityInfo\EntityInfoFactory;
+use N86io\Rest\DomainObject\EntityInfo\EntityInfoFactoryInterface;
 use N86io\Rest\Http\Routing\RoutingParameter;
 use N86io\Rest\Http\Routing\RoutingParameterInterface;
 
@@ -53,6 +55,7 @@ class Dependency
     protected static function setDefaults()
     {
         static::setDefault(RoutingParameterInterface::class, \DI\object(RoutingParameter::class));
+        static::setDefault(EntityInfoFactoryInterface::class, \DI\object(EntityInfoFactory::class));
     }
 
     /**

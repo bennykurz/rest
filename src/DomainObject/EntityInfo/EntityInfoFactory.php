@@ -27,7 +27,7 @@ use N86io\Rest\Utility\PropertyInfoUtility;
  * Class EntityInfoFactory
  * @package N86io\Rest\DomainObject\EntityInfo
  */
-class EntityInfoFactory
+class EntityInfoFactory implements EntityInfoFactoryInterface
 {
     /**
      * @Inject
