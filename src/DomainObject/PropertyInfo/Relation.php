@@ -21,6 +21,7 @@ namespace N86io\Rest\DomainObject\PropertyInfo;
 /**
  * Class Relation
  * @package N86io\Rest\DomainObject\PropertyInfo
+ * @Injectable(scope="prototype")
  */
 class Relation extends AbstractStatic implements RestrictableInterface
 {

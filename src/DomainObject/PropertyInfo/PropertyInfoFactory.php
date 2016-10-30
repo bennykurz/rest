@@ -24,6 +24,7 @@ use N86io\Rest\DomainObject\PropertyInfo;
 /**
  * Class PropertyInfoFactory
  * @package N86io\Rest\DomainObject\PropertyInfo
+ * @Injectable(scope="prototype")
  */
 class PropertyInfoFactory
 {

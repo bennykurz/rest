@@ -21,6 +21,7 @@ namespace N86io\Rest\DomainObject\PropertyInfo;
 /**
  * Class Common
  * @package N86io\Rest\DomainObject\PropertyInfo
+ * @Injectable(scope="prototype")
  */
 class Common extends AbstractStatic implements
     ResourceIdInterface,

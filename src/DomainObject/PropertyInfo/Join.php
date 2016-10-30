@@ -21,6 +21,7 @@ namespace N86io\Rest\DomainObject\PropertyInfo;
 /**
  * Class Join
  * @package N86io\Rest\DomainObject\PropertyInfo
+ * @Injectable(scope="prototype")
  */
 class Join extends DynamicSql implements JoinInterface
 {

@@ -21,6 +21,7 @@ namespace N86io\Rest\DomainObject\PropertyInfo;
 /**
  * Class RelationOnForeignField
  * @package N86io\Rest\DomainObject\PropertyInfo
+ * @Injectable(scope="prototype")
  */
 class RelationOnForeignField extends AbstractPropertyInfo implements RelationOnForeignFieldInterface
 {

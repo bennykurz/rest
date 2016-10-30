@@ -21,6 +21,7 @@ namespace N86io\Rest\DomainObject\PropertyInfo;
 /**
  * Class DynamicPhp
  * @package N86io\Rest\DomainObject\PropertyInfo
+ * @Injectable(scope="prototype")
  */
 class DynamicPhp extends AbstractPropertyInfo
 {
