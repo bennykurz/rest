@@ -24,11 +24,11 @@ use N86io\Rest\DomainObject\PropertyInfo;
 /**
  * Class PropertyInfoFactory
  * @package N86io\Rest\DomainObject\PropertyInfo
- * @Injectable(scope="prototype")
  */
 class PropertyInfoFactory
 {
     /**
+     * @Inject
      * @var ContainerInterface
      */
     protected $container;
@@ -42,15 +42,6 @@ class PropertyInfoFactory
         PropertyInfo\Factory\Relation::class,
         PropertyInfo\Factory\RelationOnForeignField::class
     ];
-
-    /**
-     * @Inject
-     * @param ContainerInterface $container
-     */
-    public function setContainer(ContainerInterface $container)
-    {
-        $this->container = $container;
-    }
 
     /**
      * @param string $name

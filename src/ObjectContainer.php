@@ -22,7 +22,6 @@ use DI\Container;
 use DI\ContainerBuilder;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
-use Interop\Container\ContainerInterface;
 
 /**
  * Class ObjectContainer
@@ -45,7 +44,8 @@ class ObjectContainer
      */
     public static function setCache(Cache $cache)
     {
-        self::$cache = $cache;
+        static::$cache = $cache;
+        static::$container = null;
     }
 
     /**
@@ -54,8 +54,7 @@ class ObjectContainer
      */
     public static function get($className)
     {
-        self::initialize();
-        return self::$container->get($className);
+        return static::$container->get($className);
     }
 
     /**
@@ -65,8 +64,7 @@ class ObjectContainer
      */
     public static function make($className, array $parameters)
     {
-        self::initialize();
-        return self::$container->make($className, $parameters);
+        return static::$container->make($className, $parameters);
     }
 
     /**
@@ -74,25 +72,24 @@ class ObjectContainer
      */
     public static function getContainer()
     {
-        self::initialize();
-        return self::$container;
+        return static::$container;
     }
 
     /**
      * ObjectContainer constructor.
      */
-    protected static function initialize()
+    public static function initialize()
     {
-        if (!self::$container) {
+        if (!static::$container) {
             $containerBuilder = (new ContainerBuilder)
-                ->addDefinitions([ContainerInterface::class => \DI\get(Container::class)])
+                ->addDefinitions(Dependency::get())
                 ->useAnnotations(true)
                 ->useAutowiring(true);
-            if (self::$cache) {
-                self::$container = $containerBuilder->setDefinitionCache(self::$cache)->build();
+            if (static::$cache) {
+                static::$container = $containerBuilder->setDefinitionCache(static::$cache)->build();
                 return;
             }
-            self::$container = $containerBuilder->setDefinitionCache(new ArrayCache)->build();
+            static::$container = $containerBuilder->setDefinitionCache(new ArrayCache)->build();
         }
     }
 }

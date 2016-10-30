@@ -26,6 +26,12 @@ namespace N86io\Rest\DomainObject\PropertyInfo;
 class Join extends DynamicSql implements JoinInterface
 {
     /**
+     * @Inject
+     * @var JoinAliasStorage
+     */
+    protected $aliasStorage;
+
+    /**
      * @var string
      */
     protected $joinTable;
@@ -36,23 +42,9 @@ class Join extends DynamicSql implements JoinInterface
     protected $joinCondition;
 
     /**
-     * @var JoinAliasStorage
-     */
-    protected $aliasStorage;
-
-    /**
      * @var bool
      */
     protected $isSqlOptional = true;
-
-    /**
-     * @Inject
-     * @param JoinAliasStorage $aliasStorage
-     */
-    public function setAliasStorage(JoinAliasStorage $aliasStorage)
-    {
-        $this->aliasStorage = $aliasStorage;
-    }
 
     /**
      * @return string

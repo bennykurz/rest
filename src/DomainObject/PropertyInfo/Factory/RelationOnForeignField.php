@@ -27,18 +27,10 @@ use N86io\Rest\Utility\PropertyInfoUtility;
 class RelationOnForeignField implements FactoryInterface
 {
     /**
+     * @Inject
      * @var PropertyInfoUtility
      */
     protected $propertyInfoUtility;
-
-    /**
-     * @Inject
-     * @param PropertyInfoUtility $propertyInfoUtility
-     */
-    public function setPropertyInfoUtility(PropertyInfoUtility $propertyInfoUtility)
-    {
-        $this->propertyInfoUtility = $propertyInfoUtility;
-    }
 
     /**
      * @param string $name

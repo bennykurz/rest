@@ -30,32 +30,16 @@ use N86io\Rest\Utility\PropertyInfoUtility;
 class EntityInfoFactory
 {
     /**
+     * @Inject
      * @var PropertyInfoFactory
      */
     protected $propertyInfoFactory;
 
     /**
+     * @Inject
      * @var PropertyInfoUtility
      */
     protected $propertyInfoUtility;
-
-    /**
-     * @Inject
-     * @param PropertyInfoFactory $propertyInfoFactory
-     */
-    public function setPropertyInfoFactory($propertyInfoFactory)
-    {
-        $this->propertyInfoFactory = $propertyInfoFactory;
-    }
-
-    /**
-     * @Inject
-     * @param PropertyInfoUtility $propertyInfoUtility
-     */
-    public function setPropertyInfoUtility($propertyInfoUtility)
-    {
-        $this->propertyInfoUtility = $propertyInfoUtility;
-    }
 
     /**
      * @param $className

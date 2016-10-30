@@ -26,20 +26,24 @@ use N86io\Rest\DomainObject\AbstractEntity;
 /**
  * Class EntityClassReflection
  * @package N86io\Rest\Reflection
+ * @Injectable(scope="prototype")
  */
 class EntityClassReflection
 {
     /**
-     * @var Container
+     * @Inject
+     * @var ContainerInterface
      */
     protected $container;
 
     /**
+     * @Inject
      * @var TagUtility
      */
     protected $tagUtility;
 
     /**
+     * @Inject
      * @var MethodNameUtility
      */
     protected $methodNameUtility;
@@ -82,33 +86,6 @@ class EntityClassReflection
             );
         }
         $this->reflectionClass = new ReflectionClass($className);
-    }
-
-    /**
-     * @Inject
-     * @param ContainerInterface $container
-     */
-    public function setContainer(ContainerInterface $container)
-    {
-        $this->container = $container;
-    }
-
-    /**
-     * @Inject
-     * @param TagUtility $tagUtility
-     */
-    public function setTagUtility(TagUtility $tagUtility)
-    {
-        $this->tagUtility = $tagUtility;
-    }
-
-    /**
-     * @Inject
-     * @param MethodNameUtility $methodNameUtility
-     */
-    public function setMethodNameUtility($methodNameUtility)
-    {
-        $this->methodNameUtility = $methodNameUtility;
     }
 
     /**
