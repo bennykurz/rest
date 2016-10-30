@@ -39,6 +39,7 @@ class DynamicPhpTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        ObjectContainer::initialize();
         $this->factory = ObjectContainer::get(DynamicPhp::class);
     }
 

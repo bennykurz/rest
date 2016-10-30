@@ -47,6 +47,7 @@ class EntityClassReflectionTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        ObjectContainer::initialize();
         $this->fakeEntity1 = ObjectContainer::make(
             EntityClassReflection::class,
             ['className' => FakeEntity1::class]

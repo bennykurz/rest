@@ -112,6 +112,7 @@ class EntityInfoTest extends \PHPUnit_Framework_TestCase
                 ]
             ]
         ];
+        ObjectContainer::initialize();
         /** @var PropertyInfoFactory $propInfoFact */
         $propInfoFact = ObjectContainer::get(PropertyInfoFactory::class);
         foreach ($propertyAttributes as $attribute) {

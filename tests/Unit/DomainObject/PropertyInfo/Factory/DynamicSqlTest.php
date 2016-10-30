@@ -40,6 +40,7 @@ class DynamicSqlTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        ObjectContainer::initialize();
         $this->factory = $this->factory = ObjectContainer::get(DynamicSql::class);
     }
 

@@ -36,6 +36,7 @@ class PropertyInfoUtilityTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        ObjectContainer::initialize();
         $this->propertyInfoUtility = ObjectContainer::get(PropertyInfoUtility::class);
     }
 

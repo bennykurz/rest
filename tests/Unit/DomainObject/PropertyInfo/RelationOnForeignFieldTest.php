@@ -41,6 +41,7 @@ class RelationOnForeignFieldTest extends \PHPUnit_Framework_TestCase
                 'foreignField' => 'some_thing',
             ]
         ];
+        ObjectContainer::initialize();
         $this->propertyInfo = ObjectContainer::make(RelationOnForeignField::class, $params);
     }
 

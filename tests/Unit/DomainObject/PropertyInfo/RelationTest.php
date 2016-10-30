@@ -41,6 +41,7 @@ class RelationTest extends \PHPUnit_Framework_TestCase
                 'constraint' => true,
             ]
         ];
+        ObjectContainer::initialize();
         $this->propertyInfo = ObjectContainer::make(Relation::class, $params);
     }
 

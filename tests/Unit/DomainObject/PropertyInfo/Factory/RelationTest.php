@@ -45,6 +45,7 @@ class RelationTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        ObjectContainer::initialize();
         $this->factory = ObjectContainer::get(Relation::class);
     }
 
