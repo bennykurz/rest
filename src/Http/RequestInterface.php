@@ -28,8 +28,9 @@ interface RequestInterface
 {
     const REQUEST_MODE_READ = 1;
     const REQUEST_MODE_CREATE = 2;
-    const REQUEST_MODE_UPDATE = 3;
-    const REQUEST_MODE_DELETE = 4;
+    const REQUEST_MODE_UPDATE = 4;
+    const REQUEST_MODE_PATCH = 8;
+    const REQUEST_MODE_DELETE = 16;
 
     /**
      * @return int

@@ -262,15 +262,29 @@ class EntityInfo implements EntityInfoInterface
     }
 
     /**
-     * @param string $requestMode
+     * @param int $requestMode
      * @return bool
      */
     public function canHandleRequestMode($requestMode)
     {
-        $isReadWriteMode = $this->readMode && $this->writeMode;
-        return ($requestMode === RequestInterface::REQUEST_MODE_READ && $this->readMode ||
+        return (
+            $requestMode === RequestInterface::REQUEST_MODE_READ && $this->readMode ||
             $requestMode === RequestInterface::REQUEST_MODE_CREATE && $this->writeMode ||
+            $this->canReadAndWrite($requestMode)
+        );
+    }
+
+    /**
+     * @param int $requestMode
+     * @return bool
+     */
+    protected function canReadAndWrite($requestMode)
+    {
+        $isReadWriteMode = $this->readMode && $this->writeMode;
+        return (
             $requestMode === RequestInterface::REQUEST_MODE_UPDATE && $isReadWriteMode ||
-            $requestMode === RequestInterface::REQUEST_MODE_DELETE && $isReadWriteMode);
+            $requestMode === RequestInterface::REQUEST_MODE_PATCH && $isReadWriteMode ||
+            $requestMode === RequestInterface::REQUEST_MODE_DELETE && $isReadWriteMode
+        );
     }
 }

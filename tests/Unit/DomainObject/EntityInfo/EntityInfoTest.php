@@ -209,13 +209,18 @@ class EntityInfoTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->entityInfo1->canHandleRequestMode(RequestInterface::REQUEST_MODE_CREATE));
         $this->assertTrue($this->entityInfo1->canHandleRequestMode(RequestInterface::REQUEST_MODE_DELETE));
         $this->assertTrue($this->entityInfo1->canHandleRequestMode(RequestInterface::REQUEST_MODE_UPDATE));
+        $this->assertTrue($this->entityInfo1->canHandleRequestMode(RequestInterface::REQUEST_MODE_PATCH));
+
         $this->assertTrue($this->entityInfo2->canHandleRequestMode(RequestInterface::REQUEST_MODE_READ));
         $this->assertFalse($this->entityInfo2->canHandleRequestMode(RequestInterface::REQUEST_MODE_CREATE));
         $this->assertFalse($this->entityInfo2->canHandleRequestMode(RequestInterface::REQUEST_MODE_DELETE));
         $this->assertFalse($this->entityInfo2->canHandleRequestMode(RequestInterface::REQUEST_MODE_UPDATE));
+        $this->assertFalse($this->entityInfo2->canHandleRequestMode(RequestInterface::REQUEST_MODE_PATCH));
+
         $this->assertFalse($this->entityInfo3->canHandleRequestMode(RequestInterface::REQUEST_MODE_READ));
         $this->assertTrue($this->entityInfo3->canHandleRequestMode(RequestInterface::REQUEST_MODE_CREATE));
         $this->assertFalse($this->entityInfo3->canHandleRequestMode(RequestInterface::REQUEST_MODE_DELETE));
         $this->assertFalse($this->entityInfo3->canHandleRequestMode(RequestInterface::REQUEST_MODE_UPDATE));
+        $this->assertFalse($this->entityInfo3->canHandleRequestMode(RequestInterface::REQUEST_MODE_PATCH));
     }
 }
