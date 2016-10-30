@@ -21,13 +21,13 @@ namespace N86io\Rest\Tests\Service;
 use GuzzleHttp\Psr7\ServerRequest;
 use N86io\Rest\ObjectContainer;
 use N86io\Rest\Service\Configuration;
-use N86io\Rest\Service\Routing;
+use N86io\Rest\Service\RoutingFactory;
 
 /**
- * Class RoutingTest
+ * Class RoutingAndFactoryTest
  * @package N86io\Rest\Tests\Service
  */
-class RoutingTest extends \PHPUnit_Framework_TestCase
+class RoutingAndFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function test()
     {
@@ -35,11 +35,9 @@ class RoutingTest extends \PHPUnit_Framework_TestCase
         $configuration = ObjectContainer::get(Configuration::class);
         $configuration->setApiBaseUrl('http://example.com/api');
 
-        /** @var Routing $routing */
-        $routing = ObjectContainer::get(Routing::class);
-        $routing->addParameter($routing->getVersionRoutingParameter());
-        $routing->addParameter($routing->getApiIdentifierRouting(['api1', 'api2']));
-        $routing->addParameter($routing->getResourceIdRouting());
+        /** @var RoutingFactory $routingFactory */
+        $routingFactory = ObjectContainer::get(RoutingFactory::class);
+        $routing = $routingFactory->build(['api1', 'api2']);
 
         $serverRequest = new ServerRequest('GET', 'http://example.com/api/3/api1/res1,res2');
         $expected = [

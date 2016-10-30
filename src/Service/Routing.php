@@ -25,7 +25,7 @@ use Psr\Http\Message\ServerRequestInterface;
  * @package N86io\Rest\Service
  * @Injectable(scope="prototype")
  */
-class Routing extends AbstractRouting
+class Routing implements RoutingInterface
 {
     /**
      * @Inject

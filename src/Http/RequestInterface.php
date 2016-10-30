@@ -85,7 +85,7 @@ interface RequestInterface
      * @param array $orderings
      * @return RequestInterface
      */
-    public function setOrderings($orderings);
+    public function setOrderings(array $orderings);
 
     /**
      * @return int
@@ -141,17 +141,6 @@ interface RequestInterface
      * @return RequestInterface
      */
     public function setAccept($accept);
-
-    /**
-     * @return string
-     */
-    public function getExtensionKey();
-
-    /**
-     * @param string $extensionKey
-     * @return RequestInterface
-     */
-    public function setExtensionKey($extensionKey);
 
     /**
      * @return string

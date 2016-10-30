@@ -19,32 +19,14 @@
 namespace N86io\Rest\Service;
 
 /**
- * Class Configuration
+ * Interface RoutingFactoryInterface
  * @package N86io\Rest\Service
  */
-class Configuration
+interface RoutingFactoryInterface
 {
     /**
-     * @var string
+     * @param array $apiIdentifiers
+     * @return RoutingInterface
      */
-    protected $apiBaseUrl;
-
-    /**
-     * @return string
-     */
-    public function getApiBaseUrl()
-    {
-        return $this->apiBaseUrl;
-    }
-
-    /**
-     * @param string $apiBaseUrl
-     */
-    public function setApiBaseUrl($apiBaseUrl)
-    {
-        if (substr($apiBaseUrl, -1) !== '/') {
-            $apiBaseUrl .= '/';
-        }
-        $this->apiBaseUrl = $apiBaseUrl;
-    }
+    public function build(array $apiIdentifiers);
 }

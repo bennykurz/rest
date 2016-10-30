@@ -18,20 +18,40 @@
 
 namespace N86io\Rest\Service;
 
-use N86io\Rest\ObjectContainer;
+use DI\Container;
 
 /**
- * Class AbstractRouting
+ * Class RoutingFactory
  * @package N86io\Rest\Service
  */
-abstract class AbstractRouting implements RoutingInterface
+class RoutingFactory implements RoutingFactoryInterface
 {
+    /**
+     * @Inject
+     * @var Container
+     */
+    protected $container;
+
+    /**
+     * @param array $apiIdentifiers
+     * @return RoutingInterface
+     */
+    public function build(array $apiIdentifiers)
+    {
+        /** @var Routing $routing */
+        $routing = $this->container->get(Routing::class);
+        $routing->addParameter($this->getVersionRoutingParameter());
+        $routing->addParameter($this->getApiIdentifierRouting($apiIdentifiers));
+        $routing->addParameter($this->getResourceIdRouting());
+        return $routing;
+    }
+
     /**
      * @return RoutingParameterInterface
      */
     public function getVersionRoutingParameter()
     {
-        return ObjectContainer::make(
+        return $this->container->make(
             RoutingParameterInterface::class,
             [
                 'name' => 'version',
@@ -47,7 +67,7 @@ abstract class AbstractRouting implements RoutingInterface
      */
     public function getApiIdentifierRouting(array $apiIdentifier)
     {
-        return ObjectContainer::make(
+        return $this->container->make(
             RoutingParameterInterface::class,
             [
                 'name' => 'apiIdentifier',
@@ -63,7 +83,7 @@ abstract class AbstractRouting implements RoutingInterface
      */
     public function getResourceIdRouting()
     {
-        return ObjectContainer::make(
+        return $this->container->make(
             RoutingParameterInterface::class,
             [
                 'name' => 'resourceId',
@@ -72,4 +92,5 @@ abstract class AbstractRouting implements RoutingInterface
             ]
         );
     }
+
 }

@@ -18,7 +18,7 @@
 
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
-use Interop\Container\ContainerInterface;
+use DI\Container;
 use N86io\Rest\DomainObject\PropertyInfo;
 
 /**
@@ -29,7 +29,7 @@ class PropertyInfoFactory
 {
     /**
      * @Inject
-     * @var ContainerInterface
+     * @var Container
      */
     protected $container;
 

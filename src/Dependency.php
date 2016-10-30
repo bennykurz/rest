@@ -54,7 +54,6 @@ class Dependency
 
     protected static function setDefaults()
     {
-        static::setDefault(ContainerInterface::class, \DI\get(Container::class));
         static::setDefault(RoutingParameterInterface::class, \DI\object(RoutingParameter::class));
     }
 

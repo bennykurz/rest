@@ -19,7 +19,6 @@
 namespace N86io\Rest\Reflection;
 
 use DI\Container;
-use Interop\Container\ContainerInterface;
 use N86io\Reflection\ReflectionClass;
 use N86io\Rest\DomainObject\AbstractEntity;
 
@@ -32,7 +31,7 @@ class EntityClassReflection
 {
     /**
      * @Inject
-     * @var ContainerInterface
+     * @var Container
      */
     protected $container;
 
