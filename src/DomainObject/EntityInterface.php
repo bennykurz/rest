@@ -19,37 +19,28 @@
 namespace N86io\Rest\DomainObject;
 
 /**
- * Class AbstractEntity
+ * Interface EntityInterface
  * @package N86io\Rest\DomainObject
  */
-abstract class AbstractEntity implements EntityInterface
+interface EntityInterface
 {
     /**
      * @param string $propertyName
      * @param mixed $propertyValue
      * @internal
      */
-    public function _setProperty($propertyName, $propertyValue)
-    {
-        $this->{$propertyName} = $propertyValue;
-    }
+    public function _setProperty($propertyName, $propertyValue);
 
     /**
      * @param $propertyName
      * @return mixed
      * @internal
      */
-    public function _getProperty($propertyName)
-    {
-        return $this->{$propertyName};
-    }
+    public function _getProperty($propertyName);
 
     /**
      * @return array
      * @internal
      */
-    public function _getProperties()
-    {
-        return get_object_vars($this);
-    }
+    public function _getProperties();
 }
