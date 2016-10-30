@@ -34,24 +34,16 @@ class EntityInfoStorage
     protected $entityInfoFactory;
 
     /**
+     * @Inject("EntityInfoStorageCache")
      * @var Cache
      */
     protected $cache;
 
     /**
-     * @Inject
+     * @Inject("EntityInfoStorageArrayCache")
      * @var ArrayCache
      */
     protected $arrayCache;
-
-    /**
-     * @Inject
-     * @param Cache $cache
-     */
-    public function setCache(Cache $cache)
-    {
-        $this->cache = $cache;
-    }
 
     /**
      * @param string $modelClassName
@@ -89,6 +81,6 @@ class EntityInfoStorage
      */
     protected function getCacheId($string)
     {
-        return 'EntityInfo_' . md5($string);
+        return md5($string);
     }
 }

@@ -62,7 +62,7 @@ class ObjectContainer
      * @param array $parameters
      * @return mixed
      */
-    public static function make($className, array $parameters)
+    public static function make($className, array $parameters = [])
     {
         return static::getContainer()->make($className, $parameters);
     }

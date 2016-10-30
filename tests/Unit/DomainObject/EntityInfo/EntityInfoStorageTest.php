@@ -19,6 +19,7 @@
 namespace N86io\Rest\Tests\DomainObject\EntityInfo;
 
 use Doctrine\Common\Cache\ArrayCache;
+use N86io\Rest\Dependency;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoFactory;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
@@ -40,15 +41,14 @@ class EntityInfoStorageTest extends \PHPUnit_Framework_TestCase
 
         /** @var ArrayCache $arrayCache */
         $cache = ObjectContainer::make(ArrayCache::class);
-        $cache->save('EntityInfo_' . md5(FakeEntity2::class), $fakeEntity2Info);
+        $cache->save(md5(FakeEntity2::class), $fakeEntity2Info);
+        Dependency::set('EntityInfoStorageCache', $cache);
+        ObjectContainer::initialize();
 
         /** @var EntityInfoStorage $entityInfoStorage */
         $entityInfoStorage = ObjectContainer::get(EntityInfoStorage::class);
-        $entityInfoStorage->setCache($cache);
         $this->assertTrue($entityInfoStorage->get(FakeEntity1::class) instanceof EntityInfoInterface);
         $this->assertTrue($entityInfoStorage->get(FakeEntity1::class) instanceof EntityInfoInterface);
         $this->assertTrue($entityInfoStorage->get(FakeEntity2::class) instanceof EntityInfoInterface);
-
-//        var_dump($arrayCache);
     }
 }
