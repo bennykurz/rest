@@ -29,9 +29,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 {
     public function test()
     {
-        ObjectContainer::initialize();
         $configuration = ObjectContainer::get(Configuration::class);
-
         $configuration->setApiBaseUrl('http://example.com/api');
         $this->assertEquals('http://example.com/api/', $configuration->getApiBaseUrl());
         $configuration->setApiBaseUrl('http://example.com/api/');

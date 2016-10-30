@@ -31,10 +31,7 @@ class RoutingAndFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function test()
     {
-        ObjectContainer::initialize();
-        /** @var Configuration $configuration */
-        $configuration = ObjectContainer::get(Configuration::class);
-        $configuration->setApiBaseUrl('http://example.com/api');
+        Configuration::setApiBaseUrl('http://example.com/api');
 
         /** @var RoutingFactory $routingFactory */
         $routingFactory = ObjectContainer::get(RoutingFactory::class);

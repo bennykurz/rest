@@ -54,7 +54,7 @@ class ObjectContainer
      */
     public static function get($className)
     {
-        return static::$container->get($className);
+        return static::getContainer()->get($className);
     }
 
     /**
@@ -64,7 +64,7 @@ class ObjectContainer
      */
     public static function make($className, array $parameters)
     {
-        return static::$container->make($className, $parameters);
+        return static::getContainer()->make($className, $parameters);
     }
 
     /**
@@ -72,6 +72,9 @@ class ObjectContainer
      */
     public static function getContainer()
     {
+        if (!static::$container) {
+            static::initialize();
+        }
         return static::$container;
     }
 
@@ -80,16 +83,14 @@ class ObjectContainer
      */
     public static function initialize()
     {
-        if (!static::$container) {
-            $containerBuilder = (new ContainerBuilder)
-                ->addDefinitions(Dependency::get())
-                ->useAnnotations(true)
-                ->useAutowiring(true);
-            if (static::$cache) {
-                static::$container = $containerBuilder->setDefinitionCache(static::$cache)->build();
-                return;
-            }
-            static::$container = $containerBuilder->setDefinitionCache(new ArrayCache)->build();
+        $containerBuilder = (new ContainerBuilder)
+            ->addDefinitions(Dependency::get())
+            ->useAnnotations(true)
+            ->useAutowiring(true);
+        if (static::$cache) {
+            static::$container = $containerBuilder->setDefinitionCache(static::$cache)->build();
+            return;
         }
+        static::$container = $containerBuilder->setDefinitionCache(new ArrayCache)->build();
     }
 }

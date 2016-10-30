@@ -29,7 +29,6 @@ class JoinAliasStorageTest extends \PHPUnit_Framework_TestCase
 {
     public function testGet()
     {
-        ObjectContainer::initialize();
         /** @var JoinAliasStorage $joinAliasStorage */
         $joinAliasStorage = ObjectContainer::get(JoinAliasStorage::class);
         $joinAliasStorage->reset();

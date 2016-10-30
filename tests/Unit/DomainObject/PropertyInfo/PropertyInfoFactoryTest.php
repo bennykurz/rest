@@ -37,7 +37,6 @@ class PropertyInfoFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        ObjectContainer::initialize();
         $this->propertyInfoFactory = ObjectContainer::get(PropertyInfoFactory::class);
     }
 

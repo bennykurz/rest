@@ -45,7 +45,6 @@ class RelationOnForeignFieldTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        ObjectContainer::initialize();
         $this->factory = ObjectContainer::get(RelationOnForeignField::class);
     }
 

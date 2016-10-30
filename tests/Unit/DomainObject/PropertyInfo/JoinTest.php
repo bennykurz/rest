@@ -43,7 +43,6 @@ class JoinTest extends \PHPUnit_Framework_TestCase
                 'joinCondition' => 'prop = 123'
             ]
         ];
-        ObjectContainer::initialize();
         /** @var JoinAliasStorage $joinAliasStorage */
         $joinAliasStorage = ObjectContainer::get(JoinAliasStorage::class);
         $joinAliasStorage->reset();
