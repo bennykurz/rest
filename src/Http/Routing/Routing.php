@@ -16,13 +16,14 @@
  * along with N86io/Rest or see <http://www.gnu.org/licenses/>.
  */
 
-namespace N86io\Rest\Service;
+namespace N86io\Rest\Http\Routing;
 
+use N86io\Rest\Service\Configuration;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Class Routing
- * @package N86io\Rest\Service
+ * @package N86io\Rest\Http\Routing
  * @Injectable(scope="prototype")
  */
 class Routing implements RoutingInterface

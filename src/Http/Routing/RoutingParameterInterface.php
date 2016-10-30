@@ -16,34 +16,14 @@
  * along with N86io/Rest or see <http://www.gnu.org/licenses/>.
  */
 
-namespace N86io\Rest\Service;
+namespace N86io\Rest\Http\Routing;
 
 /**
- * Class RoutingParameter
- * @package N86io\Rest\Service
+ * Interface RoutingParameterInterface
+ * @package N86io\Rest\Http\Routing
  */
-class RoutingParameter implements RoutingParameterInterface
+interface RoutingParameterInterface
 {
-    /**
-     * @var string
-     */
-    protected $name;
-
-    /**
-     * @var string
-     */
-    protected $expression;
-
-    /**
-     * @var boolean
-     */
-    protected $optional;
-
-    /**
-     * @var int
-     */
-    protected $takeResult;
-
     /**
      * RoutingParameter constructor.
      * @param string $name
@@ -51,43 +31,25 @@ class RoutingParameter implements RoutingParameterInterface
      * @param int $takeResult
      * @param boolean $optional
      */
-    public function __construct($name, $expression, $optional, $takeResult = 1)
-    {
-        $this->name = $name;
-        $this->expression = $expression;
-        $this->optional = $optional === true;
-        $this->takeResult = $takeResult;
-    }
+    public function __construct($name, $expression, $optional, $takeResult = 1);
 
     /**
      * @return string
      */
-    public function getName()
-    {
-        return $this->name;
-    }
+    public function getName();
 
     /**
      * @return string
      */
-    public function getExpression()
-    {
-        return $this->expression;
-    }
+    public function getExpression();
 
     /**
      * @return boolean
      */
-    public function isOptional()
-    {
-        return $this->optional;
-    }
+    public function isOptional();
 
     /**
      * @return int
      */
-    public function getTakeResult()
-    {
-        return $this->takeResult;
-    }
+    public function getTakeResult();
 }

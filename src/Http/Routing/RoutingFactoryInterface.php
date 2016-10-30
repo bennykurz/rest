@@ -16,11 +16,11 @@
  * along with N86io/Rest or see <http://www.gnu.org/licenses/>.
  */
 
-namespace N86io\Rest\Service;
+namespace N86io\Rest\Http\Routing;
 
 /**
  * Interface RoutingFactoryInterface
- * @package N86io\Rest\Service
+ * @package N86io\Rest\Http\Routing
  */
 interface RoutingFactoryInterface
 {

@@ -16,12 +16,12 @@
  * along with N86io/Rest or see <http://www.gnu.org/licenses/>.
  */
 
-namespace N86io\Rest\Tests\Service;
+namespace N86io\Rest\Tests\Http\Routing;
 
 use GuzzleHttp\Psr7\ServerRequest;
+use N86io\Rest\Http\Routing\RoutingFactory;
 use N86io\Rest\ObjectContainer;
 use N86io\Rest\Service\Configuration;
-use N86io\Rest\Service\RoutingFactory;
 
 /**
  * Class RoutingAndFactoryTest
@@ -32,6 +32,7 @@ class RoutingAndFactoryTest extends \PHPUnit_Framework_TestCase
     public function test()
     {
         ObjectContainer::initialize();
+        /** @var Configuration $configuration */
         $configuration = ObjectContainer::get(Configuration::class);
         $configuration->setApiBaseUrl('http://example.com/api');
 

@@ -16,40 +16,24 @@
  * along with N86io/Rest or see <http://www.gnu.org/licenses/>.
  */
 
-namespace N86io\Rest\Service;
+namespace N86io\Rest\Http\Routing;
+
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Interface RoutingParameterInterface
- * @package N86io\Rest\Service
+ * Interface RoutingInterface
+ * @package N86io\Rest\Http\Routing
  */
-interface RoutingParameterInterface
+interface RoutingInterface
 {
     /**
-     * RoutingParameter constructor.
-     * @param string $name
-     * @param string $expression
-     * @param int $takeResult
-     * @param boolean $optional
+     * @param RoutingParameterInterface $routingParameter
      */
-    public function __construct($name, $expression, $optional, $takeResult = 1);
+    public function addParameter(RoutingParameterInterface $routingParameter);
 
     /**
-     * @return string
+     * @param ServerRequestInterface $serverRequest
+     * @return array
      */
-    public function getName();
-
-    /**
-     * @return string
-     */
-    public function getExpression();
-
-    /**
-     * @return boolean
-     */
-    public function isOptional();
-
-    /**
-     * @return int
-     */
-    public function getTakeResult();
+    public function getRoute(ServerRequestInterface $serverRequest);
 }

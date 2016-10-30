@@ -16,24 +16,21 @@
  * along with N86io/Rest or see <http://www.gnu.org/licenses/>.
  */
 
-namespace N86io\Rest\Service;
+namespace N86io\Rest\Tests\Http\Routing;
 
-use Psr\Http\Message\ServerRequestInterface;
+use N86io\Rest\Http\Routing\RoutingParameter;
 
 /**
- * Interface RoutingInterface
- * @package N86io\Rest\Service
+ * Class RoutingParameterTest
+ * @package N86io\Rest\Tests\Service
  */
-interface RoutingInterface
+class RoutingParameterTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @param RoutingParameterInterface $routingParameter
-     */
-    public function addParameter(RoutingParameterInterface $routingParameter);
-
-    /**
-     * @param ServerRequestInterface $serverRequest
-     * @return array
-     */
-    public function getRoute(ServerRequestInterface $serverRequest);
+    public function test()
+    {
+        $routingParameter = new RoutingParameter('name', 'expr', true);
+        $this->assertEquals('name', $routingParameter->getName());
+        $this->assertEquals('expr', $routingParameter->getExpression());
+        $this->assertTrue($routingParameter->isOptional());
+    }
 }

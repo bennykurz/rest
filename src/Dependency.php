@@ -18,10 +18,8 @@
 
 namespace N86io\Rest;
 
-use DI\Container;
-use Interop\Container\ContainerInterface;
-use N86io\Rest\Service\RoutingParameter;
-use N86io\Rest\Service\RoutingParameterInterface;
+use N86io\Rest\Http\Routing\RoutingParameter;
+use N86io\Rest\Http\Routing\RoutingParameterInterface;
 
 /**
  * Class Dependency
