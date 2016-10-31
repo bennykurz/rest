@@ -31,4 +31,9 @@ interface LogicalInterface extends ConstraintInterface, \Iterator
      * @return int
      */
     public function getType();
+
+    /**
+     * @return array
+     */
+    public function getConstraints();
 }

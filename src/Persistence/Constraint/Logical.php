@@ -56,6 +56,14 @@ class Logical implements LogicalInterface
     }
 
     /**
+     * @return ConstraintInterface[]
+     */
+    public function getConstraints()
+    {
+        return $this->constraints;
+    }
+
+    /**
      * @param array $constraints
      */
     protected function checkConstraints(array $constraints)
