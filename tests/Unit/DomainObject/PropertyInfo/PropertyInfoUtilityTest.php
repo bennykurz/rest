@@ -18,16 +18,17 @@
 
 namespace N86io\Rest\Tests\DomainObject\PropertyInfo;
 
+use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoUtility;
 use N86io\Rest\ObjectContainer;
 use N86io\Rest\Tests\DomainObject\FakeEntity1;
 use N86io\Rest\Tests\DomainObject\FakeEntity2;
-use N86io\Rest\Utility\PropertyInfoUtility;
+use N86io\Rest\UnitTestCase;
 
 /**
  * Class PropertyInfoUtilityTest
  * @package N86io\Rest\Tests\DomainObject\PropertyInfo
  */
-class PropertyInfoUtilityTest extends \PHPUnit_Framework_TestCase
+class PropertyInfoUtilityTest extends UnitTestCase
 {
     /**
      * @var PropertyInfoUtility
@@ -36,6 +37,7 @@ class PropertyInfoUtilityTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        parent::setUp();
         $this->propertyInfoUtility = ObjectContainer::get(PropertyInfoUtility::class);
     }
 

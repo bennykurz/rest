@@ -16,7 +16,7 @@
  * along with N86io/Rest or see <http://www.gnu.org/licenses/>.
  */
 
-namespace N86io\Rest\Utility;
+namespace N86io\Rest\DomainObject\PropertyInfo;
 
 use N86io\Rest\DomainObject\AbstractEntity;
 

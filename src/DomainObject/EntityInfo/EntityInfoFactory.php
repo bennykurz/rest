@@ -19,9 +19,9 @@
 namespace N86io\Rest\DomainObject\EntityInfo;
 
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoFactory;
+use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoUtility;
 use N86io\Rest\ObjectContainer;
 use N86io\Rest\Reflection\EntityClassReflection;
-use N86io\Rest\Utility\PropertyInfoUtility;
 
 /**
  * Class EntityInfoFactory

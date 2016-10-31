@@ -18,7 +18,7 @@
 
 namespace N86io\Rest\DomainObject\PropertyInfo\Factory;
 
-use N86io\Rest\Utility\PropertyInfoUtility;
+use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoUtility;
 
 /**
  * Class Relation
