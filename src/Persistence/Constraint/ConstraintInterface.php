@@ -24,5 +24,4 @@ namespace N86io\Rest\Persistence\Constraint;
  */
 interface ConstraintInterface
 {
-    
 }
