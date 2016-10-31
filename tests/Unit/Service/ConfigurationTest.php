@@ -18,21 +18,79 @@
 
 namespace N86io\Rest\Tests\Service;
 
+use N86io\Rest\ControllerInterface;
 use N86io\Rest\ObjectContainer;
 use N86io\Rest\Service\Configuration;
+use N86io\Rest\Tests\DomainObject\FakeEntity1;
+use N86io\Rest\Tests\DomainObject\FakeEntity2;
+use N86io\Rest\Tests\DomainObject\FakeEntity3;
+use N86io\Rest\Tests\DomainObject\FakeEntity4;
+use N86io\Rest\UnitTestCase;
 
 /**
  * Class ConfigurationTest
  * @package N86io\Rest\Tests\Service
  */
-class ConfigurationTest extends \PHPUnit_Framework_TestCase
+class ConfigurationTest extends UnitTestCase
 {
     public function test()
     {
+        $controllerMock1Name = get_class(\Mockery::mock(ControllerInterface::class));
+        $controllerMock2Name = get_class(\Mockery::mock(ControllerInterface::class));
+
+        /** @var Configuration $configuration */
         $configuration = ObjectContainer::get(Configuration::class);
-        $configuration->setApiBaseUrl('http://example.com/api');
-        $this->assertEquals('http://example.com/api/', $configuration->getApiBaseUrl());
-        $configuration->setApiBaseUrl('http://example.com/api/');
-        $this->assertEquals('http://example.com/api/', $configuration->getApiBaseUrl());
+        Configuration::registerApiModel('api1', FakeEntity1::class, '1');
+        Configuration::registerApiModel('api1', FakeEntity2::class, '2');
+        Configuration::registerApiModel('api2', FakeEntity3::class, '1');
+        Configuration::registerApiModel('api2', FakeEntity4::class, '2');
+        Configuration::registerApiController('api1', $controllerMock1Name, '1');
+        Configuration::registerApiController('api2', $controllerMock2Name, '2');
+
+        Configuration::setApiBaseUrl('http://example.com/api');
+        $this->assertEquals('http://example.com/api', $configuration->getApiBaseUrl());
+
+        Configuration::setApiBaseUrl('http://example.com/api/');
+        $this->assertEquals('http://example.com/api', $configuration->getApiBaseUrl());
+
+        $this->assertEquals(['api1', 'api2'], $configuration->getApiIdentifiers());
+
+        $expectedApi1 = [
+            '1' => [
+                'model' => FakeEntity1::class,
+                'controller' => $controllerMock1Name
+            ],
+            '2' => [
+                'model' => FakeEntity2::class
+            ]
+        ];
+        $expectedApi2 = [
+            '1' => [
+                'model' => FakeEntity3::class
+            ],
+            '2' => [
+                'model' => FakeEntity4::class,
+                'controller' => $controllerMock2Name
+            ]
+        ];
+        $expected = [
+            'api1' => $expectedApi1,
+            'api2' => $expectedApi2
+        ];
+        $this->assertEquals($expected, $configuration->getApiConfiguration());
+        $this->assertEquals($expectedApi1, $configuration->getApiConfiguration('api1'));
+        $this->assertEquals($expectedApi2, $configuration->getApiConfiguration('api2'));
+    }
+
+    public function testExceptionRegisterApiModel()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+        Configuration::registerApiModel('api1', Configuration::class);
+    }
+
+    public function testExceptionRegisterApiController()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+        Configuration::registerApiController('api1', Configuration::class);
     }
 }
