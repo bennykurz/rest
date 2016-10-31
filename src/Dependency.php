@@ -18,13 +18,6 @@
 
 namespace N86io\Rest;
 
-use DI\Scope;
-use Doctrine\Common\Cache\ArrayCache;
-use N86io\Rest\DomainObject\EntityInfo\EntityInfoFactory;
-use N86io\Rest\DomainObject\EntityInfo\EntityInfoFactoryInterface;
-use N86io\Rest\Http\Routing\RoutingParameter;
-use N86io\Rest\Http\Routing\RoutingParameterInterface;
-
 /**
  * Class Dependency
  * @package N86io\Rest
@@ -56,10 +49,10 @@ class Dependency
 
     protected static function setDefaults()
     {
-        static::setDefault(RoutingParameterInterface::class, \DI\object(RoutingParameter::class));
-        static::setDefault(EntityInfoFactoryInterface::class, \DI\object(EntityInfoFactory::class));
-        static::setDefault('EntityInfoStorageCache', \DI\object(ArrayCache::class)->scope(Scope::PROTOTYPE));
-        static::setDefault('EntityInfoStorageArrayCache', \DI\object(ArrayCache::class)->scope(Scope::PROTOTYPE));
+        $defaultDependencies = DependencyFileLoader::load();
+        foreach ($defaultDependencies as $type => $object) {
+            static::setDefault($type, $object);
+        }
     }
 
     /**
