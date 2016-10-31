@@ -1,3 +1,4 @@
+[![Build Status](https://img.shields.io/travis/n86io/rest.svg?style=flat-square)](https://travis-ci.org/n86io/rest)
 [![Code Climate](https://img.shields.io/codeclimate/github/n86io/rest.svg?style=flat-square)](https://codeclimate.com/github/n86io/rest)
 [![Issue Count](https://img.shields.io/codeclimate/issues/github/n86io/rest.svg?style=flat-square)](https://codeclimate.com/github/n86io/rest)
 [![Style Ci](https://styleci.io/repos/72113781/shield?style=flat-square)](https://styleci.io/repos/72113781)
