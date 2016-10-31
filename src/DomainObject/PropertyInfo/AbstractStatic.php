@@ -18,8 +18,6 @@
 
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
-use N86io\Rest\Utility\PropertyInfoUtility;
-
 /**
  * Class AbstractStatic
  * @package N86io\Rest\DomainObject\PropertyInfo

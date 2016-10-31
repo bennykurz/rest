@@ -24,12 +24,13 @@ use N86io\Rest\Persistence\Constraint\Comparison;
 use N86io\Rest\Persistence\Constraint\ComparisonInterface;
 use N86io\Rest\Persistence\Constraint\ConstraintFactory;
 use N86io\Rest\Persistence\Constraint\LogicalInterface;
+use N86io\Rest\UnitTestCase;
 
 /**
  * Class ConstraintFactoryTest
  * @package N86io\Rest\Tests\Persistence\Constraint
  */
-class ConstraintFactoryTest extends \PHPUnit_Framework_TestCase
+class ConstraintFactoryTest extends UnitTestCase
 {
     /**
      * @var ConstraintFactory
@@ -48,78 +49,73 @@ class ConstraintFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        parent::setUp();
         $this->factory = new ConstraintFactory;
         $this->propInfo = new Common('name', ['type' => 'int']);
         $this->comp = new Comparison($this->propInfo, ComparisonInterface::CONTAINS, '100');
     }
 
-    public function testLogicalAnd()
+    public function testStringDetector()
     {
-        /** @var LogicalInterface $logAnd */
-        $logAnd = $this->factory->logicalAnd([$this->comp]);
-        $this->assertTrue($logAnd instanceof LogicalInterface);
-        $this->assertEquals(LogicalInterface::OPERATOR_AND, $logAnd->getType());
+        /** @var ComparisonInterface $comp */
+        $comp = $this->factory->createComparisonFromStringDetection($this->propInfo, 'lt', '100');
+        $this->assertEquals(ComparisonInterface::LESS_THAN, $comp->getType());
+
+        $comp = $this->factory->createComparisonFromStringDetection($this->propInfo, 'lte', '100');
+        $this->assertEquals(ComparisonInterface::LESS_THAN_OR_EQUAL_TO, $comp->getType());
+
+        $comp = $this->factory->createComparisonFromStringDetection($this->propInfo, 'gt', '100');
+        $this->assertEquals(ComparisonInterface::GREATER_THAN, $comp->getType());
+
+        $comp = $this->factory->createComparisonFromStringDetection($this->propInfo, 'gte', '100');
+        $this->assertEquals(ComparisonInterface::GREATER_THAN_OR_EQUAL_TO, $comp->getType());
+
+        $comp = $this->factory->createComparisonFromStringDetection($this->propInfo, 'e', '100');
+        $this->assertEquals(ComparisonInterface::EQUAL_TO, $comp->getType());
+
+        $comp = $this->factory->createComparisonFromStringDetection($this->propInfo, 'ne', '100');
+        $this->assertEquals(ComparisonInterface::NOT_EQUAL_TO, $comp->getType());
+
+        $comp = $this->factory->createComparisonFromStringDetection($this->propInfo, 'c', '100');
+        $this->assertEquals(ComparisonInterface::CONTAINS, $comp->getType());
     }
 
-    public function testLogicalOr()
+    public function testParticularBuilder()
     {
-        /** @var LogicalInterface $logAnd */
-        $logAnd = $this->factory->logicalOr([$this->comp]);
-        $this->assertTrue($logAnd instanceof LogicalInterface);
-        $this->assertEquals(LogicalInterface::OPERATOR_OR, $logAnd->getType());
-    }
+        /** @var LogicalInterface $logical */
+        $logical = $this->factory->logicalAnd([$this->comp]);
+        $this->assertTrue($logical instanceof LogicalInterface);
+        $this->assertEquals(LogicalInterface::OPERATOR_AND, $logical->getType());
 
-    public function testLessThan()
-    {
+        $logical = $this->factory->logicalOr([$this->comp]);
+        $this->assertTrue($logical instanceof LogicalInterface);
+        $this->assertEquals(LogicalInterface::OPERATOR_OR, $logical->getType());
+
         /** @var ComparisonInterface $comp */
         $comp = $this->factory->lessThan($this->propInfo, '100');
         $this->assertTrue($comp instanceof ComparisonInterface);
         $this->assertEquals(ComparisonInterface::LESS_THAN, $comp->getType());
-    }
 
-    public function testLessThanOrEqualTo()
-    {
-        /** @var ComparisonInterface $comp */
         $comp = $this->factory->lessThanOrEqualTo($this->propInfo, '100');
         $this->assertTrue($comp instanceof ComparisonInterface);
         $this->assertEquals(ComparisonInterface::LESS_THAN_OR_EQUAL_TO, $comp->getType());
-    }
 
-    public function testGreaterThan()
-    {
-        /** @var ComparisonInterface $comp */
         $comp = $this->factory->greaterThan($this->propInfo, '100');
         $this->assertTrue($comp instanceof ComparisonInterface);
         $this->assertEquals(ComparisonInterface::GREATER_THAN, $comp->getType());
-    }
 
-    public function testGreaterThanOrEqualTo()
-    {
-        /** @var ComparisonInterface $comp */
         $comp = $this->factory->greaterThanOrEqualTo($this->propInfo, '100');
         $this->assertTrue($comp instanceof ComparisonInterface);
         $this->assertEquals(ComparisonInterface::GREATER_THAN_OR_EQUAL_TO, $comp->getType());
-    }
 
-    public function testEqualTo()
-    {
-        /** @var ComparisonInterface $comp */
         $comp = $this->factory->equalTo($this->propInfo, '100');
         $this->assertTrue($comp instanceof ComparisonInterface);
         $this->assertEquals(ComparisonInterface::EQUAL_TO, $comp->getType());
-    }
 
-    public function testNotEqualTo()
-    {
-        /** @var ComparisonInterface $comp */
         $comp = $this->factory->notEqualTo($this->propInfo, '100');
         $this->assertTrue($comp instanceof ComparisonInterface);
         $this->assertEquals(ComparisonInterface::NOT_EQUAL_TO, $comp->getType());
-    }
 
-    public function testContains()
-    {
-        /** @var ComparisonInterface $comp */
         $comp = $this->factory->contains($this->propInfo, '100');
         $this->assertTrue($comp instanceof ComparisonInterface);
         $this->assertEquals(ComparisonInterface::CONTAINS, $comp->getType());

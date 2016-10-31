@@ -27,6 +27,37 @@ use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 class ConstraintFactory
 {
     /**
+     * @param PropertyInfoInterface $leftOperand
+     * @param string $operator
+     * @param string $rightOperand
+     * @param boolean $save
+     * @return ConstraintInterface
+     */
+    public function createComparisonFromStringDetection(
+        PropertyInfoInterface $leftOperand,
+        $operator,
+        $rightOperand,
+        $save = null
+    ) {
+        switch ($operator) {
+            case 'lt':
+                return $this->lessThan($leftOperand, $rightOperand, $save);
+            case 'lte':
+                return $this->lessThanOrEqualTo($leftOperand, $rightOperand, $save);
+            case 'gt':
+                return $this->greaterThan($leftOperand, $rightOperand, $save);
+            case 'gte':
+                return $this->greaterThanOrEqualTo($leftOperand, $rightOperand, $save);
+            case 'ne':
+                return $this->notEqualTo($leftOperand, $rightOperand, $save);
+            case 'c':
+                return $this->contains($leftOperand, $rightOperand, $save);
+        }
+        // Default or e
+        return $this->equalTo($leftOperand, $rightOperand, $save);
+    }
+
+    /**
      * @param array $constraints
      * @return ConstraintInterface
      */
