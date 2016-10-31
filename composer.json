@@ -40,5 +40,10 @@
   },
   "suggest": {
     "guzzlehttp/psr7": "If no implementation for psr/http-message available, this package or other require with implementation for psr/http-message."
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "0.1-dev"
+    }
   }
 }
