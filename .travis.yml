@@ -5,9 +5,4 @@ php:
 
 sudo: false
 
-before_script:
-  - composer install
-
-script:
-  - ./vendor/bin/phpunit -c tests/Build/UnitTests.xml --coverage-clover build/logs/clover.xml
-  - ./vendor/bin/test-reporter
+script: composer test-report

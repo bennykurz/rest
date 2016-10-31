@@ -47,5 +47,15 @@
     "branch-alias": {
       "dev-master": "0.1-dev"
     }
+  },
+  "scripts": {
+    "test": [
+      "@composer install",
+      "./vendor/bin/phpunit -c tests/Build/UnitTests.xml --coverage-clover build/logs/clover.xml"
+    ],
+    "test-report": [
+      "@test",
+      "./vendor/bin/test-reporter"
+    ]
   }
 }
