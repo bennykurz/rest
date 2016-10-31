@@ -33,7 +33,7 @@ interface RequestInterface
     const REQUEST_MODE_DELETE = 16;
 
     /**
-     * @return int
+     * @return string
      */
     public function getVersion();
 
