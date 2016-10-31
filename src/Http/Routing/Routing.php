@@ -56,13 +56,14 @@ class Routing implements RoutingInterface
         $patternPart = [];
         foreach ($this->parameters as $parameter) {
             if ($parameter->isOptional()) {
-                $patternPart[] = '(' . $parameter->getExpression() . ')?';
+                $patternPart[] = '(\/' . $parameter->getExpression() . ')?';
                 continue;
             }
-            $patternPart[] = '(' . $parameter->getExpression() . '){1}';
+            $patternPart[] = '(\/' . $parameter->getExpression() . '){1}';
         }
-        $searchPattern = '/' . implode('\/?', $patternPart) . '/';
+        $searchPattern = '/^' . implode('', $patternPart) . '$/';
         $apiPath = $this->getApiPath($serverRequest);
+
         preg_match($searchPattern, $apiPath, $matches);
 
         if (empty($matches)) {
@@ -77,7 +78,8 @@ class Routing implements RoutingInterface
             if (empty($matches[$position])) {
                 continue;
             }
-            $route[$parameter->getName()] = $matches[$position];
+            $value = $matches[$position][0] !== '/' ? $matches[$position] : substr($matches[$position], 1);
+            $route[$parameter->getName()] = $value;
         }
 
         return $route;
