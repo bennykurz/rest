@@ -19,12 +19,13 @@
 namespace N86io\Rest\Tests\Http\Routing;
 
 use N86io\Rest\Http\Routing\RoutingParameter;
+use N86io\Rest\UnitTestCase;
 
 /**
  * Class RoutingParameterTest
  * @package N86io\Rest\Tests\Service
  */
-class RoutingParameterTest extends \PHPUnit_Framework_TestCase
+class RoutingParameterTest extends UnitTestCase
 {
     public function test()
     {

@@ -21,12 +21,13 @@ namespace N86io\Rest\Tests\DomainObject\PropertyInfo;
 use N86io\Rest\DomainObject\PropertyInfo\Join;
 use N86io\Rest\DomainObject\PropertyInfo\JoinAliasStorage;
 use N86io\Rest\ObjectContainer;
+use N86io\Rest\UnitTestCase;
 
 /**
  * Class JoinTest
  * @package N86io\Rest\Tests\DomainObject\PropertyInfo
  */
-class JoinTest extends \PHPUnit_Framework_TestCase
+class JoinTest extends UnitTestCase
 {
     /**
      * @var Join
@@ -35,6 +36,7 @@ class JoinTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        parent::setUp();
         $params = [
             'name' => 'somename',
             'attributes' => [

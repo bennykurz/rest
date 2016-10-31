@@ -19,12 +19,13 @@
 namespace N86io\Rest\Tests\DomainObject\PropertyInfo;
 
 use N86io\Rest\DomainObject\PropertyInfo\AbstractStatic;
+use N86io\Rest\UnitTestCase;
 
 /**
  * Class AbstractStaticTest
  * @package N86io\Rest\Tests\DomainObject\PropertyInfo
  */
-class AbstractStaticTest extends \PHPUnit_Framework_TestCase
+class AbstractStaticTest extends UnitTestCase
 {
     /**
      * @var AbstractStatic
@@ -33,6 +34,7 @@ class AbstractStaticTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        parent::setUp();
         $attributes = [
             'type' => 'int'
         ];

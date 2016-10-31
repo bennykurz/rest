@@ -19,12 +19,13 @@
 namespace N86io\Rest\Tests\Reflection;
 
 use N86io\Rest\Reflection\TagUtility;
+use N86io\Rest\UnitTestCase;
 
 /**
  * Class TagUtilityTest
  * @package N86io\Rest\Tests\Reflection
  */
-class TagUtilityTest extends \PHPUnit_Framework_TestCase
+class TagUtilityTest extends UnitTestCase
 {
     /**
      * @var TagUtility
@@ -33,6 +34,7 @@ class TagUtilityTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        parent::setUp();
         $this->tagUtility = new TagUtility;
     }
 

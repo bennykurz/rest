@@ -26,12 +26,13 @@ use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
 use N86io\Rest\ObjectContainer;
 use N86io\Rest\Tests\DomainObject\FakeEntity1;
 use N86io\Rest\Tests\DomainObject\FakeEntity2;
+use N86io\Rest\UnitTestCase;
 
 /**
  * Class EntityInfoStorageTest
  * @package N86io\Rest\Tests\DomainObject\EntityInfo
  */
-class EntityInfoStorageTest extends \PHPUnit_Framework_TestCase
+class EntityInfoStorageTest extends UnitTestCase
 {
     public function test()
     {

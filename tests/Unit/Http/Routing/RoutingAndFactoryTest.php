@@ -22,12 +22,13 @@ use GuzzleHttp\Psr7\ServerRequest;
 use N86io\Rest\Http\Routing\RoutingFactory;
 use N86io\Rest\ObjectContainer;
 use N86io\Rest\Service\Configuration;
+use N86io\Rest\UnitTestCase;
 
 /**
  * Class RoutingAndFactoryTest
  * @package N86io\Rest\Tests\Service
  */
-class RoutingAndFactoryTest extends \PHPUnit_Framework_TestCase
+class RoutingAndFactoryTest extends UnitTestCase
 {
     public function test()
     {
@@ -66,6 +67,9 @@ class RoutingAndFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $routing->getRoute($serverRequest));
 
         $serverRequest = new ServerRequest('GET', 'http://example.com/api/api3');
+        $this->assertEquals([], $routing->getRoute($serverRequest));
+
+        $serverRequest = new ServerRequest('GET', 'http://example.com/api/api123');
         $this->assertEquals([], $routing->getRoute($serverRequest));
     }
 }

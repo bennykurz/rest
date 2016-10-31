@@ -20,12 +20,13 @@ namespace N86io\Rest\Tests\DomainObject\PropertyInfo;
 
 use N86io\Rest\DomainObject\PropertyInfo\JoinAliasStorage;
 use N86io\Rest\ObjectContainer;
+use N86io\Rest\UnitTestCase;
 
 /**
  * Class JoinAliasStorageTest
  * @package N86io\Rest\Tests\DomainObject\PropertyInfo
  */
-class JoinAliasStorageTest extends \PHPUnit_Framework_TestCase
+class JoinAliasStorageTest extends UnitTestCase
 {
     public function testGet()
     {

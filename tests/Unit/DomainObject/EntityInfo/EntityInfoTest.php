@@ -26,12 +26,13 @@ use N86io\Rest\Http\RequestInterface;
 use N86io\Rest\ObjectContainer;
 use N86io\Rest\Tests\DomainObject\FakeEntity1;
 use N86io\Rest\Tests\DomainObject\FakeEntity2;
+use N86io\Rest\UnitTestCase;
 
 /**
  * Class EntityInfoTest
  * @package N86io\Rest\Tests\DomainObject\EntityInfo
  */
-class EntityInfoTest extends \PHPUnit_Framework_TestCase
+class EntityInfoTest extends UnitTestCase
 {
     /**
      * @var EntityInfo
@@ -55,6 +56,7 @@ class EntityInfoTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        parent::setUp();
         $this->entityInfo1 = new EntityInfo([
             'className' => FakeEntity1::class,
             'storage' => 'storageName',

@@ -22,43 +22,30 @@ use N86io\Rest\DomainObject\PropertyInfo\Factory\FactoryInterface;
 use N86io\Rest\DomainObject\PropertyInfo\Factory\RelationOnForeignField;
 use N86io\Rest\ObjectContainer;
 use N86io\Rest\Tests\DomainObject\FakeEntity1;
+use N86io\Rest\UnitTestCase;
 
 /**
  * Class RelationOnForeignFieldTest
  * @package N86io\Rest\Tests\DomainObject\PropertyInfo\Factory
  */
-class RelationOnForeignFieldTest extends \PHPUnit_Framework_TestCase
+class RelationOnForeignFieldTest extends UnitTestCase
 {
-    /**
-     * @var FactoryInterface
-     */
-    protected $factory;
-
-    protected $attributes1 = [
-        'type' => FakeEntity1::class,
-        'foreignField' => 'field'
-    ];
-
-    protected $attributes2 = [
-        'type' => FakeEntity1::class
-    ];
-
-    public function setUp()
+    public function test()
     {
-        $this->factory = ObjectContainer::get(RelationOnForeignField::class);
-    }
-
-    public function testBuild()
-    {
+        $attributes1 = [
+            'type' => FakeEntity1::class,
+            'foreignField' => 'field'
+        ];
+        $attributes2 = [
+            'type' => FakeEntity1::class
+        ];
+        /** @var RelationOnForeignField $factory */
+        $factory = ObjectContainer::get(RelationOnForeignField::class);
         $this->assertTrue(
-            $this->factory->build('testName', $this->attributes1) instanceof
+            $factory->build('testName', $attributes1) instanceof
             \N86io\Rest\DomainObject\PropertyInfo\RelationOnForeignField
         );
-    }
-
-    public function testCheck()
-    {
-        $this->assertTrue($this->factory->check($this->attributes1));
-        $this->assertFalse($this->factory->check($this->attributes2));
+        $this->assertTrue($factory->check($attributes1));
+        $this->assertFalse($factory->check($attributes2));
     }
 }

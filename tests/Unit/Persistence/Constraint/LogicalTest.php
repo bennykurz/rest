@@ -23,12 +23,13 @@ use N86io\Rest\Persistence\Constraint\Comparison;
 use N86io\Rest\Persistence\Constraint\ComparisonInterface;
 use N86io\Rest\Persistence\Constraint\Logical;
 use N86io\Rest\Persistence\Constraint\LogicalInterface;
+use N86io\Rest\UnitTestCase;
 
 /**
  * Class LogicalTest
  * @package N86io\Rest\Tests\Persistence\Constraint
  */
-class LogicalTest extends \PHPUnit_Framework_TestCase
+class LogicalTest extends UnitTestCase
 {
     /**
      * @var Logical
@@ -37,6 +38,7 @@ class LogicalTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        parent::setUp();
         $compConstraints = [
             new Comparison(
                 new Common('name1', ['type' => 'int']),
@@ -101,9 +103,10 @@ class LogicalTest extends \PHPUnit_Framework_TestCase
         $this->logical = new Logical($compConstraints, LogicalInterface::OPERATOR_AND);
     }
 
-    public function testGetType()
+    public function testGetter()
     {
         $this->assertEquals(LogicalInterface::OPERATOR_AND, $this->logical->getType());
+        $this->assertEquals('name1', $this->logical->getConstraints()[0]->getLeftOperand()->getName());
     }
 
     public function testIteration()

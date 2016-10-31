@@ -22,12 +22,13 @@ use N86io\Rest\DomainObject\PropertyInfo\Common;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 use N86io\Rest\Persistence\Constraint\Comparison;
 use N86io\Rest\Persistence\Constraint\ComparisonInterface;
+use N86io\Rest\UnitTestCase;
 
 /**
  * Class ComparisonTest
  * @package N86io\Rest\Tests\Persistence\Constraint
  */
-class ComparisonTest extends \PHPUnit_Framework_TestCase
+class ComparisonTest extends UnitTestCase
 {
     /**
      * @var Comparison
@@ -36,6 +37,7 @@ class ComparisonTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        parent::setUp();
         $this->comparison = new Comparison(
             new Common('name', ['type' => 'int']),
             ComparisonInterface::GREATER_THAN,

@@ -21,12 +21,13 @@ namespace N86io\Rest\Tests\ContentConverter;
 use N86io\Rest\ContentConverter\ConverterFactory;
 use N86io\Rest\ContentConverter\JsonConverter;
 use N86io\Rest\ObjectContainer;
+use N86io\Rest\UnitTestCase;
 
 /**
  * Class ConverterFactoryTest
  * @package N86io\Rest\Tests\ContentConverter
  */
-class ConverterFactoryTest extends \PHPUnit_Framework_TestCase
+class ConverterFactoryTest extends UnitTestCase
 {
     public function test()
     {

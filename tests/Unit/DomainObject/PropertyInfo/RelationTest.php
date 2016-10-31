@@ -20,12 +20,13 @@ namespace N86io\Rest\Tests\DomainObject\PropertyInfo;
 
 use N86io\Rest\DomainObject\PropertyInfo\Relation;
 use N86io\Rest\ObjectContainer;
+use N86io\Rest\UnitTestCase;
 
 /**
  * Class RelationTest
  * @package N86io\Rest\Tests\DomainObject\PropertyInfo
  */
-class RelationTest extends \PHPUnit_Framework_TestCase
+class RelationTest extends UnitTestCase
 {
     /**
      * @var Relation
@@ -34,6 +35,7 @@ class RelationTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        parent::setUp();
         $params = [
             'name' => 'testSomething',
             'attributes' => [

@@ -23,12 +23,13 @@ use N86io\Rest\DomainObject\EntityInfo\EntityInfoFactoryInterface;
 use N86io\Rest\ObjectContainer;
 use N86io\Rest\Tests\DomainObject\FakeEntity1;
 use N86io\Rest\Tests\DomainObject\FakeEntity4;
+use N86io\Rest\UnitTestCase;
 
 /**
  * Class EntityInfoFactoryTest
  * @package N86io\Rest\Tests\DomainObject\EntityInfo
  */
-class EntityInfoFactoryTest extends \PHPUnit_Framework_TestCase
+class EntityInfoFactoryTest extends UnitTestCase
 {
     /**
      * @var EntityInfoFactoryInterface
@@ -37,6 +38,7 @@ class EntityInfoFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        parent::setUp();
         $this->factory = ObjectContainer::get(EntityInfoFactoryInterface::class);
     }
 

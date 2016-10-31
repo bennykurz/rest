@@ -19,12 +19,13 @@
 namespace N86io\Rest\Tests\Reflection;
 
 use N86io\Rest\Reflection\VarTypeUtility;
+use N86io\Rest\UnitTestCase;
 
 /**
  * Class VarTypeUtilityTest
  * @package N86io\Rest\Tests\Reflection
  */
-class VarTypeUtilityTest extends \PHPUnit_Framework_TestCase
+class VarTypeUtilityTest extends UnitTestCase
 {
     /**
      * @var VarTypeUtility
@@ -33,6 +34,7 @@ class VarTypeUtilityTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        parent::setUp();
         $this->varTypeUtility = new VarTypeUtility;
     }
 

@@ -22,12 +22,13 @@ use N86io\Rest\DomainObject\PropertyInfo\Factory\FactoryInterface;
 use N86io\Rest\DomainObject\PropertyInfo\Factory\Relation;
 use N86io\Rest\ObjectContainer;
 use N86io\Rest\Tests\DomainObject\FakeEntity1;
+use N86io\Rest\UnitTestCase;
 
 /**
  * Class RelationTest
  * @package N86io\Rest\Tests\DomainObject\PropertyInfo\Factory
  */
-class RelationTest extends \PHPUnit_Framework_TestCase
+class RelationTest extends UnitTestCase
 {
     /**
      * @var FactoryInterface
@@ -45,6 +46,7 @@ class RelationTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        parent::setUp();
         $this->factory = ObjectContainer::get(Relation::class);
     }
 

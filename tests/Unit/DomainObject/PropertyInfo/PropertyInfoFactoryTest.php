@@ -23,12 +23,13 @@ use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoFactory;
 use N86io\Rest\DomainObject\PropertyInfo\Relation;
 use N86io\Rest\ObjectContainer;
 use N86io\Rest\Tests\DomainObject\FakeEntity1;
+use N86io\Rest\UnitTestCase;
 
 /**
  * Class PropertyInfoFactoryTest
  * @package N86io\Rest\Tests\DomainObject\PropertyInfo
  */
-class PropertyInfoFactoryTest extends \PHPUnit_Framework_TestCase
+class PropertyInfoFactoryTest extends UnitTestCase
 {
     /**
      * @var PropertyInfoFactory
@@ -37,6 +38,7 @@ class PropertyInfoFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        parent::setUp();
         $this->propertyInfoFactory = ObjectContainer::get(PropertyInfoFactory::class);
     }
 

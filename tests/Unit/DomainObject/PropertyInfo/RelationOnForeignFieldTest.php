@@ -20,12 +20,13 @@ namespace N86io\Rest\Tests\DomainObject\PropertyInfo;
 
 use N86io\Rest\DomainObject\PropertyInfo\RelationOnForeignField;
 use N86io\Rest\ObjectContainer;
+use N86io\Rest\UnitTestCase;
 
 /**
  * Class RelationOnForeignFieldTest
  * @package N86io\Rest\Tests\DomainObject\PropertyInfo
  */
-class RelationOnForeignFieldTest extends \PHPUnit_Framework_TestCase
+class RelationOnForeignFieldTest extends UnitTestCase
 {
     /**
      * @var RelationOnForeignField
@@ -34,6 +35,7 @@ class RelationOnForeignFieldTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        parent::setUp();
         $params = [
             'name' => 'testSomething',
             'attributes' => [

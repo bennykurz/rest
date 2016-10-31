@@ -23,12 +23,13 @@ use N86io\Rest\ObjectContainer;
 use N86io\Rest\Tests\DomainObject\FakeEntity1;
 use N86io\Rest\Tests\DomainObject\FakeEntity2;
 use N86io\Rest\Tests\DomainObject\FakeEntity3;
+use N86io\Rest\UnitTestCase;
 
 /**
  * Class EntityClassReflectionTest
  * @package N86io\Rest\Tests\Reflection
  */
-class EntityClassReflectionTest extends \PHPUnit_Framework_TestCase
+class EntityClassReflectionTest extends UnitTestCase
 {
     /**
      * @var EntityClassReflection
@@ -47,6 +48,7 @@ class EntityClassReflectionTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        parent::setUp();
         $this->fakeEntity1 = ObjectContainer::make(
             EntityClassReflection::class,
             ['className' => FakeEntity1::class]

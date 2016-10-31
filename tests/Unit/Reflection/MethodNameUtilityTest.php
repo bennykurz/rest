@@ -19,12 +19,13 @@
 namespace N86io\Rest\Tests\Reflection;
 
 use N86io\Rest\Reflection\MethodNameUtility;
+use N86io\Rest\UnitTestCase;
 
 /**
  * Class MethodNameUtilityTest
  * @package N86io\Rest\Tests\Reflection
  */
-class MethodNameUtilityTest extends \PHPUnit_Framework_TestCase
+class MethodNameUtilityTest extends UnitTestCase
 {
     /**
      * @var MethodNameUtility
@@ -33,6 +34,7 @@ class MethodNameUtilityTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        parent::setUp();
         $this->methodNameUtility = new MethodNameUtility;
     }
 

@@ -19,12 +19,13 @@
 namespace N86io\Rest\Tests\DomainObject\PropertyInfo;
 
 use N86io\Rest\DomainObject\PropertyInfo\Common;
+use N86io\Rest\UnitTestCase;
 
 /**
  * Class CommonTest
  * @package N86io\Rest\Tests\DomainObject\PropertyInfo
  */
-class CommonTest extends \PHPUnit_Framework_TestCase
+class CommonTest extends UnitTestCase
 {
     /**
      * @var Common
@@ -33,6 +34,7 @@ class CommonTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        parent::setUp();
         $attributes = [
             'type' => 'int',
             'ordering' => true

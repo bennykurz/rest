@@ -19,12 +19,13 @@
 namespace N86io\Rest\Tests\DomainObject\PropertyInfo;
 
 use N86io\Rest\DomainObject\PropertyInfo\AbstractPropertyInfo;
+use N86io\Rest\UnitTestCase;
 
 /**
  * Class AbstractPropertyInfoTest
  * @package N86io\Rest\Tests\DomainObject\PropertyInfo
  */
-class AbstractPropertyInfoTest extends \PHPUnit_Framework_TestCase
+class AbstractPropertyInfoTest extends UnitTestCase
 {
     /**
      * @var AbstractPropertyInfo
@@ -38,6 +39,7 @@ class AbstractPropertyInfoTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        parent::setUp();
         $attributes1 = [
             'type' => 'int',
             'hide' => false,

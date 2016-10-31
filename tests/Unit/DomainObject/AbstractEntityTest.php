@@ -19,12 +19,13 @@
 namespace N86io\Rest\Tests\DomainObject;
 
 use N86io\Rest\DomainObject\AbstractEntity;
+use N86io\Rest\UnitTestCase;
 
 /**
  * Class AbstractEntityTest
  * @package N86io\Rest\Tests\DomainObject
  */
-class AbstractEntityTest extends \PHPUnit_Framework_TestCase
+class AbstractEntityTest extends UnitTestCase
 {
     /**
      * @var AbstractEntity
@@ -33,6 +34,7 @@ class AbstractEntityTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        parent::setUp();
         $this->abstractEntity = $this->getMockForAbstractClass(AbstractEntity::class);
         $this->abstractEntity->_setProperty('name1', 'value1');
         $this->abstractEntity->_setProperty('name2', 'value2');

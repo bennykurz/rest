@@ -19,12 +19,13 @@
 namespace N86io\Rest\Tests\ContentConverter;
 
 use N86io\Rest\ContentConverter\JsonConverter;
+use N86io\Rest\UnitTestCase;
 
 /**
  * Class JsonConverterTest
  * @package N86io\Rest\Tests\ContentConverter
  */
-class JsonConverterTest extends \PHPUnit_Framework_TestCase
+class JsonConverterTest extends UnitTestCase
 {
     public function test()
     {

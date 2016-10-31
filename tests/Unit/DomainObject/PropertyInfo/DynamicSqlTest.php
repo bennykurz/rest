@@ -19,12 +19,13 @@
 namespace N86io\Rest\Tests\DomainObject\PropertyInfo;
 
 use N86io\Rest\DomainObject\PropertyInfo\DynamicSql;
+use N86io\Rest\UnitTestCase;
 
 /**
  * Class DynamicSqlTest
  * @package N86io\Rest\Tests\DomainObject\PropertyInfo
  */
-class DynamicSqlTest extends \PHPUnit_Framework_TestCase
+class DynamicSqlTest extends UnitTestCase
 {
     /**
      * @var DynamicSql
@@ -33,6 +34,7 @@ class DynamicSqlTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        parent::setUp();
         $attributes = [
             'type' => 'int',
             'ordering' => true,
