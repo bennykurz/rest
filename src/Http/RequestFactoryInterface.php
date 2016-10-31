@@ -24,5 +24,4 @@ namespace N86io\Rest\Http;
  */
 interface RequestFactoryInterface
 {
-
 }

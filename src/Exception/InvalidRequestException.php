@@ -24,5 +24,4 @@ namespace N86io\Rest\Exception;
  */
 class InvalidRequestException extends \InvalidArgumentException
 {
-
 }
