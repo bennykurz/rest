@@ -18,34 +18,17 @@
 
 namespace N86io\Rest\DomainObject\PropertyInfo\Factory;
 
+use DI\Container;
+
 /**
- * Class DynamicPhp
+ * Class AbstractFactory
  * @package N86io\Rest\DomainObject\PropertyInfo\Factory
  */
-class DynamicPhp extends AbstractFactory
+abstract class AbstractFactory implements FactoryInterface
 {
     /**
-     * @param string $name
-     * @param array $attributes
-     * @return \N86io\Rest\DomainObject\PropertyInfo\DynamicPhp
+     * @Inject
+     * @var Container
      */
-    public function build($name, array $attributes)
-    {
-        return $this->container->make(
-            \N86io\Rest\DomainObject\PropertyInfo\DynamicPhp::class,
-            [
-                'name' => $name,
-                'attributes' => $attributes
-            ]
-        );
-    }
-
-    /**
-     * @param array $attributes
-     * @return boolean
-     */
-    public function check(array $attributes)
-    {
-        return $attributes['type'] === '__dynamic';
-    }
+    protected $container;
 }

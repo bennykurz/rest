@@ -29,23 +29,22 @@ use N86io\Rest\UnitTestCase;
  */
 class OrderingFactoryTest extends UnitTestCase
 {
-    /**
-     * @var OrderingFactory
-     */
-    protected $orderingFactory;
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->orderingFactory = new OrderingFactory;
-    }
-
     public function test()
     {
-        $ordering = $this->orderingFactory->ascending(new Common('name', ['type' => 'int']));
+        $orderingFactory = static::$container->get(OrderingFactory::class);
+        $common = static::$container->make(
+            Common::class,
+            [
+                'name' => 'name',
+                'attributes' => [
+                    'type' => 'int'
+                ]
+            ]
+        );
+        $ordering = $orderingFactory->ascending($common);
         $this->assertEquals(OrderingInterface::ASCENDING, $ordering->getDirection());
 
-        $ordering = $this->orderingFactory->descending(new Common('name', ['type' => 'int']));
+        $ordering = $orderingFactory->descending($common);
         $this->assertEquals(OrderingInterface::DESCENDING, $ordering->getDirection());
     }
 }

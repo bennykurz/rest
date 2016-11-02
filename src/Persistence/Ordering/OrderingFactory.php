@@ -18,6 +18,7 @@
 
 namespace N86io\Rest\Persistence\Ordering;
 
+use DI\Container;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 
 /**
@@ -27,12 +28,24 @@ use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 class OrderingFactory
 {
     /**
+     * @Inject
+     * @var Container
+     */
+    protected $container;
+
+    /**
      * @param PropertyInfoInterface $propertyInfo
      * @return OrderingInterface
      */
     public function ascending(PropertyInfoInterface $propertyInfo)
     {
-        return new Ordering($propertyInfo, OrderingInterface::ASCENDING);
+        return $this->container->make(
+            Ordering::class,
+            [
+                'propertyInfo' => $propertyInfo,
+                'direction' => OrderingInterface::ASCENDING
+            ]
+        );
     }
 
     /**
@@ -41,6 +54,12 @@ class OrderingFactory
      */
     public function descending(PropertyInfoInterface $propertyInfo)
     {
-        return new Ordering($propertyInfo, OrderingInterface::DESCENDING);
+        return $this->container->make(
+            Ordering::class,
+            [
+                'propertyInfo' => $propertyInfo,
+                'direction' => OrderingInterface::DESCENDING
+            ]
+        );
     }
 }

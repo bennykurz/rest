@@ -18,6 +18,7 @@
 
 namespace N86io\Rest\Http\Utility;
 
+use DI\Container;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
 use N86io\Rest\DomainObject\PropertyInfo\RestrictableInterface;
 use N86io\Rest\DomainObject\PropertyInfo\SortableInterface;
@@ -31,6 +32,12 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class QueryUtility
 {
+    /**
+     * @Inject
+     * @var Container
+     */
+    protected $container;
+
     /**
      * @Inject
      * @var ConstraintFactory
@@ -98,7 +105,7 @@ class QueryUtility
         if (!$entityInfo->hasPropertyInfo($propertyName)) {
             return;
         }
-        $orderingFactory = new OrderingFactory;
+        $orderingFactory = $this->container->get(OrderingFactory::class);
         $propertyInfo = $entityInfo->getPropertyInfo($propertyName);
         if ($propertyInfo instanceof SortableInterface && $propertyInfo->isOrdering()) {
             switch ($direction) {

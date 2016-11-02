@@ -22,7 +22,7 @@ namespace N86io\Rest\DomainObject\PropertyInfo\Factory;
  * Class Join
  * @package N86io\Rest\DomainObject\PropertyInfo\Factory
  */
-class Join implements FactoryInterface
+class Join extends AbstractFactory
 {
     /**
      * @param string $name
@@ -31,7 +31,13 @@ class Join implements FactoryInterface
      */
     public function build($name, array $attributes)
     {
-        return new \N86io\Rest\DomainObject\PropertyInfo\Join($name, $attributes);
+        return $this->container->make(
+            \N86io\Rest\DomainObject\PropertyInfo\Join::class,
+            [
+                'name' => $name,
+                'attributes' => $attributes
+            ]
+        );
     }
 
     /**

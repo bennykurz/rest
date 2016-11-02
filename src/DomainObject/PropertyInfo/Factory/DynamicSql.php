@@ -22,7 +22,7 @@ namespace N86io\Rest\DomainObject\PropertyInfo\Factory;
  * Class DynamicSql
  * @package N86io\Rest\DomainObject\PropertyInfo\Factory
  */
-class DynamicSql implements FactoryInterface
+class DynamicSql extends AbstractFactory
 {
     /**
      * @param string $name
@@ -31,7 +31,13 @@ class DynamicSql implements FactoryInterface
      */
     public function build($name, array $attributes)
     {
-        return new \N86io\Rest\DomainObject\PropertyInfo\DynamicSql($name, $attributes);
+        return $this->container->make(
+            \N86io\Rest\DomainObject\PropertyInfo\DynamicSql::class,
+            [
+                'name' => $name,
+                'attributes' => $attributes
+            ]
+        );
     }
 
     /**

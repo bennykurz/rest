@@ -36,18 +36,18 @@ class AbstractEntityTest extends UnitTestCase
     {
         parent::setUp();
         $this->abstractEntity = $this->getMockForAbstractClass(AbstractEntity::class);
-        $this->abstractEntity->_setProperty('name1', 'value1');
-        $this->abstractEntity->_setProperty('name2', 'value2');
+        $this->abstractEntity->setProperty('name1', 'value1');
+        $this->abstractEntity->setProperty('name2', 'value2');
     }
 
     public function testGetProperty()
     {
-        $this->assertEquals('value1', $this->abstractEntity->_getProperty('name1'));
-        $this->assertEquals('value2', $this->abstractEntity->_getProperty('name2'));
+        $this->assertEquals('value1', $this->abstractEntity->getProperty('name1'));
+        $this->assertEquals('value2', $this->abstractEntity->getProperty('name2'));
     }
 
     public function testGetProperties()
     {
-        $this->assertEquals(['name1' => 'value1', 'name2' => 'value2'], $this->abstractEntity->_getProperties());
+        $this->assertEquals(['name1' => 'value1', 'name2' => 'value2'], $this->abstractEntity->getProperties());
     }
 }

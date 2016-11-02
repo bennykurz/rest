@@ -24,7 +24,7 @@ use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoUtility;
  * Class Relation
  * @package N86io\Rest\DomainObject\PropertyInfo\Factory
  */
-class Relation implements FactoryInterface
+class Relation extends AbstractFactory
 {
     /**
      * @Inject
@@ -39,7 +39,13 @@ class Relation implements FactoryInterface
      */
     public function build($name, array $attributes)
     {
-        return new \N86io\Rest\DomainObject\PropertyInfo\Relation($name, $attributes);
+        return $this->container->make(
+            \N86io\Rest\DomainObject\PropertyInfo\Relation::class,
+            [
+                'name' => $name,
+                'attributes' => $attributes
+            ]
+        );
     }
 
     /**

@@ -34,7 +34,7 @@ abstract class AbstractStatic extends AbstractPropertyInfo implements StaticInte
      */
     public function getResourcePropertyName()
     {
-        $commonUtility = new PropertyInfoUtility;
+        $commonUtility = $this->container->get(PropertyInfoUtility::class);
         return $this->resourcePropertyName ?: $commonUtility->convertPropertyName($this->getName());
     }
 }

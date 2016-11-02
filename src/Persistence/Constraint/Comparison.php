@@ -49,7 +49,7 @@ class Comparison implements ComparisonInterface
     /**
      * ComparisonOperator constructor.
      * @param PropertyInfoInterface $leftOperand
-     * @param mixed $rightOperand
+     * @param $rightOperand
      * @param int $type
      * @param bool $save
      */

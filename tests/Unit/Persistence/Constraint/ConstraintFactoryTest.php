@@ -50,9 +50,22 @@ class ConstraintFactoryTest extends UnitTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->factory = new ConstraintFactory;
-        $this->propInfo = new Common('name', ['type' => 'int']);
-        $this->comp = new Comparison($this->propInfo, ComparisonInterface::CONTAINS, '100');
+        $this->factory = static::$container->get(ConstraintFactory::class);
+        $this->propInfo = static::$container->make(
+            Common::class,
+            [
+                'name' => 'name',
+                'attributes' => ['type' => 'int']
+            ]
+        );
+        $this->comp = static::$container->make(
+            Comparison::class,
+            [
+                'leftOperand' => $this->propInfo,
+                'type' => ComparisonInterface::CONTAINS,
+                'rightOperand' => '100'
+            ]
+        );
     }
 
     public function testStringDetector()

@@ -56,22 +56,38 @@ class EntityInfoTest extends UnitTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->entityInfo1 = new EntityInfo([
-            'className' => FakeEntity1::class,
-            'storage' => 'storageName',
-            'mode' => ['read', 'write'],
-            'table' => 'table_name'
-        ]);
-        $this->entityInfo2 = new EntityInfo([
-            'className' => FakeEntity2::class,
-            'storage' => 'storageName',
-            'mode' => ['read']
-        ]);
-        $this->entityInfo3 = new EntityInfo([
-            'className' => FakeEntity1::class,
-            'storage' => 'storageName',
-            'mode' => ['write']
-        ]);
+
+        $this->entityInfo1 = static::$container->make(
+            EntityInfo::class,
+            [
+                'attributes' => [
+                    'className' => FakeEntity1::class,
+                    'storage' => 'storageName',
+                    'mode' => ['read', 'write'],
+                    'table' => 'table_name'
+                ]
+            ]
+        );
+        $this->entityInfo2 = static::$container->make(
+            EntityInfo::class,
+            [
+                'attributes' => [
+                    'className' => FakeEntity2::class,
+                    'storage' => 'storageName',
+                    'mode' => ['read']
+                ]
+            ]
+        );
+        $this->entityInfo3 = static::$container->make(
+            EntityInfo::class,
+            [
+                'attributes' => [
+                    'className' => FakeEntity1::class,
+                    'storage' => 'storageName',
+                    'mode' => ['write']
+                ]
+            ]
+        );
         $propertyAttributes = [
             [
                 'name' => 'fakeId',
@@ -130,14 +146,19 @@ class EntityInfoTest extends UnitTestCase
 
     public function testAddPropertyInfoException1()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
-        $this->entityInfo1->addPropertyInfo(new Common(
-            'someFurtherUid',
+        $propertyInfo = static::$container->make(
+            Common::class,
             [
-                'type' => 'int',
-                'resourcePropertyName' => 'uid'
+                'name' => 'someFurtherUid',
+                'attributes' => [
+                    'type' => 'int',
+                    'resourcePropertyName' => 'uid'
+                ]
             ]
-        ));
+        );
+
+        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->entityInfo1->addPropertyInfo($propertyInfo);
     }
 
     public function testAddPropertyInfoException2()

@@ -82,7 +82,7 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
     {
         $attributes = $classTags;
         $attributes['className'] = $className;
-        return new EntityInfo($attributes);
+        return $this->container->make(EntityInfo::class, ['attributes' => $attributes]);
     }
 
     /**

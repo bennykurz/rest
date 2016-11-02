@@ -19,4 +19,17 @@ class UnitTestCase extends \PHPUnit_Framework_TestCase
     {
         static::$container = ContainerFactory::create();
     }
+
+    /**
+     * @param object $object
+     * @param string $propertyName
+     * @param mixed $value
+     */
+    public function inject($object, $propertyName, $value)
+    {
+        $reflectionClass = new \ReflectionClass($object);
+        $reflectionProperty = $reflectionClass->getProperty($propertyName);
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue($object, $value);
+    }
 }

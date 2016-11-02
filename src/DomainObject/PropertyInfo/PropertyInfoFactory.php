@@ -57,7 +57,7 @@ class PropertyInfoFactory
                 return $factory->build($name, $attributes);
             }
         }
-        return new PropertyInfo\Common($name, $attributes);
+        return $this->container->make(PropertyInfo\Common::class, ['name' => $name, 'attributes' => $attributes]);
     }
 
     /**
@@ -72,6 +72,6 @@ class PropertyInfoFactory
             'hide' => true,
             'resourceId' => $isResourceId
         ];
-        return new PropertyInfo\Common('_uid', $attributes);
+        return $this->container->make(PropertyInfo\Common::class, ['name' => '_uid', 'attributes' => $attributes]);
     }
 }

@@ -39,6 +39,7 @@ class AbstractStaticTest extends UnitTestCase
             'type' => 'int'
         ];
         $this->abstractStatic = $this->getMockForAbstractClass(AbstractStatic::class, ['testSomething', $attributes]);
+        $this->inject($this->abstractStatic, 'container', static::$container);
     }
 
     public function testGetResourcePropertyName()
