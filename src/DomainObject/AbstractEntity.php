@@ -29,7 +29,7 @@ abstract class AbstractEntity implements EntityInterface
      * @param mixed $propertyValue
      * @internal
      */
-    public function _setProperty($propertyName, $propertyValue)
+    public function setProperty($propertyName, $propertyValue)
     {
         $this->{$propertyName} = $propertyValue;
     }
@@ -39,7 +39,7 @@ abstract class AbstractEntity implements EntityInterface
      * @return mixed
      * @internal
      */
-    public function _getProperty($propertyName)
+    public function getProperty($propertyName)
     {
         return $this->{$propertyName};
     }
@@ -48,7 +48,7 @@ abstract class AbstractEntity implements EntityInterface
      * @return array
      * @internal
      */
-    public function _getProperties()
+    public function getProperties()
     {
         return get_object_vars($this);
     }

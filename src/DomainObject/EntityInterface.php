@@ -29,18 +29,18 @@ interface EntityInterface
      * @param mixed $propertyValue
      * @internal
      */
-    public function _setProperty($propertyName, $propertyValue);
+    public function setProperty($propertyName, $propertyValue);
 
     /**
      * @param $propertyName
      * @return mixed
      * @internal
      */
-    public function _getProperty($propertyName);
+    public function getProperty($propertyName);
 
     /**
      * @return array
      * @internal
      */
-    public function _getProperties();
+    public function getProperties();
 }
