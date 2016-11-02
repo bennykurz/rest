@@ -20,7 +20,6 @@ namespace N86io\Rest\Tests\DomainObject\EntityInfo;
 
 use N86io\Rest\DomainObject\EntityInfo\EntityInfo;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoFactoryInterface;
-use N86io\Rest\ObjectContainer;
 use N86io\Rest\Tests\DomainObject\FakeEntity1;
 use N86io\Rest\Tests\DomainObject\FakeEntity4;
 use N86io\Rest\UnitTestCase;
@@ -39,7 +38,7 @@ class EntityInfoFactoryTest extends UnitTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->factory = ObjectContainer::get(EntityInfoFactoryInterface::class);
+        $this->factory = static::$container->get(EntityInfoFactoryInterface::class);
     }
 
     public function test()

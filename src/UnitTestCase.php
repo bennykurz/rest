@@ -1,14 +1,22 @@
 <?php
 namespace N86io\Rest;
 
+use DI\Container;
+use N86io\Rest\Object\ContainerFactory;
+
 /**
  * Class UnitTestCase
  * @package N86io\Rest\Test
  */
 class UnitTestCase extends \PHPUnit_Framework_TestCase
 {
-    public function setUp()
+    /**
+     * @var Container
+     */
+    protected static $container;
+
+    public static function setUpBeforeClass()
     {
-        ObjectContainer::initialize();
+        static::$container = ContainerFactory::create();
     }
 }

@@ -18,9 +18,7 @@
 
 namespace N86io\Rest\Tests\DomainObject\PropertyInfo\Factory;
 
-use N86io\Rest\DomainObject\PropertyInfo\Factory\FactoryInterface;
 use N86io\Rest\DomainObject\PropertyInfo\Factory\RelationOnForeignField;
-use N86io\Rest\ObjectContainer;
 use N86io\Rest\Tests\DomainObject\FakeEntity1;
 use N86io\Rest\UnitTestCase;
 
@@ -40,7 +38,7 @@ class RelationOnForeignFieldTest extends UnitTestCase
             'type' => FakeEntity1::class
         ];
         /** @var RelationOnForeignField $factory */
-        $factory = ObjectContainer::get(RelationOnForeignField::class);
+        $factory = static::$container->get(RelationOnForeignField::class);
         $this->assertTrue(
             $factory->build('testName', $attributes1) instanceof
             \N86io\Rest\DomainObject\PropertyInfo\RelationOnForeignField

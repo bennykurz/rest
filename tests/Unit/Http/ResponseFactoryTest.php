@@ -19,7 +19,6 @@
 namespace N86io\Rest\Tests\Http;
 
 use N86io\Rest\Http\ResponseFactory;
-use N86io\Rest\ObjectContainer;
 use N86io\Rest\UnitTestCase;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -36,7 +35,7 @@ class ResponseFactoryTest extends UnitTestCase
         $serverRequest->shouldReceive('getUri')->andReturn('RequestUrl');
 
         /** @var ResponseFactory $responseFactory */
-        $responseFactory = ObjectContainer::get(ResponseFactory::class);
+        $responseFactory = static::$container->get(ResponseFactory::class);
         $responseFactory->setServerRequest($serverRequest);
         $responseFactory->setAccept('application/json');
 

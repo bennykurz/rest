@@ -22,8 +22,6 @@ use GuzzleHttp\Psr7\ServerRequest;
 use N86io\Rest\Exception\InvalidRequestException;
 use N86io\Rest\Http\RequestFactory;
 use N86io\Rest\Http\RequestInterface;
-use N86io\Rest\ObjectContainer;
-use N86io\Rest\Persistence\Constraint\ConstraintInterface;
 use N86io\Rest\Service\Configuration;
 use N86io\Rest\Tests\DomainObject\FakeEntity1;
 use N86io\Rest\UnitTestCase;
@@ -42,9 +40,10 @@ class RequestFactoryTest extends UnitTestCase
     public function setUp()
     {
         parent::setUp();
-        Configuration::setApiBaseUrl('http://example.com/api');
-        Configuration::registerApiModel('api1', FakeEntity1::class, 1);
-        $this->requestFactory = ObjectContainer::get(RequestFactory::class);
+        $configuration = static::$container->get(Configuration::class);
+        $configuration->setApiBaseUrl('http://example.com/api');
+        $configuration->registerApiModel('api1', FakeEntity1::class, 1);
+        $this->requestFactory = static::$container->get(RequestFactory::class);
     }
 
     public function test()

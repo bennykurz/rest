@@ -20,7 +20,6 @@ namespace N86io\Rest\Tests\DomainObject\PropertyInfo\Factory;
 
 use N86io\Rest\DomainObject\PropertyInfo\Factory\DynamicPhp;
 use N86io\Rest\DomainObject\PropertyInfo\Factory\FactoryInterface;
-use N86io\Rest\ObjectContainer;
 use N86io\Rest\UnitTestCase;
 
 /**
@@ -41,7 +40,7 @@ class DynamicPhpTest extends UnitTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->factory = ObjectContainer::get(DynamicPhp::class);
+        $this->factory = static::$container->get(DynamicPhp::class);
     }
 
     public function testBuild()

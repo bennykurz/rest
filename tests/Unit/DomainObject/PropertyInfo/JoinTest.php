@@ -20,7 +20,6 @@ namespace N86io\Rest\Tests\DomainObject\PropertyInfo;
 
 use N86io\Rest\DomainObject\PropertyInfo\Join;
 use N86io\Rest\DomainObject\PropertyInfo\JoinAliasStorage;
-use N86io\Rest\ObjectContainer;
 use N86io\Rest\UnitTestCase;
 
 /**
@@ -46,9 +45,9 @@ class JoinTest extends UnitTestCase
             ]
         ];
         /** @var JoinAliasStorage $joinAliasStorage */
-        $joinAliasStorage = ObjectContainer::get(JoinAliasStorage::class);
+        $joinAliasStorage = static::$container->get(JoinAliasStorage::class);
         $joinAliasStorage->reset();
-        $this->propertyInfo = ObjectContainer::make(Join::class, $params);
+        $this->propertyInfo = static::$container->make(Join::class, $params);
     }
 
     public function testGetTable()

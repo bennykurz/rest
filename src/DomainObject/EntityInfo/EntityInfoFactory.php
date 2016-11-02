@@ -18,9 +18,9 @@
 
 namespace N86io\Rest\DomainObject\EntityInfo;
 
+use DI\Container;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoFactory;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoUtility;
-use N86io\Rest\ObjectContainer;
 use N86io\Rest\Reflection\EntityClassReflection;
 
 /**
@@ -29,6 +29,12 @@ use N86io\Rest\Reflection\EntityClassReflection;
  */
 class EntityInfoFactory implements EntityInfoFactoryInterface
 {
+    /**
+     * @Inject
+     * @var Container
+     */
+    protected $container;
+
     /**
      * @Inject
      * @var PropertyInfoFactory
@@ -48,7 +54,7 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
     public function buildEntityInfoFromClassName($className)
     {
         /** @var EntityClassReflection $entityClassRefl */
-        $entityClassRefl = ObjectContainer::make(EntityClassReflection::class, ['className' => $className]);
+        $entityClassRefl = $this->container->make(EntityClassReflection::class, ['className' => $className]);
         $classTags = $entityClassRefl->getClassTags();
         $properties = $entityClassRefl->getProperties();
         $this->setUndefinedPropertyAttributes($properties);

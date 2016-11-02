@@ -23,7 +23,6 @@ use N86io\Rest\DomainObject\PropertyInfo\Common;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoFactory;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 use N86io\Rest\Http\RequestInterface;
-use N86io\Rest\ObjectContainer;
 use N86io\Rest\Tests\DomainObject\FakeEntity1;
 use N86io\Rest\Tests\DomainObject\FakeEntity2;
 use N86io\Rest\UnitTestCase;
@@ -115,7 +114,7 @@ class EntityInfoTest extends UnitTestCase
             ]
         ];
         /** @var PropertyInfoFactory $propInfoFact */
-        $propInfoFact = ObjectContainer::get(PropertyInfoFactory::class);
+        $propInfoFact = static::$container->get(PropertyInfoFactory::class);
         foreach ($propertyAttributes as $attribute) {
             $propInfo = $propInfoFact->buildPropertyInfo($attribute['name'], $attribute['attributes']);
             $this->entityInfo1->addPropertyInfo($propInfo);

@@ -16,23 +16,14 @@
  * along with N86io/Rest or see <http://www.gnu.org/licenses/>.
  */
 
-namespace N86io\Rest\Tests\ContentConverter;
+namespace N86io\Rest\Cache;
 
-use N86io\Rest\ContentConverter\ConverterFactory;
-use N86io\Rest\ContentConverter\JsonConverter;
-use N86io\Rest\UnitTestCase;
+use Doctrine\Common\Cache\Cache;
 
 /**
- * Class ConverterFactoryTest
- * @package N86io\Rest\Tests\ContentConverter
+ * Interface EntityInfoStorageCacheInterface
+ * @package N86io\Rest\Cache
  */
-class ConverterFactoryTest extends UnitTestCase
+interface EntityInfoStorageCacheInterface extends Cache
 {
-    public function test()
-    {
-        /** @var ConverterFactory $converterFactory */
-        $converterFactory = static::$container->get(ConverterFactory::class);
-        $this->assertTrue($converterFactory->createFromAccept('application/json') instanceof JsonConverter);
-        $this->assertTrue($converterFactory->createFromAccept('') instanceof JsonConverter);
-    }
 }

@@ -18,8 +18,8 @@
 
 namespace N86io\Rest\DomainObject\EntityInfo;
 
-use Doctrine\Common\Cache\ArrayCache;
-use Doctrine\Common\Cache\Cache;
+use N86io\Rest\Cache\EntityInfoStorageArrayCacheInterface;
+use N86io\Rest\Cache\EntityInfoStorageCacheInterface;
 
 /**
  * Class EntityInfoStorage
@@ -34,14 +34,14 @@ class EntityInfoStorage
     protected $entityInfoFactory;
 
     /**
-     * @Inject("EntityInfoStorageCache")
-     * @var Cache
+     * @Inject
+     * @var EntityInfoStorageCacheInterface
      */
     protected $cache;
 
     /**
-     * @Inject("EntityInfoStorageArrayCache")
-     * @var ArrayCache
+     * @Inject
+     * @var EntityInfoStorageArrayCacheInterface
      */
     protected $arrayCache;
 

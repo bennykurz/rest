@@ -21,7 +21,6 @@ namespace N86io\Rest\Tests\DomainObject\PropertyInfo;
 use N86io\Rest\DomainObject\PropertyInfo\Common;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoFactory;
 use N86io\Rest\DomainObject\PropertyInfo\Relation;
-use N86io\Rest\ObjectContainer;
 use N86io\Rest\Tests\DomainObject\FakeEntity1;
 use N86io\Rest\UnitTestCase;
 
@@ -39,7 +38,7 @@ class PropertyInfoFactoryTest extends UnitTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->propertyInfoFactory = ObjectContainer::get(PropertyInfoFactory::class);
+        $this->propertyInfoFactory = static::$container->get(PropertyInfoFactory::class);
     }
 
     /**

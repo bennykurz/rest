@@ -18,12 +18,12 @@
 
 namespace N86io\Rest\Tests\DomainObject\EntityInfo;
 
-use Doctrine\Common\Cache\ArrayCache;
-use N86io\Rest\Dependency;
+use DI\Cache\ArrayCache;
+use N86io\Rest\Cache\EntityInfoStorageCacheInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoFactory;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
-use N86io\Rest\ObjectContainer;
+use N86io\Rest\Object\ContainerFactory;
 use N86io\Rest\Tests\DomainObject\FakeEntity1;
 use N86io\Rest\Tests\DomainObject\FakeEntity2;
 use N86io\Rest\UnitTestCase;
@@ -37,17 +37,21 @@ class EntityInfoStorageTest extends UnitTestCase
     public function test()
     {
         /** @var EntityInfoFactory $entityInfoFactory */
-        $entityInfoFactory = ObjectContainer::get(EntityInfoFactory::class);
+        $entityInfoFactory = static::$container->get(EntityInfoFactory::class);
         $fakeEntity2Info = $entityInfoFactory->buildEntityInfoFromClassName(FakeEntity2::class);
 
         /** @var ArrayCache $arrayCache */
-        $cache = ObjectContainer::make(ArrayCache::class);
+        $cache = static::$container->get(ArrayCache::class);
         $cache->save(md5(FakeEntity2::class), $fakeEntity2Info);
-        Dependency::set('EntityInfoStorageCache', $cache);
-        ObjectContainer::initialize();
+        $container = ContainerFactory::create(
+            null,
+            [
+                EntityInfoStorageCacheInterface::class => $cache
+            ]
+        );
 
         /** @var EntityInfoStorage $entityInfoStorage */
-        $entityInfoStorage = ObjectContainer::get(EntityInfoStorage::class);
+        $entityInfoStorage = $container->get(EntityInfoStorage::class);
         $this->assertTrue($entityInfoStorage->get(FakeEntity1::class) instanceof EntityInfoInterface);
         $this->assertTrue($entityInfoStorage->get(FakeEntity1::class) instanceof EntityInfoInterface);
         $this->assertTrue($entityInfoStorage->get(FakeEntity2::class) instanceof EntityInfoInterface);

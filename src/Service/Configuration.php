@@ -20,7 +20,6 @@ namespace N86io\Rest\Service;
 
 use N86io\Rest\ControllerInterface;
 use N86io\Rest\DomainObject\EntityInterface;
-use N86io\Rest\ObjectContainer;
 
 /**
  * Class Configuration
@@ -49,20 +48,20 @@ class Configuration
     /**
      * @param string $apiBaseUrl
      */
-    public static function setApiBaseUrl($apiBaseUrl)
+    public function setApiBaseUrl($apiBaseUrl)
     {
-        static::getInstance()->apiBaseUrl = static::removeAllSlashesAtEnd($apiBaseUrl);
+        $this->apiBaseUrl = $this->removeAllSlashesAtEnd($apiBaseUrl);
     }
 
     /**
      * @param string $string
      * @return string
      */
-    protected static function removeAllSlashesAtEnd($string)
+    protected function removeAllSlashesAtEnd($string)
     {
         if (substr($string, -1) === '/') {
             $string = substr($string, 0, strlen($string) - 1);
-            return static::removeAllSlashesAtEnd($string);
+            return $this->removeAllSlashesAtEnd($string);
         }
         return $string;
     }
@@ -72,13 +71,13 @@ class Configuration
      * @param string $model
      * @param string $version
      */
-    public static function registerApiModel($apiIdentifier, $model, $version = '1')
+    public function registerApiModel($apiIdentifier, $model, $version = '1')
     {
         if (!is_subclass_of($model, EntityInterface::class)) {
             throw new \InvalidArgumentException('The model you want to register should be implements "' .
                 EntityInterface::class . '".');
         }
-        static::getInstance()->apiConfiguration[$apiIdentifier][$version]['model'] = $model;
+        $this->apiConfiguration[$apiIdentifier][$version]['model'] = $model;
     }
 
     /**
@@ -86,13 +85,13 @@ class Configuration
      * @param string $controller
      * @param string $version
      */
-    public static function registerApiController($apiIdentifier, $controller, $version = '1')
+    public function registerApiController($apiIdentifier, $controller, $version = '1')
     {
         if (!is_subclass_of($controller, ControllerInterface::class)) {
             throw new \InvalidArgumentException('The controller you want to register should be implements "' .
                 ControllerInterface::class . '".');
         }
-        static::getInstance()->apiConfiguration[$apiIdentifier][$version]['controller'] = $controller;
+        $this->apiConfiguration[$apiIdentifier][$version]['controller'] = $controller;
     }
 
     /**
@@ -113,13 +112,5 @@ class Configuration
             return $this->apiConfiguration[$apiIdentifier];
         }
         return $this->apiConfiguration;
-    }
-
-    /**
-     * @return Configuration
-     */
-    protected static function getInstance()
-    {
-        return ObjectContainer::get(self::class);
     }
 }

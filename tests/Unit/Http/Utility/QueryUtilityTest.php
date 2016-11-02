@@ -21,7 +21,6 @@ namespace N86io\Rest\Tests\Http\Utility;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfo;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
 use N86io\Rest\Http\Utility\QueryUtility;
-use N86io\Rest\ObjectContainer;
 use N86io\Rest\Tests\DomainObject\FakeEntity1;
 use N86io\Rest\UnitTestCase;
 use Psr\Http\Message\ServerRequestInterface;
@@ -46,9 +45,9 @@ class QueryUtilityTest extends UnitTestCase
     public function setUp()
     {
         parent::setUp();
-        $entityInfoStorage = ObjectContainer::get(EntityInfoStorage::class);
+        $entityInfoStorage = static::$container->get(EntityInfoStorage::class);
         $this->entityInfo = $entityInfoStorage->get(FakeEntity1::class);
-        $this->queryUtility = ObjectContainer::get(QueryUtility::class);
+        $this->queryUtility = static::$container->get(QueryUtility::class);
     }
 
     public function test1()

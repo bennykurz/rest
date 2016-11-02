@@ -19,7 +19,7 @@
 namespace N86io\Rest\Tests\DomainObject\PropertyInfo;
 
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoUtility;
-use N86io\Rest\ObjectContainer;
+use N86io\Rest\Object\ContainerFactory;
 use N86io\Rest\Tests\DomainObject\FakeEntity1;
 use N86io\Rest\Tests\DomainObject\FakeEntity2;
 use N86io\Rest\UnitTestCase;
@@ -38,7 +38,7 @@ class PropertyInfoUtilityTest extends UnitTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->propertyInfoUtility = ObjectContainer::get(PropertyInfoUtility::class);
+        $this->propertyInfoUtility = static::$container->get(PropertyInfoUtility::class);
     }
 
     public function testCastValue()
@@ -78,6 +78,6 @@ class PropertyInfoUtilityTest extends UnitTestCase
     {
         $this->assertTrue($this->propertyInfoUtility->checkForAbstractEntitySubclass(FakeEntity1::class));
         $this->assertTrue($this->propertyInfoUtility->checkForAbstractEntitySubclass(FakeEntity2::class));
-        $this->assertFalse($this->propertyInfoUtility->checkForAbstractEntitySubclass(ObjectContainer::class));
+        $this->assertFalse($this->propertyInfoUtility->checkForAbstractEntitySubclass(ContainerFactory::class));
     }
 }

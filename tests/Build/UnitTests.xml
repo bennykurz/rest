@@ -19,6 +19,9 @@
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory>../../src/</directory>
+            <exclude>
+                <file>../../src/UnitTestCase.php</file>
+            </exclude>
         </whitelist>
     </filter>
 </phpunit>

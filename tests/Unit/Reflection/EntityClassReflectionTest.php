@@ -18,8 +18,8 @@
 
 namespace N86io\Rest\Tests\Reflection;
 
+use N86io\Rest\Object\ContainerFactory;
 use N86io\Rest\Reflection\EntityClassReflection;
-use N86io\Rest\ObjectContainer;
 use N86io\Rest\Tests\DomainObject\FakeEntity1;
 use N86io\Rest\Tests\DomainObject\FakeEntity2;
 use N86io\Rest\Tests\DomainObject\FakeEntity3;
@@ -49,15 +49,15 @@ class EntityClassReflectionTest extends UnitTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->fakeEntity1 = ObjectContainer::make(
+        $this->fakeEntity1 = static::$container->make(
             EntityClassReflection::class,
             ['className' => FakeEntity1::class]
         );
-        $this->fakeEntity2 = ObjectContainer::make(
+        $this->fakeEntity2 = static::$container->make(
             EntityClassReflection::class,
             ['className' => FakeEntity2::class]
         );
-        $this->fakeEntity3 = ObjectContainer::make(
+        $this->fakeEntity3 = static::$container->make(
             EntityClassReflection::class,
             ['className' => FakeEntity3::class]
         );
@@ -67,9 +67,9 @@ class EntityClassReflectionTest extends UnitTestCase
     {
         $this->setExpectedException(\InvalidArgumentException::class);
         /** @var EntityClassReflection $wrongEntityClass */
-        ObjectContainer::make(
+        static::$container->make(
             EntityClassReflection::class,
-            ['className' => ObjectContainer::class]
+            ['className' => ContainerFactory::class]
         );
     }
 

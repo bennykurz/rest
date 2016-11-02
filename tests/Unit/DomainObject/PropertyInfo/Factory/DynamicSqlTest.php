@@ -20,7 +20,6 @@ namespace N86io\Rest\Tests\DomainObject\PropertyInfo\Factory;
 
 use N86io\Rest\DomainObject\PropertyInfo\Factory\DynamicSql;
 use N86io\Rest\DomainObject\PropertyInfo\Factory\FactoryInterface;
-use N86io\Rest\ObjectContainer;
 use N86io\Rest\UnitTestCase;
 
 /**
@@ -42,7 +41,7 @@ class DynamicSqlTest extends UnitTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->factory = $this->factory = ObjectContainer::get(DynamicSql::class);
+        $this->factory = $this->factory = static::$container->get(DynamicSql::class);
     }
 
     public function testBuild()

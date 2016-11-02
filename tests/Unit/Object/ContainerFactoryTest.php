@@ -16,37 +16,23 @@
  * along with N86io/Rest or see <http://www.gnu.org/licenses/>.
  */
 
-namespace N86io\Rest\Tests\DomainObject\PropertyInfo;
+namespace N86io\Rest\Tests\Object;
 
-use N86io\Rest\DomainObject\PropertyInfo\Relation;
+use DI\Scope;
+use N86io\Rest\Object\ContainerFactory;
 use N86io\Rest\UnitTestCase;
 
-/**
- * Class RelationTest
- * @package N86io\Rest\Tests\DomainObject\PropertyInfo
- */
-class RelationTest extends UnitTestCase
+class ContainerFactoryTest extends UnitTestCase
 {
-    /**
-     * @var Relation
-     */
-    protected $propertyInfo;
-
-    public function setUp()
+    public function test()
     {
-        parent::setUp();
-        $params = [
-            'name' => 'testSomething',
-            'attributes' => [
-                'type' => 'int',
-                'constraint' => true,
-            ]
+        $mapping = [
+            'Something' => \DI\object(ContainerFactory::class)->scope(Scope::SINGLETON),
+            'Other' => \DI\object(ContainerFactory::class)->scope(Scope::PROTOTYPE)
         ];
-        $this->propertyInfo = static::$container->make(Relation::class, $params);
-    }
-
-    public function testIsConstraint()
-    {
-        $this->assertTrue($this->propertyInfo->isConstraint());
+        $container = ContainerFactory::create(null, $mapping);
+        $this->assertTrue($container->get('Something') instanceof ContainerFactory);
+        $this->assertTrue($container->get('Something') === $container->get('Something'));
+        $this->assertTrue($container->get('Other') !== $container->get('Other'));
     }
 }

@@ -21,7 +21,7 @@ namespace N86io\Rest\Http;
 use N86io\Rest\ControllerInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
 use N86io\Rest\Exception\InvalidRequestException;
-use N86io\Rest\Http\Routing\RoutingFactory;
+use N86io\Rest\Http\Routing\RoutingFactoryInterface;
 use N86io\Rest\Http\Utility\QueryUtility;
 use N86io\Rest\Persistence\Constraint\ConstraintFactory;
 use N86io\Rest\Persistence\Constraint\ConstraintInterface;
@@ -42,7 +42,7 @@ class RequestFactory implements RequestFactoryInterface
 
     /**
      * @Inject
-     * @var RoutingFactory
+     * @var RoutingFactoryInterface
      */
     protected $routingFactory;
 

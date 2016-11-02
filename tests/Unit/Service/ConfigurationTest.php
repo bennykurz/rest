@@ -19,7 +19,6 @@
 namespace N86io\Rest\Tests\Service;
 
 use N86io\Rest\ControllerInterface;
-use N86io\Rest\ObjectContainer;
 use N86io\Rest\Service\Configuration;
 use N86io\Rest\Tests\DomainObject\FakeEntity1;
 use N86io\Rest\Tests\DomainObject\FakeEntity2;
@@ -39,18 +38,18 @@ class ConfigurationTest extends UnitTestCase
         $controllerMock2Name = get_class(\Mockery::mock(ControllerInterface::class));
 
         /** @var Configuration $configuration */
-        $configuration = ObjectContainer::get(Configuration::class);
-        Configuration::registerApiModel('api1', FakeEntity1::class, '1');
-        Configuration::registerApiModel('api1', FakeEntity2::class, '2');
-        Configuration::registerApiModel('api2', FakeEntity3::class, '1');
-        Configuration::registerApiModel('api2', FakeEntity4::class, '2');
-        Configuration::registerApiController('api1', $controllerMock1Name, '1');
-        Configuration::registerApiController('api2', $controllerMock2Name, '2');
+        $configuration = static::$container->get(Configuration::class);
+        $configuration->registerApiModel('api1', FakeEntity1::class, '1');
+        $configuration->registerApiModel('api1', FakeEntity2::class, '2');
+        $configuration->registerApiModel('api2', FakeEntity3::class, '1');
+        $configuration->registerApiModel('api2', FakeEntity4::class, '2');
+        $configuration->registerApiController('api1', $controllerMock1Name, '1');
+        $configuration->registerApiController('api2', $controllerMock2Name, '2');
 
-        Configuration::setApiBaseUrl('http://example.com/api');
+        $configuration->setApiBaseUrl('http://example.com/api');
         $this->assertEquals('http://example.com/api', $configuration->getApiBaseUrl());
 
-        Configuration::setApiBaseUrl('http://example.com/api/');
+        $configuration->setApiBaseUrl('http://example.com/api/');
         $this->assertEquals('http://example.com/api', $configuration->getApiBaseUrl());
 
         $this->assertEquals(['api1', 'api2'], $configuration->getApiIdentifiers());
@@ -84,13 +83,17 @@ class ConfigurationTest extends UnitTestCase
 
     public function testExceptionRegisterApiModel()
     {
+        /** @var Configuration $configuration */
+        $configuration = static::$container->get(Configuration::class);
         $this->setExpectedException(\InvalidArgumentException::class);
-        Configuration::registerApiModel('api1', Configuration::class);
+        $configuration->registerApiModel('api1', Configuration::class);
     }
 
     public function testExceptionRegisterApiController()
     {
+        /** @var Configuration $configuration */
+        $configuration = static::$container->get(Configuration::class);
         $this->setExpectedException(\InvalidArgumentException::class);
-        Configuration::registerApiController('api1', Configuration::class);
+        $configuration->registerApiController('api1', Configuration::class);
     }
 }

@@ -20,7 +20,6 @@ namespace N86io\Rest\Tests\Http\Routing;
 
 use GuzzleHttp\Psr7\ServerRequest;
 use N86io\Rest\Http\Routing\RoutingFactory;
-use N86io\Rest\ObjectContainer;
 use N86io\Rest\Service\Configuration;
 use N86io\Rest\UnitTestCase;
 
@@ -32,10 +31,11 @@ class RoutingAndFactoryTest extends UnitTestCase
 {
     public function test()
     {
-        Configuration::setApiBaseUrl('http://example.com/api');
+        $configuration = static::$container->get(Configuration::class);
+        $configuration->setApiBaseUrl('http://example.com/api');
 
         /** @var RoutingFactory $routingFactory */
-        $routingFactory = ObjectContainer::get(RoutingFactory::class);
+        $routingFactory = static::$container->get(RoutingFactory::class);
         $routing = $routingFactory->build(['api1', 'api2']);
 
         $serverRequest = new ServerRequest('GET', 'http://example.com/api/3/api1/res1,res2');
