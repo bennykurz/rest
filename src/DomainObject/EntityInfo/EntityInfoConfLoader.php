@@ -34,10 +34,40 @@ class EntityInfoConfLoader
     protected $configuration;
 
     /**
+     * @var array
+     */
+    protected $loadedConf;
+
+    /**
+     * @param string $className
+     * @param array $parentClassNames
      * @return array
      */
-    public function load()
+    public function loadSingle($className, array $parentClassNames = [])
     {
+        $this->loadAll();
+        $result = [];
+        foreach ($parentClassNames as $parentClassName) {
+            if (!array_key_exists($parentClassName, $this->loadedConf)) {
+                continue;
+            }
+            $this->mergeModelConf($result, $this->loadedConf[$parentClassName]);
+        }
+        if (!array_key_exists($className, $this->loadedConf)) {
+            return $result;
+        }
+        $this->mergeModelConf($result, $this->loadedConf[$className]);
+        return $result;
+    }
+
+    /**
+     * @return array
+     */
+    public function loadAll()
+    {
+        if ($this->loadedConf) {
+            return $this->loadedConf;
+        }
         $entityInfoConf = $this->configuration->getEntityInfoConfiguration();
         $result = [];
         foreach ($entityInfoConf as $item) {
@@ -54,13 +84,13 @@ class EntityInfoConfLoader
             }
             $this->mergeComplete($result, $content);
         }
+        $this->loadedConf = $result;
         return $result;
     }
 
     /**
      * @param array $array1
      * @param array $array2
-     * @return array
      */
     protected function mergeComplete(array &$array1, array $array2)
     {
@@ -69,19 +99,27 @@ class EntityInfoConfLoader
                 $array1[$modelName2] = [];
             }
             $modelConf1 = &$array1[$modelName2];
-            $this->mergeSingle($modelConf1, $modelConf2, 'table');
-            $this->mergeSingle($modelConf1, $modelConf2, 'mode');
-
-            if (!array_key_exists('properties', $modelConf2)) {
-                continue;
-            }
-
-            if (!array_key_exists('properties', $modelConf1)) {
-                $modelConf1['properties'] = [];
-            }
-            $this->mergeProperties($modelConf1['properties'], $modelConf2['properties']);
+            $this->mergeModelConf($modelConf1, $modelConf2);
         }
-        return $array1;
+    }
+
+    /**
+     * @param array $modelConf1
+     * @param array $modelConf2
+     */
+    protected function mergeModelConf(array &$modelConf1, array &$modelConf2)
+    {
+        $this->mergeSingle($modelConf1, $modelConf2, 'table');
+        $this->mergeSingle($modelConf1, $modelConf2, 'mode');
+
+        if (!array_key_exists('properties', $modelConf2)) {
+            return;
+        }
+
+        if (!array_key_exists('properties', $modelConf1)) {
+            $modelConf1['properties'] = [];
+        }
+        $this->mergeProperties($modelConf1['properties'], $modelConf2['properties']);
     }
 
     /**

@@ -88,6 +88,33 @@ class EntityInfoConfLoaderTest extends UnitTestCase
                 ]
             ]
         ];
-        $this->assertEquals($expected, $loader->load());
+        $this->assertEquals($expected, $loader->loadAll());
+
+        $expected = [
+            'table' => 'table_fake',
+            'mode' => ['read'],
+            'properties' => [
+                'fakeId' => ['resourcePropertyName' => 'uid', 'resourceId' => true],
+                'string' => ['ordering' => true, 'hide' => true],
+                'integer' => ['constraint' => false],
+                'float' => ['hide' => true],
+                'dateTimeTimestamp' => ['outputLevel' => 106],
+                'array' => ['position' => 102],
+                'statusCombined' => [
+                    'sqlExpression' => 'CONV(BINARY(CONCAT(%value_a%, %value_b%, %value_c%)),2,10)'
+                ],
+                'statusPhpDetermination' => ['position' => 15, 'outputLevel' => 2]
+            ]
+        ];
+        $this->assertEquals(
+            $expected,
+            $loader->loadSingle(
+                FakeEntity4::class,
+                [
+                    FakeEntity1::class,
+                    FakeEntity2::class
+                ]
+            )
+        );
     }
 }
