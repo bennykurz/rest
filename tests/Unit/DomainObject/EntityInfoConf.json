@@ -1,0 +1,28 @@
+{
+  "N86io\\Rest\\Tests\\DomainObject\\FakeEntity2": {
+    "mode": [
+      "read"
+    ],
+    "properties": {
+      "integer": {
+        "constraint": false
+      },
+      "float": {
+        "hide": true
+      },
+      "dateTimeTimestamp": {
+        "outputLevel": 106
+      },
+      "array": {
+        "position": 102
+      },
+      "statusCombined": {
+        "sqlExpression": "CONV(BINARY(CONCAT(%value_a%, %value_b%, %value_c%)),2,10)"
+      },
+      "statusPhpDetermination": {
+        "position": 15,
+        "outputLevel": 2
+      }
+    }
+  }
+}
