@@ -26,8 +26,6 @@ use N86io\Rest\DomainObject\AbstractEntity;
  * Some description
  *
  * @package N86io\Rest\Tests\DomainObject
- * @table table_fake
- * @mode read write
  */
 class FakeEntity4 extends AbstractEntity
 {
@@ -38,7 +36,6 @@ class FakeEntity4 extends AbstractEntity
 
     /**
      * @var string
-     * @ordering 1
      */
     protected $string;
 }

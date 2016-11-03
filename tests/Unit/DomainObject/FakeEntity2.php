@@ -21,43 +21,35 @@ namespace N86io\Rest\Tests\DomainObject;
 /**
  * Class FakeEntity2
  * @package N86io\Rest\Tests\DomainObject
- * @mode read
  */
 class FakeEntity2 extends FakeEntity1
 {
     /**
      * @var int
-     * @constraint false
      */
     protected $integer;
 
     /**
      * @var float
-     * @hide
      */
     protected $float;
 
     /**
      * @var \DateTime
-     * @outputLevel 106
      */
     protected $dateTimeTimestamp;
 
     /**
      * @var array
-     * @position 102
      */
     protected $array;
 
     /**
      * @var int
-     * @sqlExpression CONV(BINARY(CONCAT(%value_a%, %value_b%, %value_c%)),2,10)
      */
     protected $statusCombined;
 
     /**
-     * @position 15
-     * @outputLevel 2
      * @return int
      */
     public function getStatusPhpDetermination()

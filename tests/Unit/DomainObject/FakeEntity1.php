@@ -28,45 +28,36 @@ use N86io\Rest\Tests\DomainObject as Test;
  * Some description
  *
  * @package N86io\Rest\Tests\DomainObject
- * @table table_fake
- * @mode read write
  */
 class FakeEntity1 extends AbstractEntity
 {
     /**
      * @var int
-     * @resourcePropertyName uid
-     * @resourceId true
      */
     protected $fakeId;
 
     /**
      * @var string
-     * @ordering 1
      */
     protected $string;
 
     /**
      * @var int
-     * @constraint
      */
     protected $integer;
 
     /**
      * @var float
-     * @hide false
      */
     protected $float;
 
     /**
      * @var \DateTime
-     * @outputLevel 6
      */
     protected $dateTimeTimestamp;
 
     /**
      * @var array
-     * @position 2
      */
     protected $array;
 
