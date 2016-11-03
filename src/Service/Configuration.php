@@ -27,6 +27,11 @@ use N86io\Rest\DomainObject\EntityInterface;
  */
 class Configuration
 {
+    const ENTITY_INFO_CONF_ARRAY = 1;
+    const ENTITY_INFO_CONF_JSON = 2;
+    const ENTITY_INFO_CONF_YAML = 4;
+    const ENTITY_INFO_CONF_FILE = 8;
+
     /**
      * @var string
      */
@@ -36,6 +41,33 @@ class Configuration
      * @var array
      */
     protected $apiConfiguration = [];
+
+    /**
+     * @var array
+     */
+    protected $apiAliases = [];
+
+    /**
+     * @var array
+     */
+    protected $apiContrSettings = [];
+
+    /**
+     * @var array
+     */
+    protected $entityInfoConf = [];
+
+    /**
+     * @param Configuration $configuration
+     */
+    public function injectConfiguration(Configuration $configuration)
+    {
+        $this->apiBaseUrl = $configuration->apiBaseUrl;
+        $this->apiConfiguration = $configuration->apiConfiguration;
+        $this->apiAliases = $configuration->apiAliases;
+        $this->apiContrSettings = $configuration->apiContrSettings;
+        $this->entityInfoConf = $configuration->entityInfoConf;
+    }
 
     /**
      * @return string
@@ -54,16 +86,46 @@ class Configuration
     }
 
     /**
-     * @param string $string
-     * @return string
+     * @return array
      */
-    protected function removeAllSlashesAtEnd($string)
+    public function getApiIdentifiers()
     {
-        if (substr($string, -1) === '/') {
-            $string = substr($string, 0, strlen($string) - 1);
-            return $this->removeAllSlashesAtEnd($string);
+        return array_merge(
+            array_keys($this->apiConfiguration),
+            array_keys($this->apiAliases)
+        );
+    }
+
+    /**
+     * @param string $apiIdentifier
+     * @return array
+     */
+    public function getApiConfiguration($apiIdentifier)
+    {
+        if ($this->isApiAlias($apiIdentifier)) {
+            $apiIdentifier = $this->apiAliases[$apiIdentifier];
         }
-        return $string;
+        return $this->apiConfiguration[$apiIdentifier];
+    }
+
+    /**
+     * @param string $apiIdentifier
+     * @return array
+     */
+    public function getApiControllerSettings($apiIdentifier)
+    {
+        if (array_key_exists($apiIdentifier, $this->apiContrSettings)) {
+            return $this->apiContrSettings[$apiIdentifier];
+        }
+        return [];
+    }
+
+    /**
+     * @return array
+     */
+    public function getEntityInfoConfiguration()
+    {
+        return $this->entityInfoConf;
     }
 
     /**
@@ -73,6 +135,7 @@ class Configuration
      */
     public function registerApiModel($apiIdentifier, $model, $version = '1')
     {
+        $this->makeSureNotAlias($apiIdentifier);
         if (!is_subclass_of($model, EntityInterface::class)) {
             throw new \InvalidArgumentException('The model you want to register should be implements "' .
                 EntityInterface::class . '".');
@@ -87,6 +150,7 @@ class Configuration
      */
     public function registerApiController($apiIdentifier, $controller, $version = '1')
     {
+        $this->makeSureNotAlias($apiIdentifier);
         if (!is_subclass_of($controller, ControllerInterface::class)) {
             throw new \InvalidArgumentException('The controller you want to register should be implements "' .
                 ControllerInterface::class . '".');
@@ -95,22 +159,97 @@ class Configuration
     }
 
     /**
-     * @return array
+     * @param string $apiAlias
+     * @param string $apiIdentifier
      */
-    public function getApiIdentifiers()
+    public function registerAlias($apiAlias, $apiIdentifier)
     {
-        return array_keys($this->apiConfiguration);
+        if ($this->isApiAlias($apiIdentifier)) {
+            throw new \InvalidArgumentException('Can\'t register api-alias "' . $apiAlias . '" on another alias "' .
+                $apiIdentifier . '".');
+        }
+        if ($this->isRegularApiIdentifier($apiAlias)) {
+            throw new \InvalidArgumentException('"' . $apiAlias . '" is already registered as api-identifier and ' .
+                'can\'t use as api-alias.');
+        }
+        if (!$this->isRegularApiIdentifier($apiIdentifier)) {
+            throw new \InvalidArgumentException('Can\'t find api-identifier "' . $apiIdentifier . '".');
+        }
+        $this->apiAliases[$apiAlias] = $apiIdentifier;
     }
 
     /**
      * @param string $apiIdentifier
-     * @return array
+     * @param array $settings
      */
-    public function getApiConfiguration($apiIdentifier = '')
+    public function registerApiControllerSettings($apiIdentifier, array $settings)
     {
-        if ($apiIdentifier !== '') {
-            return $this->apiConfiguration[$apiIdentifier];
+        $this->apiContrSettings[$apiIdentifier] = $settings;
+    }
+
+    /**
+     * @param $content
+     * @param int $type
+     */
+    public function registerEntityInfoConfiguration($content, $type)
+    {
+        $this->checkEntityInfoType($type);
+        $this->entityInfoConf[] = [
+            'type' => $type,
+            'content' => $content
+        ];
+    }
+
+    /**
+     * @param int $type
+     */
+    protected function checkEntityInfoType($type)
+    {
+        $allowed = [1, 2, 4, 9, 10, 12];
+        if (array_search($type, $allowed) === false) {
+            throw new \InvalidArgumentException('Invalid type selected for EntityInfo configuration.');
         }
-        return $this->apiConfiguration;
+    }
+
+    /**
+     * @param string $string
+     * @return string
+     */
+    protected function removeAllSlashesAtEnd($string)
+    {
+        if (substr($string, -1) === '/') {
+            $string = substr($string, 0, strlen($string) - 1);
+            return $this->removeAllSlashesAtEnd($string);
+        }
+        return $string;
+    }
+
+    /**
+     * @param string $apiIdentifier
+     */
+    protected function makeSureNotAlias($apiIdentifier)
+    {
+        if ($this->isApiAlias($apiIdentifier)) {
+            throw new \InvalidArgumentException('"' . $apiIdentifier . '" is already registered as api-alias and ' .
+                'can\'t use as api-identifier.');
+        }
+    }
+
+    /**
+     * @param string $apiIdentifier
+     * @return bool
+     */
+    protected function isApiAlias($apiIdentifier)
+    {
+        return array_key_exists($apiIdentifier, $this->apiAliases);
+    }
+
+    /**
+     * @param string $apiIdentifier
+     * @return bool
+     */
+    protected function isRegularApiIdentifier($apiIdentifier)
+    {
+        return array_key_exists($apiIdentifier, $this->apiConfiguration);
     }
 }
