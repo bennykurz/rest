@@ -86,53 +86,30 @@ class EntityClassReflectionTest extends UnitTestCase
         $this->assertEquals('Some description', $this->fakeEntity2->getClassDescription());
     }
 
-    public function testGetClassTags()
-    {
-        $expected1 = [
-            'package' => 'N86io\Rest\Tests\DomainObject',
-            'table' => 'table_fake',
-            'mode' => ['read', 'write']
-        ];
-        $expected2 = [
-            'package' => 'N86io\Rest\Tests\DomainObject',
-            'table' => 'table_fake',
-            'mode' => ['read']
-        ];
-        $this->assertEquals($expected1, $this->fakeEntity1->getClassTags());
-        $this->assertEquals($expected2, $this->fakeEntity2->getClassTags());
-    }
-
     public function testGetProperties()
     {
         $expected1 = [
             'fakeId' => [
-                'type' => 'int',
-                'resourcePropertyName' => 'uid',
-                'resourceId' => true
+                'type' => 'int'
             ],
             'string' => [
                 'type' => 'string',
-                'ordering' => true,
                 'getter' => 'getString'
             ],
             'integer' => [
                 'type' => 'int',
-                'constraint' => true,
                 'setter' => 'setInteger'
             ],
             'float' => [
-                'type' => 'float',
-                'hide' => false
+                'type' => 'float'
             ],
             'dateTimeTimestamp' => [
                 'type' => '\DateTime',
-                'outputLevel' => 6,
                 'getter' => 'getDateTimeTimestamp',
                 'setter' => 'setDateTimeTimestamp'
             ],
             'array' => [
                 'type' => 'array',
-                'position' => 2
             ],
             'demoList' => [
                 'type' => '\N86io\Rest\Tests\DomainObject\FakeEntity1'
@@ -148,20 +125,13 @@ class EntityClassReflectionTest extends UnitTestCase
             ]
         ];
         $expected2 = $expected1;
-        $expected2['integer']['constraint'] = false;
-        $expected2['float']['hide'] = true;
-        $expected2['dateTimeTimestamp']['outputLevel'] = 106;
-        $expected2['array']['position'] = 102;
         $expected2['statusPhpDetermination'] = [
             'type' => '__dynamic',
-            'position' => 15,
-            'outputLevel' => 2,
             'getter' => 'getStatusPhpDetermination',
             'setter' => 'setStatusPhpDetermination'
         ];
         $expected2['statusCombined'] = [
-            'type' => 'int',
-            'sqlExpression' => 'CONV(BINARY(CONCAT(%value_a%, %value_b%, %value_c%)),2,10)'
+            'type' => 'int'
         ];
         $this->assertEquals($expected1, $this->fakeEntity1->getProperties());
         $this->assertEquals($expected2, $this->fakeEntity2->getProperties());

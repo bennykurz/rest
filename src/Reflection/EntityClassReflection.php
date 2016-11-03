@@ -37,12 +37,6 @@ class EntityClassReflection
 
     /**
      * @Inject
-     * @var TagUtility
-     */
-    protected $tagUtility;
-
-    /**
-     * @Inject
      * @var MethodNameUtility
      */
     protected $methodNameUtility;
@@ -61,11 +55,6 @@ class EntityClassReflection
      * @var string
      */
     protected $classDescription;
-
-    /**
-     * @var array
-     */
-    protected $classTags;
 
     /**
      * @var array
@@ -108,15 +97,6 @@ class EntityClassReflection
     /**
      * @return array
      */
-    public function getClassTags()
-    {
-        $this->load();
-        return $this->classTags;
-    }
-
-    /**
-     * @return array
-     */
     public function getProperties()
     {
         $this->load();
@@ -128,19 +108,16 @@ class EntityClassReflection
         if ($this->properties) {
             return;
         }
-        $this->classSummary = $this->reflectionClass->getParsedDocComment()->getSummary();
-        $this->classDescription = $this->reflectionClass->getParsedDocComment()->getDescription();
-        $this->classTags = $this->reflectionClass->getParsedDocComment()->getTags();
+        $this->getInheritClassSummaryAndDescription();
         $this->properties = $this->getPropertiesAttributes();
         $methodsAttributes = $this->getMethodsAttributes();
         $this->mergeMethodsAttributesIntoProperties($methodsAttributes);
-        $this->classTags = $this->tagUtility->evaluateTagList($this->classTags);
-        $this->properties = $this->tagUtility->evaluatePropertyList($this->properties);
-        $this->mergeWithParentClass();
     }
 
-    protected function mergeWithParentClass()
+    protected function getInheritClassSummaryAndDescription()
     {
+        $this->classSummary = $this->reflectionClass->getParsedDocComment()->getSummary();
+        $this->classDescription = $this->reflectionClass->getParsedDocComment()->getDescription();
         if (($parentClass = $this->reflectionClass->getParentClass()->getName()) !== AbstractEntity::class) {
             /** @var EntityClassReflection $parent */
             $parent = $this->container->make(EntityClassReflection::class, ['className' => $parentClass]);
@@ -149,12 +126,6 @@ class EntityClassReflection
             }
             if ($this->classDescription === '') {
                 $this->classDescription = $parent->getClassDescription();
-            }
-            if (!empty($parentClassTags = $parent->getClassTags())) {
-                $this->classTags = $this->tagUtility->mergeTagList($parentClassTags, $this->classTags);
-            }
-            if (!empty($parentProperties = $parent->getProperties())) {
-                $this->properties = $this->tagUtility->mergePropertyList($parentProperties, $this->properties);
             }
         }
     }
@@ -172,8 +143,6 @@ class EntityClassReflection
             if (empty($propertyAttributes)) {
                 $propertyAttributes = [
                     'type' => '__dynamic',
-                    'position' => $methodAttributes['position'],
-                    'outputLevel' => $methodAttributes['outputLevel'],
                     'getter' => $methodAttributes['getter'],
                     'setter' => $methodAttributes['setter']
                 ];
@@ -189,7 +158,7 @@ class EntityClassReflection
         $methodsAttr = [];
         $methods = $this->reflectionClass->getMethods();
         foreach ($methods as $method) {
-            if ($method->getDeclaringClass()->getName() !== $this->reflectionClass->getName() ||
+            if ($method->getDeclaringClass()->getName() === AbstractEntity::class ||
                 $method->isProtected() || $method->isPrivate() ||
                 !$this->methodNameUtility->isGetterOrSetter($method->getName())
             ) {
@@ -220,12 +189,11 @@ class EntityClassReflection
         $propertiesAttr = [];
         $properties = $this->reflectionClass->getProperties();
         foreach ($properties as $property) {
-            if ($property->getDeclaringClass()->getName() !== $this->reflectionClass->getName()) {
+            if ($property->getDeclaringClass()->getName() === AbstractEntity::class) {
                 continue;
             }
             $attr = &$propertiesAttr[$property->getName()];
-            $attr = $property->getParsedDocComment()->getTags();
-            $attr['type'] = $attr['var'];
+            $attr['type'] = current($property->getParsedDocComment()->getTags()['var']);
             unset($attr['var'], $attr['getter'], $attr['setter']);
             if ($property->hasGetter()) {
                 $attr['getter'] = $property->getGetter()->getName();
