@@ -62,6 +62,11 @@ class EntityClassReflection
     protected $properties;
 
     /**
+     * @var array
+     */
+    protected $parentClasses = [];
+
+    /**
      * EntityClassReflection constructor.
      * @param string $className
      * @throws \Exception
@@ -103,30 +108,43 @@ class EntityClassReflection
         return $this->properties;
     }
 
+    /**
+     * @return array
+     */
+    public function getParentClasses()
+    {
+        $this->load();
+        return $this->parentClasses;
+    }
+
     protected function load()
     {
         if ($this->properties) {
             return;
         }
-        $this->getInheritClassSummaryAndDescription();
+        $this->createInheritValues();
         $this->properties = $this->getPropertiesAttributes();
         $methodsAttributes = $this->getMethodsAttributes();
         $this->mergeMethodsAttributesIntoProperties($methodsAttributes);
     }
 
-    protected function getInheritClassSummaryAndDescription()
+    protected function createInheritValues()
     {
         $this->classSummary = $this->reflectionClass->getParsedDocComment()->getSummary();
         $this->classDescription = $this->reflectionClass->getParsedDocComment()->getDescription();
-        if (($parentClass = $this->reflectionClass->getParentClass()->getName()) !== AbstractEntity::class) {
-            /** @var EntityClassReflection $parent */
-            $parent = $this->container->make(EntityClassReflection::class, ['className' => $parentClass]);
+
+        $class = $this->reflectionClass;
+        while (($class = $class->getParentClass()) instanceof ReflectionClass) {
+            if ($class->getName() === AbstractEntity::class) {
+                break;
+            }
             if (trim($this->classSummary) === '') {
-                $this->classSummary = $parent->getClassSummary();
+                $this->classSummary = $class->getParsedDocComment()->getSummary();
             }
-            if ($this->classDescription === '') {
-                $this->classDescription = $parent->getClassDescription();
+            if (trim($this->classDescription) === '') {
+                $this->classDescription = $class->getParsedDocComment()->getDescription();
             }
+            array_unshift($this->parentClasses, $class->getName());
         }
     }
 
@@ -189,9 +207,12 @@ class EntityClassReflection
         $propertiesAttr = [];
         $properties = $this->reflectionClass->getProperties();
         foreach ($properties as $property) {
+            // @codeCoverageIgnoreStart
+            // Currently no properties in AbstractEntity defined, why this part would be ignored.
             if ($property->getDeclaringClass()->getName() === AbstractEntity::class) {
                 continue;
             }
+            // @codeCoverageIgnoreEnd
             $attr = &$propertiesAttr[$property->getName()];
             $attr['type'] = current($property->getParsedDocComment()->getTags()['var']);
             unset($attr['var'], $attr['getter'], $attr['setter']);

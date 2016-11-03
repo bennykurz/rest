@@ -73,21 +73,15 @@ class EntityClassReflectionTest extends UnitTestCase
         );
     }
 
-    public function testGetClassSummary()
+    public function testGettter()
     {
         $this->assertEquals('Class FakeEntity1', $this->fakeEntity1->getClassSummary());
         $this->assertEquals('Class FakeEntity2', $this->fakeEntity2->getClassSummary());
         $this->assertEquals('Class FakeEntity1', $this->fakeEntity3->getClassSummary());
-    }
 
-    public function testGetClassDescription()
-    {
         $this->assertEquals('Some description', $this->fakeEntity1->getClassDescription());
         $this->assertEquals('Some description', $this->fakeEntity2->getClassDescription());
-    }
 
-    public function testGetProperties()
-    {
         $expected1 = [
             'fakeId' => [
                 'type' => 'int'
@@ -135,5 +129,9 @@ class EntityClassReflectionTest extends UnitTestCase
         ];
         $this->assertEquals($expected1, $this->fakeEntity1->getProperties());
         $this->assertEquals($expected2, $this->fakeEntity2->getProperties());
+
+        $this->assertEquals([], $this->fakeEntity1->getParentClasses());
+        $this->assertEquals(['N86io\Rest\Tests\DomainObject\FakeEntity1'], $this->fakeEntity2->getParentClasses());
+        $this->assertEquals(['N86io\Rest\Tests\DomainObject\FakeEntity1'], $this->fakeEntity3->getParentClasses());
     }
 }
