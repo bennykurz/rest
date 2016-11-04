@@ -29,14 +29,11 @@ class RelationTest extends UnitTestCase
 {
     public function test()
     {
-        $params = [
-            'name' => 'testSomething',
-            'attributes' => [
-                'type' => 'int',
-                'constraint' => true,
-            ]
+        $attributes = [
+            'type' => 'int',
+            'constraint' => true,
         ];
-        $propertyInfo = static::$container->make(Relation::class, $params);
+        $propertyInfo = new Relation('testSomething', $attributes);
         $this->assertTrue($propertyInfo->isConstraint());
     }
 }
