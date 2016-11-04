@@ -18,6 +18,7 @@
 
 namespace N86io\Rest\Tests\ContentConverter;
 
+use DI\Container;
 use N86io\Rest\ContentConverter\ConverterFactory;
 use N86io\Rest\ContentConverter\JsonConverter;
 use N86io\Rest\UnitTestCase;
@@ -30,9 +31,24 @@ class ConverterFactoryTest extends UnitTestCase
 {
     public function test()
     {
-        /** @var ConverterFactory $converterFactory */
-        $converterFactory = static::$container->get(ConverterFactory::class);
+        $jsonConverterMock = \Mockery::mock(JsonConverter::class);
+        $jsonConverterMock->shouldReceive('getContentType')
+            ->andReturn('application/json');
+
+        $containerMock = \Mockery::mock(Container::class);
+        $containerMock->shouldReceive('get')
+            ->with(JsonConverter::class)
+            ->andReturn($jsonConverterMock);
+
+        $converterFactory = new ConverterFactory;
+        $this->inject($converterFactory, 'container', $containerMock);
+
         $this->assertTrue($converterFactory->createFromAccept('application/json') instanceof JsonConverter);
         $this->assertTrue($converterFactory->createFromAccept('') instanceof JsonConverter);
+    }
+
+    public function tearDown()
+    {
+        \Mockery::close();
     }
 }
