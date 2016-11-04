@@ -106,11 +106,7 @@ class EntityClassReflectionTest extends UnitTestCase
     public function testWrongEntityClass()
     {
         $this->setExpectedException(\InvalidArgumentException::class);
-        /** @var EntityClassReflection $wrongEntityClass */
-        static::$container->make(
-            EntityClassReflection::class,
-            ['className' => ContainerFactory::class]
-        );
+        new EntityClassReflection(ContainerFactory::class);
     }
 
     /**

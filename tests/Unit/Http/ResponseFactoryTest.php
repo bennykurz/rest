@@ -18,9 +18,14 @@
 
 namespace N86io\Rest\Tests\Http;
 
+use DI\Container;
+use N86io\Rest\ContentConverter\ConverterFactory;
+use N86io\Rest\ContentConverter\ConverterInterface;
 use N86io\Rest\Http\ResponseFactory;
 use N86io\Rest\UnitTestCase;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamInterface;
 
 /**
  * Class ResponseFactoryTest
@@ -35,14 +40,62 @@ class ResponseFactoryTest extends UnitTestCase
         $serverRequest->shouldReceive('getUri')->andReturn('RequestUrl');
         $serverRequest->shouldReceive('getHeader')->with('accept')->andReturn('application/json');
 
-        /** @var ResponseFactory $responseFactory */
-        $responseFactory = static::$container->get(ResponseFactory::class);
+        $responseFactory = new ResponseFactory;
+        $this->inject($responseFactory, 'container', $this->createContainerMock());
+        $this->inject($responseFactory, 'converterFactory', $this->createConverterFactory());
         $responseFactory->setServerRequest($serverRequest);
 
-        $this->assertEquals(400, $responseFactory->badRequest()->getStatusCode());
-        $this->assertEquals(401, $responseFactory->unauthorized()->getStatusCode());
-        $this->assertEquals(404, $responseFactory->notFound()->getStatusCode());
-        $this->assertEquals(405, $responseFactory->methodNotAllowed()->getStatusCode());
-        $this->assertEquals(200, $responseFactory->createResponse(200, [])->getStatusCode());
+        $this->assertTrue($responseFactory->badRequest() instanceof ResponseInterface);
+        $this->assertTrue($responseFactory->unauthorized() instanceof ResponseInterface);
+        $this->assertTrue($responseFactory->notFound() instanceof ResponseInterface);
+        $this->assertTrue($responseFactory->methodNotAllowed() instanceof ResponseInterface);
+        $this->assertTrue($responseFactory->createResponse(200, []) instanceof ResponseInterface);
+    }
+
+    /**
+     * @return ConverterFactory
+     */
+    protected function createConverterFactory()
+    {
+        $mock = \Mockery::mock(ConverterFactory::class);
+        $mock->shouldReceive('createFromAccept')->withAnyArgs()->andReturn($this->createContentConverterMock());
+        return $mock;
+    }
+
+    /**
+     * @return ConverterInterface
+     */
+    protected function createContentConverterMock()
+    {
+        $mock = \Mockery::mock(ConverterInterface::class);
+        $mock->shouldReceive('getContentType')->andReturn('');
+        $mock->shouldReceive('render')->withAnyArgs()->andReturn('');
+        return $mock;
+    }
+
+    /**
+     * @return Container
+     */
+    protected function createContainerMock()
+    {
+        $mock = \Mockery::mock(Container::class);
+        $mock->shouldReceive('make')->with(ResponseInterface::class)->andReturn($this->createResponseMock());
+        return $mock;
+    }
+
+    /**
+     * @return ResponseInterface
+     */
+    protected function createResponseMock()
+    {
+        $stream = \Mockery::mock(StreamInterface::class);
+        $stream->shouldReceive('write')->withAnyArgs();
+
+        $mock = \Mockery::mock(ResponseInterface::class);
+        $mock->shouldReceive('withAddedHeader')->withAnyArgs()->andReturn($mock);
+        $mock->shouldReceive('withStatus')->withAnyArgs()->andReturn($mock);
+        $mock->shouldReceive('getBody')->withAnyArgs()->andReturn($stream);
+
+        return $mock;
     }
 }

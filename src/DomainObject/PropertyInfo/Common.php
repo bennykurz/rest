@@ -26,7 +26,8 @@ namespace N86io\Rest\DomainObject\PropertyInfo;
 class Common extends AbstractStatic implements
     ResourceIdInterface,
     SortableInterface,
-    RestrictableInterface
+    RestrictableInterface,
+    UidInterface
 {
     /**
      * @var boolean
@@ -44,11 +45,16 @@ class Common extends AbstractStatic implements
     protected $constraint;
 
     /**
+     * @var boolean
+     */
+    protected $uid;
+
+    /**
      * @return boolean
      */
     public function isResourceId()
     {
-        return $this->resourceId ?: false;
+        return $this->resourceId === true;
     }
 
     /**
@@ -56,7 +62,7 @@ class Common extends AbstractStatic implements
      */
     public function isConstraint()
     {
-        return $this->constraint ?: false;
+        return $this->constraint === true;
     }
 
     /**
@@ -64,6 +70,14 @@ class Common extends AbstractStatic implements
      */
     public function isOrdering()
     {
-        return $this->ordering ?: false;
+        return $this->ordering === true;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isUid()
+    {
+        return $this->uid === true;
     }
 }

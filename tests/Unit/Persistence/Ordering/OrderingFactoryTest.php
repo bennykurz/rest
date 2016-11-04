@@ -18,6 +18,7 @@
 
 namespace N86io\Rest\Tests\Persistence\Ordering;
 
+use DI\Container;
 use N86io\Rest\DomainObject\PropertyInfo\Common;
 use N86io\Rest\Persistence\Ordering\OrderingFactory;
 use N86io\Rest\Persistence\Ordering\OrderingInterface;
@@ -31,20 +32,25 @@ class OrderingFactoryTest extends UnitTestCase
 {
     public function test()
     {
-        $orderingFactory = static::$container->get(OrderingFactory::class);
-        $common = static::$container->make(
-            Common::class,
-            [
-                'name' => 'name',
-                'attributes' => [
-                    'type' => 'int'
-                ]
-            ]
-        );
-        $ordering = $orderingFactory->ascending($common);
-        $this->assertEquals(OrderingInterface::ASCENDING, $ordering->getDirection());
+        $orderingFactory = new OrderingFactory;
+        $this->inject($orderingFactory, 'container', $this->createContainerMock());
 
-        $ordering = $orderingFactory->descending($common);
-        $this->assertEquals(OrderingInterface::DESCENDING, $ordering->getDirection());
+        $commonMock = \Mockery::mock(Common::class, ['_name_', ['type' => 'int']]);
+
+        $ordering = $orderingFactory->ascending($commonMock);
+        $this->assertTrue($ordering instanceof OrderingInterface);
+
+        $ordering = $orderingFactory->descending($commonMock);
+        $this->assertTrue($ordering instanceof OrderingInterface);
+    }
+
+    /**
+     * @return Container
+     */
+    protected function createContainerMock()
+    {
+        $mock = \Mockery::mock(Container::class);
+        $mock->shouldReceive('make')->andReturn(\Mockery::mock(OrderingInterface::class));
+        return $mock;
     }
 }

@@ -18,12 +18,12 @@
 
 namespace N86io\Rest\Http;
 
+use DI\Container;
 use N86io\Rest\ControllerInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
 use N86io\Rest\Exception\InvalidRequestException;
 use N86io\Rest\Http\Routing\RoutingFactoryInterface;
 use N86io\Rest\Http\Utility\QueryUtility;
-use N86io\Rest\Persistence\Constraint\ConstraintFactory;
 use N86io\Rest\Persistence\Constraint\ConstraintInterface;
 use N86io\Rest\Service\Configuration;
 use Psr\Http\Message\ServerRequestInterface;
@@ -34,6 +34,12 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class RequestFactory implements RequestFactoryInterface
 {
+    /**
+     * @Inject
+     * @var Container
+     */
+    protected $container;
+
     /**
      * @Inject
      * @var Configuration
@@ -54,12 +60,6 @@ class RequestFactory implements RequestFactoryInterface
 
     /**
      * @Inject
-     * @var ConstraintFactory
-     */
-    protected $constraintFactory;
-
-    /**
-     * @Inject
      * @var QueryUtility
      */
     protected $queryUtility;
@@ -71,7 +71,8 @@ class RequestFactory implements RequestFactoryInterface
     public function fromServerRequest(ServerRequestInterface $serverRequest)
     {
         $routing = $this->routingFactory->build($this->configuration->getApiIdentifiers());
-        $route = $routing->getRoute($serverRequest);
+
+        $route = $routing->getRoute($serverRequest->getUri());
 
         if (empty($route)) {
             throw new InvalidRequestException;
@@ -83,11 +84,13 @@ class RequestFactory implements RequestFactoryInterface
             $version
         );
         $entityInfo = $this->entityInfoStorage->get($modelClassName);
-        $queryParams = $this->queryUtility->resolveQueryParams($serverRequest, $entityInfo);
+
+        $queryParams = $this->queryUtility->resolveQueryParams($serverRequest->getUri()->getQuery(), $entityInfo);
 
         $resourceIds = array_key_exists('resourceId', $route) ? explode(',', $route['resourceId']) : [];
 
-        $request = new Request();
+        /** @var RequestInterface $request */
+        $request = $this->container->make(RequestInterface::class);
         $request->setVersion($version)
             ->setApiIdentifier($route['apiIdentifier'])
             ->setResourceIds($resourceIds)
@@ -95,7 +98,6 @@ class RequestFactory implements RequestFactoryInterface
             ->setLimit($queryParams['limit'])
             ->setPage($queryParams['page'])
             ->setOutputLevel($queryParams['outputLevel'])
-            ->setAccept($serverRequest->getHeader('accept'))
             ->setModelClassName($modelClassName)
             ->setControllerClassName($controllerClassName)
             ->setMode($this->getRequestMode($serverRequest));

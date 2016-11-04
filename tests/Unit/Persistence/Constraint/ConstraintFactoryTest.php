@@ -18,9 +18,8 @@
 
 namespace N86io\Rest\Tests\Persistence\Constraint;
 
-use N86io\Rest\DomainObject\PropertyInfo\Common;
+use DI\Container;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
-use N86io\Rest\Persistence\Constraint\Comparison;
 use N86io\Rest\Persistence\Constraint\ComparisonInterface;
 use N86io\Rest\Persistence\Constraint\ConstraintFactory;
 use N86io\Rest\Persistence\Constraint\LogicalInterface;
@@ -32,105 +31,66 @@ use N86io\Rest\UnitTestCase;
  */
 class ConstraintFactoryTest extends UnitTestCase
 {
-    /**
-     * @var ConstraintFactory
-     */
-    protected $factory;
-
-    /**
-     * @var PropertyInfoInterface
-     */
-    protected $propInfo;
-
-    /**
-     * @var ComparisonInterface
-     */
-    protected $comp;
-
-    public function setUp()
+    public function testSingle()
     {
-        parent::setUp();
-        $this->factory = static::$container->get(ConstraintFactory::class);
-        $this->propInfo = static::$container->make(
-            Common::class,
-            [
-                'name' => 'name',
-                'attributes' => ['type' => 'int']
-            ]
+        $containerMock = \Mockery::mock(Container::class);
+        $containerMock->shouldReceive('make')->withAnyArgs()->andReturn(
+            \Mockery::mock(LogicalInterface::class)
         );
-        $this->comp = static::$container->make(
-            Comparison::class,
-            [
-                'leftOperand' => $this->propInfo,
-                'type' => ComparisonInterface::CONTAINS,
-                'rightOperand' => '100'
-            ]
+        $factory = new ConstraintFactory;
+        $this->inject($factory, 'container', $containerMock);
+
+        $this->assertTrue($factory->logicalAnd([]) instanceof LogicalInterface);
+        $this->assertTrue($factory->logicalOr([]) instanceof LogicalInterface);
+
+
+        $containerMock = \Mockery::mock(Container::class);
+        $containerMock->shouldReceive('make')->withAnyArgs()->andReturn(
+            \Mockery::mock(ComparisonInterface::class)
         );
+        $factory = new ConstraintFactory;
+        $this->inject($factory, 'container', $containerMock);
+
+        /** @var PropertyInfoInterface $propInfoMock */
+        $propInfoMock = \Mockery::mock(PropertyInfoInterface::class);
+
+        $this->assertTrue($factory->lessThan($propInfoMock, '') instanceof ComparisonInterface);
+        $this->assertTrue($factory->lessThanOrEqualTo($propInfoMock, '') instanceof ComparisonInterface);
+        $this->assertTrue($factory->greaterThan($propInfoMock, '') instanceof ComparisonInterface);
+        $this->assertTrue($factory->greaterThanOrEqualTo($propInfoMock, '') instanceof ComparisonInterface);
+        $this->assertTrue($factory->equalTo($propInfoMock, '') instanceof ComparisonInterface);
+        $this->assertTrue($factory->notEqualTo($propInfoMock, '') instanceof ComparisonInterface);
+        $this->assertTrue($factory->contains($propInfoMock, '') instanceof ComparisonInterface);
     }
 
     public function testStringDetector()
     {
-        /** @var ComparisonInterface $comp */
-        $comp = $this->factory->createComparisonFromStringDetection($this->propInfo, 'lt', '100');
-        $this->assertEquals(ComparisonInterface::LESS_THAN, $comp->getType());
+        /** @var PropertyInfoInterface $propInfoMock */
+        $propInfoMock = \Mockery::mock(PropertyInfoInterface::class);
 
-        $comp = $this->factory->createComparisonFromStringDetection($this->propInfo, 'lte', '100');
-        $this->assertEquals(ComparisonInterface::LESS_THAN_OR_EQUAL_TO, $comp->getType());
+        $factoryMock = \Mockery::mock(ConstraintFactory::class)->makePartial();
 
-        $comp = $this->factory->createComparisonFromStringDetection($this->propInfo, 'gt', '100');
-        $this->assertEquals(ComparisonInterface::GREATER_THAN, $comp->getType());
+        $ltMock = \Mockery::mock(ComparisonInterface::class);
+        $factoryMock->shouldReceive('lessThan')->withAnyArgs()->andReturn($ltMock);
+        $lteMock = \Mockery::mock(ComparisonInterface::class);
+        $factoryMock->shouldReceive('lessThanOrEqualTo')->withAnyArgs()->andReturn($lteMock);
+        $gtMock = \Mockery::mock(ComparisonInterface::class);
+        $factoryMock->shouldReceive('greaterThan')->withAnyArgs()->andReturn($gtMock);
+        $gteMock = \Mockery::mock(ComparisonInterface::class);
+        $factoryMock->shouldReceive('greaterThanOrEqualTo')->withAnyArgs()->andReturn($gteMock);
+        $eMock = \Mockery::mock(ComparisonInterface::class);
+        $factoryMock->shouldReceive('equalTo')->withAnyArgs()->andReturn($eMock);
+        $neMock = \Mockery::mock(ComparisonInterface::class);
+        $factoryMock->shouldReceive('notEqualTo')->withAnyArgs()->andReturn($neMock);
+        $cMock = \Mockery::mock(ComparisonInterface::class);
+        $factoryMock->shouldReceive('contains')->withAnyArgs()->andReturn($cMock);
 
-        $comp = $this->factory->createComparisonFromStringDetection($this->propInfo, 'gte', '100');
-        $this->assertEquals(ComparisonInterface::GREATER_THAN_OR_EQUAL_TO, $comp->getType());
-
-        $comp = $this->factory->createComparisonFromStringDetection($this->propInfo, 'e', '100');
-        $this->assertEquals(ComparisonInterface::EQUAL_TO, $comp->getType());
-
-        $comp = $this->factory->createComparisonFromStringDetection($this->propInfo, 'ne', '100');
-        $this->assertEquals(ComparisonInterface::NOT_EQUAL_TO, $comp->getType());
-
-        $comp = $this->factory->createComparisonFromStringDetection($this->propInfo, 'c', '100');
-        $this->assertEquals(ComparisonInterface::CONTAINS, $comp->getType());
-    }
-
-    public function testParticularBuilder()
-    {
-        /** @var LogicalInterface $logical */
-        $logical = $this->factory->logicalAnd([$this->comp]);
-        $this->assertTrue($logical instanceof LogicalInterface);
-        $this->assertEquals(LogicalInterface::OPERATOR_AND, $logical->getType());
-
-        $logical = $this->factory->logicalOr([$this->comp]);
-        $this->assertTrue($logical instanceof LogicalInterface);
-        $this->assertEquals(LogicalInterface::OPERATOR_OR, $logical->getType());
-
-        /** @var ComparisonInterface $comp */
-        $comp = $this->factory->lessThan($this->propInfo, '100');
-        $this->assertTrue($comp instanceof ComparisonInterface);
-        $this->assertEquals(ComparisonInterface::LESS_THAN, $comp->getType());
-
-        $comp = $this->factory->lessThanOrEqualTo($this->propInfo, '100');
-        $this->assertTrue($comp instanceof ComparisonInterface);
-        $this->assertEquals(ComparisonInterface::LESS_THAN_OR_EQUAL_TO, $comp->getType());
-
-        $comp = $this->factory->greaterThan($this->propInfo, '100');
-        $this->assertTrue($comp instanceof ComparisonInterface);
-        $this->assertEquals(ComparisonInterface::GREATER_THAN, $comp->getType());
-
-        $comp = $this->factory->greaterThanOrEqualTo($this->propInfo, '100');
-        $this->assertTrue($comp instanceof ComparisonInterface);
-        $this->assertEquals(ComparisonInterface::GREATER_THAN_OR_EQUAL_TO, $comp->getType());
-
-        $comp = $this->factory->equalTo($this->propInfo, '100');
-        $this->assertTrue($comp instanceof ComparisonInterface);
-        $this->assertEquals(ComparisonInterface::EQUAL_TO, $comp->getType());
-
-        $comp = $this->factory->notEqualTo($this->propInfo, '100');
-        $this->assertTrue($comp instanceof ComparisonInterface);
-        $this->assertEquals(ComparisonInterface::NOT_EQUAL_TO, $comp->getType());
-
-        $comp = $this->factory->contains($this->propInfo, '100');
-        $this->assertTrue($comp instanceof ComparisonInterface);
-        $this->assertEquals(ComparisonInterface::CONTAINS, $comp->getType());
+        $this->assertTrue($factoryMock->createComparisonFromStringDetection($propInfoMock, 'lt', '') === $ltMock);
+        $this->assertTrue($factoryMock->createComparisonFromStringDetection($propInfoMock, 'lte', '') === $lteMock);
+        $this->assertTrue($factoryMock->createComparisonFromStringDetection($propInfoMock, 'gt', '') === $gtMock);
+        $this->assertTrue($factoryMock->createComparisonFromStringDetection($propInfoMock, 'gte', '') === $gteMock);
+        $this->assertTrue($factoryMock->createComparisonFromStringDetection($propInfoMock, 'e', '') === $eMock);
+        $this->assertTrue($factoryMock->createComparisonFromStringDetection($propInfoMock, 'ne', '') === $neMock);
+        $this->assertTrue($factoryMock->createComparisonFromStringDetection($propInfoMock, 'c', '') === $cMock);
     }
 }

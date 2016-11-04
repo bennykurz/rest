@@ -18,14 +18,9 @@
 
 namespace N86io\Rest\Tests\DomainObject\EntityInfo;
 
-use DI\Cache\ArrayCache;
-use N86io\Rest\Cache\EntityInfoStorageCacheInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoFactory;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
-use N86io\Rest\Object\ContainerFactory;
-use N86io\Rest\Tests\DomainObject\FakeEntity1;
-use N86io\Rest\Tests\DomainObject\FakeEntity2;
 use N86io\Rest\UnitTestCase;
 
 /**

@@ -18,13 +18,12 @@
 
 namespace N86io\Rest\Tests\DomainObject\EntityInfo;
 
+use N86io\Rest\DomainObject\AbstractEntity;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfo;
+use N86io\Rest\DomainObject\PropertyInfo\AbstractPropertyInfo;
+use N86io\Rest\DomainObject\PropertyInfo\AbstractStatic;
 use N86io\Rest\DomainObject\PropertyInfo\Common;
-use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoFactory;
-use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 use N86io\Rest\Http\RequestInterface;
-use N86io\Rest\Tests\DomainObject\FakeEntity1;
-use N86io\Rest\Tests\DomainObject\FakeEntity2;
 use N86io\Rest\UnitTestCase;
 
 /**
@@ -53,89 +52,56 @@ class EntityInfoTest extends UnitTestCase
      */
     protected $createdPropertyInfo;
 
-    public function setUp()
+    public function test()
     {
-        parent::setUp();
+        /** @var $entityInfo EntityInfo */
+        list($entityClassName, $entityInfo) = $this->createEntityInfoReadOnly();
+        $this->assertEquals($entityClassName, $entityInfo->getClassName());
+        $this->assertEquals('_storage_', $entityInfo->getStorage());
+        $this->assertEquals('_table_', $entityInfo->getTable());
+        $this->assertTrue($entityInfo->canHandleRequestMode(RequestInterface::REQUEST_MODE_READ));
+        $this->assertFalse($entityInfo->canHandleRequestMode(RequestInterface::REQUEST_MODE_DELETE));
 
-        $this->entityInfo1 = static::$container->make(
-            EntityInfo::class,
-            [
-                'attributes' => [
-                    'className' => FakeEntity1::class,
-                    'storage' => 'storageName',
-                    'mode' => ['read', 'write'],
-                    'table' => 'table_name'
-                ]
-            ]
-        );
-        $this->entityInfo2 = static::$container->make(
-            EntityInfo::class,
-            [
-                'attributes' => [
-                    'className' => FakeEntity2::class,
-                    'storage' => 'storageName',
-                    'mode' => ['read']
-                ]
-            ]
-        );
-        $this->entityInfo3 = static::$container->make(
-            EntityInfo::class,
-            [
-                'attributes' => [
-                    'className' => FakeEntity1::class,
-                    'storage' => 'storageName',
-                    'mode' => ['write']
-                ]
-            ]
-        );
-        $propertyAttributes = [
-            [
-                'name' => 'fakeId',
-                'attributes' => [
-                    'type' => 'int',
-                    'resourcePropertyName' => 'uid'
-                ]
-            ],
-            [
-                'name' => 'someNameFour',
-                'attributes' => [
-                    'type' => 'int',
-                    'outputLevel' => 0,
-                    'position' => 3,
-                    'resourceId' => true
-                ]
-            ],
-            [
-                'name' => 'someNameOne',
-                'attributes' => [
-                    'type' => FakeEntity1::class,
-                    'outputLevel' => 0,
-                    'position' => 2
-                ]
-            ],
-            [
-                'name' => 'someNameTwo',
-                'attributes' => [
-                    'type' => 'string',
-                    'outputLevel' => 1,
-                    'position' => 1
-                ]
-            ],
-            [
-                'name' => 'someDynamic',
-                'attributes' => [
-                    'type' => '__dynamic',
-                    'outputLevel' => 5
-                ]
-            ]
+        $entityInfo = $this->createEntityInfoWriteOnly();
+        $this->assertTrue($entityInfo->canHandleRequestMode(RequestInterface::REQUEST_MODE_CREATE));
+        $this->assertFalse($entityInfo->canHandleRequestMode(RequestInterface::REQUEST_MODE_DELETE));
+
+        $entityInfo = $this->createEntityInfoReadWrite();
+        $this->assertTrue($entityInfo->canHandleRequestMode(RequestInterface::REQUEST_MODE_READ));
+        $this->assertTrue($entityInfo->canHandleRequestMode(RequestInterface::REQUEST_MODE_CREATE));
+        $this->assertTrue($entityInfo->canHandleRequestMode(RequestInterface::REQUEST_MODE_DELETE));
+
+        $this->assertFalse($entityInfo->hasResourceIdPropertyInfo());
+        $this->assertFalse($entityInfo->hasUidPropertyInfo());
+
+        $propInfo = $this->createCommonPropertyInfoMock(true, false, 'name', '_name_', 2, 2);
+        $entityInfo->addPropertyInfo($propInfo);
+        $this->assertTrue($entityInfo->hasResourceIdPropertyInfo());
+        $this->assertEquals('name', $entityInfo->mapResourcePropertyName('_name_'));
+        $this->assertEquals('name', $entityInfo->mapResourcePropertyName('name'));
+        $this->assertEquals($propInfo, $entityInfo->getResourceIdPropertyInfo());
+        $this->assertEquals($propInfo, $entityInfo->getPropertyInfo('name'));
+        $expected = [
+            $propInfo->getName() => $propInfo
         ];
-        /** @var PropertyInfoFactory $propInfoFact */
-        $propInfoFact = static::$container->get(PropertyInfoFactory::class);
-        foreach ($propertyAttributes as $attribute) {
-            $propInfo = $propInfoFact->buildPropertyInfo($attribute['name'], $attribute['attributes']);
-            $this->entityInfo1->addPropertyInfo($propInfo);
-            $this->createdPropertyInfo[$propInfo->getName()] = $propInfo;
-        }
+        $this->assertEquals($expected, $entityInfo->getPropertyInfoList());
+        $this->assertTrue($entityInfo->hasPropertyInfo('name'));
+        $this->assertFalse($entityInfo->hasPropertyInfo('otherName'));
+
+        $propInfo = $this->createCommonPropertyInfoMock(false, true, 'name2', '_name_2_', 1, 3);
+        $entityInfo->addPropertyInfo($propInfo);
+        $this->assertTrue($entityInfo->hasUidPropertyInfo());
+        $this->assertEquals($propInfo, $entityInfo->getUidPropertyInfo());
+
+        $propInfo = \Mockery::mock(AbstractPropertyInfo::class);
+        $propInfo->shouldReceive('getName')->andReturn('name3');
+        $propInfo->shouldReceive('shouldShow')->withAnyArgs()->andReturn(true);
+        $propInfo->shouldReceive('getPosition')->andReturn(1);
+        $entityInfo->addPropertyInfo($propInfo);
+
+        $this->assertEquals('name3', $entityInfo->getVisiblePropertiesOrdered(0)[0]->getName());
+        $this->assertEquals('name', $entityInfo->getVisiblePropertiesOrdered(0)[1]->getName());
+        $this->assertEquals('name2', $entityInfo->getVisiblePropertiesOrdered(0)[2]->getName());
     }
 
     public function testConstructorException()
@@ -144,104 +110,82 @@ class EntityInfoTest extends UnitTestCase
         new EntityInfo(['className' => EntityInfoTest::class]);
     }
 
-    public function testAddPropertyInfoException1()
+    public function testSecondResourceIdPropInfoException()
     {
-        $propertyInfo = static::$container->make(
-            Common::class,
-            [
-                'name' => 'someFurtherUid',
-                'attributes' => [
-                    'type' => 'int',
-                    'resourcePropertyName' => 'uid'
-                ]
-            ]
-        );
-
+        $entityInfo = $this->createEntityInfoReadWrite();
+        $propInfo = $this->createCommonPropertyInfoMock(true, false, 'name', '_name_', 2, 1);
+        $entityInfo->addPropertyInfo($propInfo);
         $this->setExpectedException(\InvalidArgumentException::class);
-        $this->entityInfo1->addPropertyInfo($propertyInfo);
+        $propInfo = $this->createCommonPropertyInfoMock(true, false, 'name', '_name_', 2, 1);
+        $entityInfo->addPropertyInfo($propInfo);
     }
 
-    public function testAddPropertyInfoException2()
+    public function testSecondUidPropInfoException()
     {
+        $entityInfo = $this->createEntityInfoReadWrite();
+        $propInfo = $this->createCommonPropertyInfoMock(false, true, 'name', '_name_', 2, 1);
+        $entityInfo->addPropertyInfo($propInfo);
         $this->setExpectedException(\InvalidArgumentException::class);
-        $this->entityInfo1->addPropertyInfo(new Common(
-            'someFurtherUid',
-            [
-                'type' => 'int',
-                'resourceId' => true
-            ]
-        ));
+        $propInfo = $this->createCommonPropertyInfoMock(false, true, 'name', '_name_', 2, 1);
+        $entityInfo->addPropertyInfo($propInfo);
     }
 
-    public function test()
+    /**
+     * @param boolean $isResourceId
+     * @param boolean $isUid
+     * @param string $name
+     * @param string $resPropName
+     * @param int $outputLevel
+     * @param int $position
+     * @return Common
+     */
+    protected function createCommonPropertyInfoMock($isResourceId, $isUid, $name, $resPropName, $outputLevel, $position)
     {
-        $this->assertEquals('storageName', $this->entityInfo1->getStorage());
-        $this->assertEquals(FakeEntity1::class, $this->entityInfo1->getClassName());
-        $this->assertEquals('table_name', $this->entityInfo1->getTable());
-        $this->assertEquals(
-            $this->createdPropertyInfo['someNameFour'],
-            $this->entityInfo1->getResourceIdPropertyInfo()
-        );
-        $this->assertEquals($this->createdPropertyInfo['fakeId'], $this->entityInfo1->getUidPropertyInfo());
-        $this->assertEquals(
-            $this->createdPropertyInfo['someNameOne'],
-            $this->entityInfo1->getPropertyInfo('someNameOne')
-        );
-        $this->assertEquals(
-            $this->createdPropertyInfo['someDynamic'],
-            $this->entityInfo1->getPropertyInfo('someDynamic')
-        );
-        $this->assertEquals($this->createdPropertyInfo, $this->entityInfo1->getPropertyInfoList());
-        $this->assertTrue($this->entityInfo1->hasPropertyInfo('someNameOne'));
-        $this->assertTrue($this->entityInfo1->hasPropertyInfo('someNameTwo'));
-        $this->assertFalse($this->entityInfo1->hasPropertyInfo('someNameTwenty'));
-        $this->assertTrue($this->entityInfo1->hasResourceId());
-        $this->assertTrue($this->entityInfo1->hasUidPropertyInfo());
-        $this->assertEquals('someNameOne', $this->entityInfo1->mapResourcePropertyName('some_name_one'));
-        $this->assertEquals('someNameTwo', $this->entityInfo1->mapResourcePropertyName('some_name_two'));
-        $this->assertEquals('someNameTwo', $this->entityInfo1->mapResourcePropertyName('someNameTwo'));
-        $this->assertEquals('', $this->entityInfo1->mapResourcePropertyName('someNameThree'));
+        $propInfo = \Mockery::mock(Common::class);
+        $propInfo->shouldReceive('isResourceId')->andReturn($isResourceId);
+        $propInfo->shouldReceive('isUid')->andReturn($isUid);
+        $propInfo->shouldReceive('getName')->andReturn($name);
+        $propInfo->shouldReceive('getResourcePropertyName')->andReturn($resPropName);
+        $propInfo->shouldReceive('getOutputLevel')->andReturn($outputLevel);
+        $propInfo->shouldReceive('shouldShow')->withAnyArgs()->andReturn(true);
+        $propInfo->shouldReceive('getPosition')->andReturn($position);
+        return $propInfo;
+    }
 
-        /**
-         * @var PropertyInfoInterface $propInfo1
-         * @var PropertyInfoInterface $propInfo2
-         * @var PropertyInfoInterface $propInfo3
-         */
-        $result = $this->entityInfo1->getVisiblePropertiesOrdered(0);
-        list($propInfo1, $propInfo2, $propInfo3) = $result;
-        $this->assertEquals('fakeId', $propInfo1->getName());
-        $this->assertEquals('someNameOne', $propInfo2->getName());
-        $this->assertEquals('someNameFour', $propInfo3->getName());
-        $this->assertFalse(array_key_exists(3, $result));
+    /**
+     * @return EntityInfo
+     */
+    protected function createEntityInfoReadWrite()
+    {
+        return new EntityInfo([
+            'className' => get_class(\Mockery::mock(AbstractEntity::class)),
+            'mode' => ['read', 'write']
+        ]);
+    }
 
-        /**
-         * @var PropertyInfoInterface $propInfo1
-         * @var PropertyInfoInterface $propInfo2
-         * @var PropertyInfoInterface $propInfo3
-         * @var PropertyInfoInterface $propInfo4
-         */
-        list($propInfo1, $propInfo2, $propInfo3, $propInfo4) = $this->entityInfo1->getVisiblePropertiesOrdered(1);
-        $this->assertEquals('fakeId', $propInfo1->getName());
-        $this->assertEquals('someNameTwo', $propInfo2->getName());
-        $this->assertEquals('someNameOne', $propInfo3->getName());
-        $this->assertEquals('someNameFour', $propInfo4->getName());
+    /**
+     * @return EntityInfo
+     */
+    protected function createEntityInfoWriteOnly()
+    {
+        return new EntityInfo([
+            'className' => get_class(\Mockery::mock(AbstractEntity::class)),
+            'mode' => ['write']
+        ]);
+    }
 
-        $this->assertTrue($this->entityInfo1->canHandleRequestMode(RequestInterface::REQUEST_MODE_READ));
-        $this->assertTrue($this->entityInfo1->canHandleRequestMode(RequestInterface::REQUEST_MODE_CREATE));
-        $this->assertTrue($this->entityInfo1->canHandleRequestMode(RequestInterface::REQUEST_MODE_DELETE));
-        $this->assertTrue($this->entityInfo1->canHandleRequestMode(RequestInterface::REQUEST_MODE_UPDATE));
-        $this->assertTrue($this->entityInfo1->canHandleRequestMode(RequestInterface::REQUEST_MODE_PATCH));
-
-        $this->assertTrue($this->entityInfo2->canHandleRequestMode(RequestInterface::REQUEST_MODE_READ));
-        $this->assertFalse($this->entityInfo2->canHandleRequestMode(RequestInterface::REQUEST_MODE_CREATE));
-        $this->assertFalse($this->entityInfo2->canHandleRequestMode(RequestInterface::REQUEST_MODE_DELETE));
-        $this->assertFalse($this->entityInfo2->canHandleRequestMode(RequestInterface::REQUEST_MODE_UPDATE));
-        $this->assertFalse($this->entityInfo2->canHandleRequestMode(RequestInterface::REQUEST_MODE_PATCH));
-
-        $this->assertFalse($this->entityInfo3->canHandleRequestMode(RequestInterface::REQUEST_MODE_READ));
-        $this->assertTrue($this->entityInfo3->canHandleRequestMode(RequestInterface::REQUEST_MODE_CREATE));
-        $this->assertFalse($this->entityInfo3->canHandleRequestMode(RequestInterface::REQUEST_MODE_DELETE));
-        $this->assertFalse($this->entityInfo3->canHandleRequestMode(RequestInterface::REQUEST_MODE_UPDATE));
-        $this->assertFalse($this->entityInfo3->canHandleRequestMode(RequestInterface::REQUEST_MODE_PATCH));
+    /**
+     * @return array
+     */
+    protected function createEntityInfoReadOnly()
+    {
+        $entityClassName = get_class(\Mockery::mock(AbstractEntity::class));
+        $entityInfo = new EntityInfo([
+            'className' => $entityClassName,
+            'storage' => '_storage_',
+            'table' => '_table_',
+            'mode' => ['read']
+        ]);
+        return [$entityClassName, $entityInfo];
     }
 }

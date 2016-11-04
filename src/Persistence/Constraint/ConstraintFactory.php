@@ -36,7 +36,7 @@ class ConstraintFactory
     /**
      * @param PropertyInfoInterface $leftOperand
      * @param string $operator
-     * @param string $rightOperand
+     * @param $rightOperand
      * @param boolean $save
      * @return ConstraintInterface
      */
@@ -66,7 +66,7 @@ class ConstraintFactory
 
     /**
      * @param array $constraints
-     * @return ConstraintInterface
+     * @return LogicalInterface
      */
     public function logicalAnd(array $constraints)
     {
@@ -81,7 +81,7 @@ class ConstraintFactory
 
     /**
      * @param array $constraints
-     * @return ConstraintInterface
+     * @return LogicalInterface
      */
     public function logicalOr(array $constraints)
     {
@@ -96,9 +96,9 @@ class ConstraintFactory
 
     /**
      * @param PropertyInfoInterface $leftOperand
-     * @param mixed $rightOperand
+     * @param $rightOperand
      * @param bool $save
-     * @return ConstraintInterface
+     * @return ComparisonInterface
      */
     public function lessThan(PropertyInfoInterface $leftOperand, $rightOperand, $save = null)
     {
@@ -115,9 +115,9 @@ class ConstraintFactory
 
     /**
      * @param PropertyInfoInterface $leftOperand
-     * @param mixed $rightOperand
+     * @param $rightOperand
      * @param bool $save
-     * @return ConstraintInterface
+     * @return ComparisonInterface
      */
     public function lessThanOrEqualTo(PropertyInfoInterface $leftOperand, $rightOperand, $save = null)
     {
@@ -134,9 +134,9 @@ class ConstraintFactory
 
     /**
      * @param PropertyInfoInterface $leftOperand
-     * @param mixed $rightOperand
+     * @param $rightOperand
      * @param bool $save
-     * @return ConstraintInterface
+     * @return ComparisonInterface
      */
     public function greaterThan(PropertyInfoInterface $leftOperand, $rightOperand, $save = null)
     {
@@ -153,9 +153,9 @@ class ConstraintFactory
 
     /**
      * @param PropertyInfoInterface $leftOperand
-     * @param mixed $rightOperand
+     * @param $rightOperand
      * @param bool $save
-     * @return ConstraintInterface
+     * @return ComparisonInterface
      */
     public function greaterThanOrEqualTo(PropertyInfoInterface $leftOperand, $rightOperand, $save = null)
     {
@@ -172,9 +172,9 @@ class ConstraintFactory
 
     /**
      * @param PropertyInfoInterface $leftOperand
-     * @param mixed $rightOperand
+     * @param $rightOperand
      * @param bool $save
-     * @return ConstraintInterface
+     * @return ComparisonInterface
      */
     public function equalTo(PropertyInfoInterface $leftOperand, $rightOperand, $save = null)
     {
@@ -191,9 +191,9 @@ class ConstraintFactory
 
     /**
      * @param PropertyInfoInterface $leftOperand
-     * @param mixed $rightOperand
+     * @param $rightOperand
      * @param bool $save
-     * @return ConstraintInterface
+     * @return ComparisonInterface
      */
     public function notEqualTo(PropertyInfoInterface $leftOperand, $rightOperand, $save = null)
     {
@@ -210,9 +210,9 @@ class ConstraintFactory
 
     /**
      * @param PropertyInfoInterface $leftOperand
-     * @param mixed $rightOperand
+     * @param $rightOperand
      * @param bool $save
-     * @return ConstraintInterface
+     * @return ComparisonInterface
      */
     public function contains(PropertyInfoInterface $leftOperand, $rightOperand, $save = null)
     {

@@ -22,6 +22,7 @@ use N86io\Rest\DomainObject\AbstractEntity;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 use N86io\Rest\DomainObject\PropertyInfo\ResourceIdInterface;
 use N86io\Rest\DomainObject\PropertyInfo\StaticInterface;
+use N86io\Rest\DomainObject\PropertyInfo\UidInterface;
 use N86io\Rest\Http\RequestInterface;
 
 /**
@@ -198,13 +199,13 @@ class EntityInfo implements EntityInfoInterface
      */
     protected function isUidPropertyInfo(PropertyInfoInterface $propertyInfo)
     {
-        if (!$propertyInfo instanceof StaticInterface) {
+        if (!$propertyInfo instanceof UidInterface) {
             return false;
         }
-        if ($propertyInfo->getResourcePropertyName() === 'uid' && !empty($this->uidPropertyInfo)) {
+        if ($propertyInfo->isUid() && !empty($this->uidPropertyInfo)) {
             throw new \InvalidArgumentException('Only one column can selected as uid.');
         }
-        return $propertyInfo->getResourcePropertyName() === 'uid';
+        return $propertyInfo->isUid();
     }
 
     /**
@@ -219,7 +220,7 @@ class EntityInfo implements EntityInfoInterface
     /**
      * @return bool
      */
-    public function hasResourceId()
+    public function hasResourceIdPropertyInfo()
     {
         return $this->resIdPropertyInfo instanceof PropertyInfoInterface;
     }

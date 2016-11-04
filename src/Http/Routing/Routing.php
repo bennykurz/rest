@@ -19,7 +19,7 @@
 namespace N86io\Rest\Http\Routing;
 
 use N86io\Rest\Service\Configuration;
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UriInterface;
 
 /**
  * Class Routing
@@ -48,10 +48,10 @@ class Routing implements RoutingInterface
     }
 
     /**
-     * @param ServerRequestInterface $serverRequest
+     * @param UriInterface $uri
      * @return array
      */
-    public function getRoute(ServerRequestInterface $serverRequest)
+    public function getRoute(UriInterface $uri)
     {
         $patternPart = [];
         foreach ($this->parameters as $parameter) {
@@ -62,7 +62,7 @@ class Routing implements RoutingInterface
             $patternPart[] = '(\/' . $parameter->getExpression() . '){1}';
         }
         $searchPattern = '/^' . implode('', $patternPart) . '$/';
-        $apiPath = $this->getApiPath($serverRequest);
+        $apiPath = $this->getApiPath($uri);
 
         preg_match($searchPattern, $apiPath, $matches);
 
@@ -86,22 +86,13 @@ class Routing implements RoutingInterface
     }
 
     /**
-     * @param ServerRequestInterface $request
+     * @param UriInterface $uri
      * @return string
      */
-    protected function getApiPath(ServerRequestInterface $request)
+    protected function getApiPath(UriInterface $uri)
     {
         $apiBaseUrl = $this->configuration->getApiBaseUrl();
-        $url = $this->getUrl($request);
+        $url = $uri->getScheme() . '://' . $uri->getHost() . $uri->getPath();
         return substr($url, strlen($apiBaseUrl));
-    }
-
-    /**
-     * @param ServerRequestInterface $request
-     * @return string
-     */
-    protected function getUrl(ServerRequestInterface $request)
-    {
-        return $request->getUri()->getScheme() . '://' . $request->getUri()->getHost() . $request->getUri()->getPath();
     }
 }

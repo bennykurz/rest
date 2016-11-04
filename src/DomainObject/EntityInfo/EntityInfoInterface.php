@@ -77,7 +77,7 @@ interface EntityInfoInterface
     /**
      * @return bool
      */
-    public function hasResourceId();
+    public function hasResourceIdPropertyInfo();
 
     /**
      * @return bool

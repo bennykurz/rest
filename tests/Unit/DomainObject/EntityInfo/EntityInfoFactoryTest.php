@@ -64,9 +64,6 @@ class EntityInfoFactoryTest extends UnitTestCase
         $mock = \Mockery::mock(PropertyInfoFactory::class);
         $mock->shouldReceive('buildPropertyInfo')->withAnyArgs()
             ->andReturn(\Mockery::mock(PropertyInfoInterface::class));
-        
-        $mock->shouldReceive('buildUidPropertyInfo')->withAnyArgs()
-            ->andReturn(\Mockery::mock(PropertyInfoInterface::class));
 
         return $mock;
     }

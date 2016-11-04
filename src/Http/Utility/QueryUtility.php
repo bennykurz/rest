@@ -24,7 +24,6 @@ use N86io\Rest\DomainObject\PropertyInfo\RestrictableInterface;
 use N86io\Rest\DomainObject\PropertyInfo\SortableInterface;
 use N86io\Rest\Persistence\Constraint\ConstraintFactory;
 use N86io\Rest\Persistence\Ordering\OrderingFactory;
-use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Class QueryUtility
@@ -45,14 +44,14 @@ class QueryUtility
     protected $constraintFactory;
 
     /**
-     * @param ServerRequestInterface $serverRequest
+     * @param string $queryParams
      * @param EntityInfoInterface $entityInfo
      * @return array
      */
-    public function resolveQueryParams(ServerRequestInterface $serverRequest, EntityInfoInterface $entityInfo)
+    public function resolveQueryParams($queryParams, EntityInfoInterface $entityInfo)
     {
-        parse_str($serverRequest->getUri()->getQuery(), $parsed);
-        $queryParams = $parsed ?: [];
+        parse_str($queryParams, $parsed);
+        $parsed = $parsed ?: [];
         $result = [
             'ordering' => [],
             'limit' => null,
@@ -60,7 +59,7 @@ class QueryUtility
             'outputLevel' => null
         ];
         $constraints = [];
-        foreach ($queryParams as $name => $value) {
+        foreach ($parsed as $name => $value) {
             switch ($name) {
                 case 'sort':
                     $this->createOrdering($result['ordering'], $value, $entityInfo);

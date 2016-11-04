@@ -72,8 +72,7 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
         }
 
         if (!$entityInfo->hasUidPropertyInfo()) {
-            $uidPropertyInfo = $this->propertyInfoFactory->buildUidPropertyInfo(!$entityInfo->hasResourceId());
-            $entityInfo->addPropertyInfo($uidPropertyInfo);
+            // TODO: throw an exception
         }
         return $entityInfo;
     }

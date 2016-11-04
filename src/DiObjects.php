@@ -7,8 +7,10 @@ use N86io\Rest\Cache\EntityInfoStorageCache;
 use N86io\Rest\Cache\EntityInfoStorageCacheInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoFactory;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoFactoryInterface;
+use N86io\Rest\Http\Request;
 use N86io\Rest\Http\RequestFactory;
 use N86io\Rest\Http\RequestFactoryInterface;
+use N86io\Rest\Http\RequestInterface;
 use N86io\Rest\Http\Routing\RoutingFactory;
 use N86io\Rest\Http\Routing\RoutingFactoryInterface;
 use N86io\Rest\Http\Routing\RoutingParameter;
@@ -24,6 +26,9 @@ return [
 
     EntityInfoFactoryInterface::class =>
         \DI\object(EntityInfoFactory::class),
+
+    RequestInterface::class =>
+        \DI\object(Request::class),
 
     RequestFactoryInterface::class =>
         \DI\object(RequestFactory::class),

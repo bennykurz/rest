@@ -18,7 +18,7 @@
 
 namespace N86io\Rest\Http\Routing;
 
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UriInterface;
 
 /**
  * Interface RoutingInterface
@@ -32,8 +32,8 @@ interface RoutingInterface
     public function addParameter(RoutingParameterInterface $routingParameter);
 
     /**
-     * @param ServerRequestInterface $serverRequest
+     * @param UriInterface $uri
      * @return array
      */
-    public function getRoute(ServerRequestInterface $serverRequest);
+    public function getRoute(UriInterface $uri);
 }

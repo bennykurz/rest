@@ -31,12 +31,14 @@ class CommonTest extends UnitTestCase
     {
         $attributes = [
             'type' => 'int',
-            'ordering' => true
+            'ordering' => true,
+            'uid' => true
         ];
         $propertyInfo = new Common('testSomething', $attributes);
 
         $this->assertFalse($propertyInfo->isResourceId());
         $this->assertTrue($propertyInfo->isOrdering());
         $this->assertFalse($propertyInfo->isConstraint());
+        $this->assertTrue($propertyInfo->isUid());
     }
 }

@@ -21,7 +21,6 @@ namespace N86io\Rest\Tests\DomainObject\PropertyInfo\Factory;
 use N86io\Rest\DomainObject\PropertyInfo\Factory\FactoryInterface;
 use N86io\Rest\DomainObject\PropertyInfo\Factory\Relation;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoUtility;
-use N86io\Rest\Tests\DomainObject\FakeEntity1;
 
 /**
  * Class RelationTest

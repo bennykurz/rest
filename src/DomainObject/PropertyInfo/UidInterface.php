@@ -16,23 +16,16 @@
  * along with N86io/Rest or see <http://www.gnu.org/licenses/>.
  */
 
-namespace N86io\Rest\Tests\Http\Routing;
-
-use N86io\Rest\Http\Routing\RoutingParameter;
-use N86io\Rest\UnitTestCase;
+namespace N86io\Rest\DomainObject\PropertyInfo;
 
 /**
- * Class RoutingParameterTest
- * @package N86io\Rest\Tests\Service
+ * Interface UidInterface
+ * @package N86io\Rest\DomainObject\PropertyInfo
  */
-class RoutingParameterTest extends UnitTestCase
+interface UidInterface
 {
-    public function test()
-    {
-        $routingParameter = new RoutingParameter('name', 'expr', true, 2);
-        $this->assertEquals('name', $routingParameter->getName());
-        $this->assertEquals('expr', $routingParameter->getExpression());
-        $this->assertTrue($routingParameter->isOptional());
-        $this->assertEquals(2, $routingParameter->getTakeResult());
-    }
+    /**
+     * @return boolean
+     */
+    public function isUid();
 }

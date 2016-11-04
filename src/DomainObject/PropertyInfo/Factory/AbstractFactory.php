@@ -26,9 +26,11 @@ use DI\Container;
  */
 abstract class AbstractFactory implements FactoryInterface
 {
+    // @codeCoverageIgnoreStart
     /**
      * @Inject
      * @var Container
      */
     protected $container;
+    // @codeCoverageIgnoreEnd
 }
