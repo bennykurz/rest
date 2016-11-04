@@ -40,7 +40,6 @@ class RequestTest extends UnitTestCase
             ->setPage(3)
             ->setOutputLevel(4)
             ->setMode(5)
-            ->setAccept('something')
             ->setModelClassName('ClassName')
             ->setControllerClassName('ControllerName');
         $this->assertEquals(1, $request->getVersion());
@@ -52,7 +51,6 @@ class RequestTest extends UnitTestCase
         $this->assertEquals(3, $request->getPage());
         $this->assertEquals(4, $request->getOutputLevel());
         $this->assertEquals(5, $request->getMode());
-        $this->assertEquals('something', $request->getAccept());
         $this->assertEquals('ClassName', $request->getModelClassName());
         $this->assertEquals('ControllerName', $request->getControllerClassName());
     }

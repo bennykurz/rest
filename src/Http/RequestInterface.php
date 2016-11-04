@@ -134,17 +134,6 @@ interface RequestInterface
     /**
      * @return string
      */
-    public function getAccept();
-
-    /**
-     * @param string $accept
-     * @return RequestInterface
-     */
-    public function setAccept($accept);
-
-    /**
-     * @return string
-     */
     public function getModelClassName();
 
     /**

@@ -251,24 +251,6 @@ class Request implements RequestInterface
     /**
      * @return string
      */
-    public function getAccept()
-    {
-        return $this->accept;
-    }
-
-    /**
-     * @param string $accept
-     * @return Request
-     */
-    public function setAccept($accept)
-    {
-        $this->accept = $accept;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
     public function getModelClassName()
     {
         return $this->modelClassName;
