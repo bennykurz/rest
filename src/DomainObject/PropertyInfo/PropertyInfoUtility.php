@@ -88,13 +88,4 @@ class PropertyInfoUtility
     {
         return is_subclass_of($className, AbstractEntity::class);
     }
-
-    /**
-     * @param string $string
-     * @return string
-     */
-    public function convertPropertyName($string)
-    {
-        return strtolower(preg_replace('/([A-Z])/', '_$1', $string));
-    }
 }

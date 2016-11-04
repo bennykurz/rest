@@ -48,13 +48,7 @@ class EntityInfoConfLoader
         $this->loadAll();
         $result = [];
         foreach ($parentClassNames as $parentClassName) {
-            if (!array_key_exists($parentClassName, $this->loadedConf)) {
-                continue;
-            }
             $this->mergeModelConf($result, $this->loadedConf[$parentClassName]);
-        }
-        if (!array_key_exists($className, $this->loadedConf)) {
-            return $result;
         }
         $this->mergeModelConf($result, $this->loadedConf[$className]);
         return $result;
@@ -112,10 +106,6 @@ class EntityInfoConfLoader
         $this->mergeSingle($modelConf1, $modelConf2, 'table');
         $this->mergeSingle($modelConf1, $modelConf2, 'mode');
 
-        if (!array_key_exists('properties', $modelConf2)) {
-            return;
-        }
-
         if (!array_key_exists('properties', $modelConf1)) {
             $modelConf1['properties'] = [];
         }
@@ -128,14 +118,15 @@ class EntityInfoConfLoader
      */
     protected function mergeProperties(array &$properties1, array $properties2)
     {
-        foreach ($properties2 as $propertyName => $property2) {
+        foreach ($properties2 as $propertyName => $attributes2) {
             if (!array_key_exists($propertyName, $properties1)) {
                 $properties1[$propertyName] = [];
             }
-            $property1 = &$properties1[$propertyName];
-            foreach (array_keys($property2) as $attributeName) {
-                $this->mergeSingle($property1, $property2, $attributeName);
+            $attributes1 = &$properties1[$propertyName];
+            foreach (array_keys($attributes2) as $attributeName) {
+                $this->mergeSingle($attributes1, $attributes2, $attributeName);
             }
+            $attributes1 = $this->setUndefinedPropertyAttributes($propertyName, $attributes1);
         }
     }
 
@@ -153,7 +144,7 @@ class EntityInfoConfLoader
 
     /**
      * @param string $yaml
-     * @return mixed
+     * @return array
      * @throws \Exception
      */
     protected function parseYaml($yaml)
@@ -188,12 +179,32 @@ class EntityInfoConfLoader
     protected function loadFromFile($path, $type)
     {
         if (($type & Configuration::ENTITY_INFO_CONF_ARRAY) !== 0) {
-            $array = require $path;
-            if (!is_array($array)) {
-                throw new \Exception('The file "' . $path . '" gives no array return.');
-            }
-            return $array;
+            return require $path;
         }
         return file_get_contents($path);
+    }
+
+    /**
+     * @param string $propertyName
+     * @param array $attributes
+     * @return array
+     */
+    protected function setUndefinedPropertyAttributes($propertyName, array $attributes)
+    {
+        if (!array_key_exists('resourcePropertyName', $attributes) &&
+            !array_key_exists('sqlExpression', $attributes)
+        ) {
+            $attributes['resourcePropertyName'] = $this->convertPropertyName($propertyName);
+        }
+        return $attributes;
+    }
+
+    /**
+     * @param string $string
+     * @return string
+     */
+    protected function convertPropertyName($string)
+    {
+        return strtolower(preg_replace('/(?<=\\w)([A-Z])/', '_$1', $string));
     }
 }
