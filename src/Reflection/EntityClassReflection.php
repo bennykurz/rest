@@ -18,7 +18,6 @@
 
 namespace N86io\Rest\Reflection;
 
-use DI\Container;
 use N86io\Reflection\ReflectionClass;
 use N86io\Rest\DomainObject\AbstractEntity;
 
@@ -29,12 +28,6 @@ use N86io\Rest\DomainObject\AbstractEntity;
  */
 class EntityClassReflection
 {
-    /**
-     * @Inject
-     * @var Container
-     */
-    protected $container;
-
     /**
      * @Inject
      * @var MethodNameUtility
@@ -158,12 +151,12 @@ class EntityClassReflection
                 continue;
             }
             $propertyAttributes = &$this->properties[$propertyName];
-            if (empty($propertyAttributes)) {
-                $propertyAttributes = [
-                    'type' => '__dynamic',
-                    'getter' => $methodAttributes['getter'],
-                    'setter' => $methodAttributes['setter']
-                ];
+            $propertyAttributes['type'] = '__dynamic';
+            if (array_key_exists('getter', $methodAttributes)) {
+                $propertyAttributes['getter'] = $methodAttributes['getter'];
+            }
+            if (array_key_exists('setter', $methodAttributes)) {
+                $propertyAttributes['setter'] = $methodAttributes['setter'];
             }
         }
     }
@@ -183,12 +176,7 @@ class EntityClassReflection
                 continue;
             }
             $propertyName = $this->methodNameUtility->createPropertyNameFromMethod($method->getName());
-            $attr = &$methodsAttr[$propertyName];
-            if (!is_array($attr)) {
-                $attr = [];
-            }
             if ($this->methodNameUtility->isGetter($method->getName())) {
-                $attr = array_merge($method->getParsedDocComment()->getTags(), $attr);
                 $methodsAttr[$propertyName]['getter'] = $method->getName();
             }
             if ($this->methodNameUtility->isSetter($method->getName())) {

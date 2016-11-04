@@ -20,6 +20,7 @@ namespace N86io\Rest\Tests\Reflection;
 
 use N86io\Rest\Object\ContainerFactory;
 use N86io\Rest\Reflection\EntityClassReflection;
+use N86io\Rest\Reflection\MethodNameUtility;
 use N86io\Rest\Tests\DomainObject\FakeEntity1;
 use N86io\Rest\Tests\DomainObject\FakeEntity2;
 use N86io\Rest\Tests\DomainObject\FakeEntity3;
@@ -31,56 +32,23 @@ use N86io\Rest\UnitTestCase;
  */
 class EntityClassReflectionTest extends UnitTestCase
 {
-    /**
-     * @var EntityClassReflection
-     */
-    protected $fakeEntity1;
-
-    /**
-     * @var EntityClassReflection
-     */
-    protected $fakeEntity2;
-
-    /**
-     * @var EntityClassReflection
-     */
-    protected $fakeEntity3;
-
-    public function setUp()
+    public function test()
     {
-        parent::setUp();
-        $this->fakeEntity1 = static::$container->make(
-            EntityClassReflection::class,
-            ['className' => FakeEntity1::class]
-        );
-        $this->fakeEntity2 = static::$container->make(
-            EntityClassReflection::class,
-            ['className' => FakeEntity2::class]
-        );
-        $this->fakeEntity3 = static::$container->make(
-            EntityClassReflection::class,
-            ['className' => FakeEntity3::class]
-        );
-    }
+        $fakeEntity1 = new EntityClassReflection(FakeEntity1::class);
+        $this->inject($fakeEntity1, 'methodNameUtility', $this->createMethodNameUtilityMock());
 
-    public function testWrongEntityClass()
-    {
-        $this->setExpectedException(\InvalidArgumentException::class);
-        /** @var EntityClassReflection $wrongEntityClass */
-        static::$container->make(
-            EntityClassReflection::class,
-            ['className' => ContainerFactory::class]
-        );
-    }
+        $fakeEntity2 = new EntityClassReflection(FakeEntity2::class);
+        $this->inject($fakeEntity2, 'methodNameUtility', $this->createMethodNameUtilityMock());
 
-    public function testGettter()
-    {
-        $this->assertEquals('Class FakeEntity1', $this->fakeEntity1->getClassSummary());
-        $this->assertEquals('Class FakeEntity2', $this->fakeEntity2->getClassSummary());
-        $this->assertEquals('Class FakeEntity1', $this->fakeEntity3->getClassSummary());
+        $fakeEntity3 = new EntityClassReflection(FakeEntity3::class);
+        $this->inject($fakeEntity3, 'methodNameUtility', $this->createMethodNameUtilityMock());
 
-        $this->assertEquals('Some description', $this->fakeEntity1->getClassDescription());
-        $this->assertEquals('Some description', $this->fakeEntity2->getClassDescription());
+        $this->assertEquals('Class FakeEntity1', $fakeEntity1->getClassSummary());
+        $this->assertEquals('Class FakeEntity2', $fakeEntity2->getClassSummary());
+        $this->assertEquals('Class FakeEntity1', $fakeEntity3->getClassSummary());
+
+        $this->assertEquals('Some description', $fakeEntity1->getClassDescription());
+        $this->assertEquals('Some description', $fakeEntity2->getClassDescription());
 
         $expected1 = [
             'fakeId' => [
@@ -127,11 +95,47 @@ class EntityClassReflectionTest extends UnitTestCase
         $expected2['statusCombined'] = [
             'type' => 'int'
         ];
-        $this->assertEquals($expected1, $this->fakeEntity1->getProperties());
-        $this->assertEquals($expected2, $this->fakeEntity2->getProperties());
+        $this->assertEquals($expected1, $fakeEntity1->getProperties());
+        $this->assertEquals($expected2, $fakeEntity2->getProperties());
 
-        $this->assertEquals([], $this->fakeEntity1->getParentClasses());
-        $this->assertEquals(['N86io\Rest\Tests\DomainObject\FakeEntity1'], $this->fakeEntity2->getParentClasses());
-        $this->assertEquals(['N86io\Rest\Tests\DomainObject\FakeEntity1'], $this->fakeEntity3->getParentClasses());
+        $this->assertEquals([], $fakeEntity1->getParentClasses());
+        $this->assertEquals(['N86io\Rest\Tests\DomainObject\FakeEntity1'], $fakeEntity2->getParentClasses());
+        $this->assertEquals(['N86io\Rest\Tests\DomainObject\FakeEntity1'], $fakeEntity3->getParentClasses());
+    }
+
+    public function testWrongEntityClass()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+        /** @var EntityClassReflection $wrongEntityClass */
+        static::$container->make(
+            EntityClassReflection::class,
+            ['className' => ContainerFactory::class]
+        );
+    }
+
+    /**
+     * @return MethodNameUtility
+     */
+    protected function createMethodNameUtilityMock()
+    {
+        $mock = \Mockery::mock(MethodNameUtility::class);
+        $mock->shouldReceive('isGetterOrSetter')->with('/^(is|get|set).*/')->andReturn(true);
+        $mock->shouldReceive('isGetterOrSetter')->withAnyArgs()->andReturn(false);
+
+        $mock->shouldReceive('isGetter')->with('/^(is|get).*/')->andReturn(true);
+        $mock->shouldReceive('isGetter')->withAnyArgs()->andReturn(false);
+
+        $mock->shouldReceive('isSetter')->with('/^set.*/')->andReturn(true);
+        $mock->shouldReceive('isSetter')->withAnyArgs()->andReturn(false);
+
+        $mock->shouldReceive('createPropertyNameFromMethod')->with('/(set|get)String/')->andReturn('string');
+        $mock->shouldReceive('createPropertyNameFromMethod')->with('/(set|get)Integer/')->andReturn('integer');
+
+        $mock->shouldReceive('createPropertyNameFromMethod')->with('/(set|get)DateTimeTimestamp/')
+            ->andReturn('dateTimeTimestamp');
+        $mock->shouldReceive('createPropertyNameFromMethod')->with('/(set|get)StatusPhpDetermination/')
+            ->andReturn('statusPhpDetermination');
+
+        return $mock;
     }
 }
