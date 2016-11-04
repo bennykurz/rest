@@ -36,24 +36,45 @@ class EntityInfoStorageTest extends UnitTestCase
 {
     public function test()
     {
-        /** @var EntityInfoFactory $entityInfoFactory */
-        $entityInfoFactory = static::$container->get(EntityInfoFactory::class);
-        $fakeEntity2Info = $entityInfoFactory->buildEntityInfoFromClassName(FakeEntity2::class);
+        $cache = new \Doctrine\Common\Cache\ArrayCache;
+        $arrayCache = new \Doctrine\Common\Cache\ArrayCache;
 
-        /** @var ArrayCache $arrayCache */
-        $cache = static::$container->get(ArrayCache::class);
-        $cache->save(md5(FakeEntity2::class), $fakeEntity2Info);
-        $container = ContainerFactory::create(
-            null,
-            [
-                EntityInfoStorageCacheInterface::class => $cache
-            ]
-        );
+        $entityInfoStorage = new EntityInfoStorage;
 
-        /** @var EntityInfoStorage $entityInfoStorage */
-        $entityInfoStorage = $container->get(EntityInfoStorage::class);
-        $this->assertTrue($entityInfoStorage->get(FakeEntity1::class) instanceof EntityInfoInterface);
-        $this->assertTrue($entityInfoStorage->get(FakeEntity1::class) instanceof EntityInfoInterface);
-        $this->assertTrue($entityInfoStorage->get(FakeEntity2::class) instanceof EntityInfoInterface);
+        $this->inject($entityInfoStorage, 'cache', $cache);
+        $this->inject($entityInfoStorage, 'arrayCache', $arrayCache);
+
+        $factoryMock = $this->getEntityInfoFactoryMock();
+
+        $this->inject($entityInfoStorage, 'entityInfoFactory', $factoryMock);
+
+        $entity2Info = $factoryMock->buildEntityInfoFromClassName('Entity2');
+        $cache->save(md5('Entity2'), $entity2Info);
+
+        $this->assertTrue($entityInfoStorage->get('Entity1') instanceof EntityInfoInterface);
+        $this->assertTrue($entityInfoStorage->get('Entity1') instanceof EntityInfoInterface);
+        $this->assertTrue($entityInfoStorage->get('Entity2') instanceof EntityInfoInterface);
+    }
+
+    /**
+     * @return EntityInfoFactory
+     */
+    protected function getEntityInfoFactoryMock()
+    {
+        $mock = \Mockery::mock(EntityInfoFactory::class);
+        $mock->shouldReceive('buildEntityInfoFromClassName')
+            ->with('Entity1')
+            ->andReturn(\Mockery::mock(EntityInfoInterface::class));
+
+        $mock->shouldReceive('buildEntityInfoFromClassName')
+            ->with('Entity2')
+            ->andReturn(\Mockery::mock(EntityInfoInterface::class));
+
+        return $mock;
+    }
+
+    public function tearDown()
+    {
+        \Mockery::close();
     }
 }
