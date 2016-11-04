@@ -53,19 +53,12 @@ class ResponseFactory
     protected $serverRequest;
 
     /**
-     * @param string $accept
-     */
-    public function setAccept($accept)
-    {
-        $this->contentConverter = $this->converterFactory->createFromAccept($accept);
-    }
-
-    /**
      * @param ServerRequestInterface $serverRequest
      */
     public function setServerRequest(ServerRequestInterface $serverRequest)
     {
         $this->serverRequest = $serverRequest;
+        $this->contentConverter = $this->converterFactory->createFromAccept($serverRequest->getHeader('accept'));
     }
 
     /**

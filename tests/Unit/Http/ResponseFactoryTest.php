@@ -33,11 +33,11 @@ class ResponseFactoryTest extends UnitTestCase
         /** @var ServerRequestInterface $serverRequest */
         $serverRequest = \Mockery::mock(ServerRequestInterface::class);
         $serverRequest->shouldReceive('getUri')->andReturn('RequestUrl');
+        $serverRequest->shouldReceive('getHeader')->with('accept')->andReturn('application/json');
 
         /** @var ResponseFactory $responseFactory */
         $responseFactory = static::$container->get(ResponseFactory::class);
         $responseFactory->setServerRequest($serverRequest);
-        $responseFactory->setAccept('application/json');
 
         $this->assertEquals(400, $responseFactory->badRequest()->getStatusCode());
         $this->assertEquals(401, $responseFactory->unauthorized()->getStatusCode());
