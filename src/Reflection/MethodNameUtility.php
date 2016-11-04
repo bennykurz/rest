@@ -49,7 +49,7 @@ class MethodNameUtility
      */
     public function isGetter($methodName)
     {
-        return $this->methodType($methodName) === 'get' || self::methodType($methodName) === 'is';
+        return preg_match('/^(is|get).*/', $methodName) === 1;
     }
 
     /**
@@ -58,16 +58,6 @@ class MethodNameUtility
      */
     public function isSetter($methodName)
     {
-        return $this->methodType($methodName) === 'set';
-    }
-
-    /**
-     * @param string $methodName
-     * @return string
-     */
-    protected function methodType($methodName)
-    {
-        preg_match('/^([a-z]+)[a-zA-Z]*/', $methodName, $matches);
-        return $matches[1];
+        return preg_match('/^(set).*/', $methodName) === 1;
     }
 }

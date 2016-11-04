@@ -27,54 +27,36 @@ use N86io\Rest\UnitTestCase;
  */
 class MethodNameUtilityTest extends UnitTestCase
 {
-    /**
-     * @var MethodNameUtility
-     */
-    protected $methodNameUtility;
-
-    public function setUp()
+    public function test()
     {
-        parent::setUp();
-        $this->methodNameUtility = new MethodNameUtility;
-    }
+        $methodNameUtility = new MethodNameUtility;
 
-    public function testCreatePropertyNameFromMethod()
-    {
         $this->assertEquals(
             'somethingYouWant',
-            $this->methodNameUtility->createPropertyNameFromMethod('getSomethingYouWant')
+            $methodNameUtility->createPropertyNameFromMethod('getSomethingYouWant')
         );
         $this->assertEquals(
             'somethingYouWant',
-            $this->methodNameUtility->createPropertyNameFromMethod('setSomethingYouWant')
+            $methodNameUtility->createPropertyNameFromMethod('setSomethingYouWant')
         );
         $this->assertEquals(
             'somethingYouWant',
-            $this->methodNameUtility->createPropertyNameFromMethod('isSomethingYouWant')
+            $methodNameUtility->createPropertyNameFromMethod('isSomethingYouWant')
         );
-    }
 
-    public function testIsGetterOrSetter()
-    {
-        $this->assertTrue($this->methodNameUtility->isGetterOrSetter('setSomething'));
-        $this->assertTrue($this->methodNameUtility->isGetterOrSetter('getSomething'));
-        $this->assertTrue($this->methodNameUtility->isGetterOrSetter('isSomething'));
-        $this->assertFalse($this->methodNameUtility->isGetterOrSetter('createSomething'));
-    }
+        $this->assertTrue($methodNameUtility->isGetterOrSetter('setSomething'));
+        $this->assertTrue($methodNameUtility->isGetterOrSetter('getSomething'));
+        $this->assertTrue($methodNameUtility->isGetterOrSetter('isSomething'));
+        $this->assertFalse($methodNameUtility->isGetterOrSetter('createSomething'));
 
-    public function testIsGetter()
-    {
-        $this->assertFalse($this->methodNameUtility->isGetter('setSomethingYouWant'));
-        $this->assertTrue($this->methodNameUtility->isGetter('getSomethingYouWant'));
-        $this->assertTrue($this->methodNameUtility->isGetter('isSomethingYouWant'));
-        $this->assertFalse($this->methodNameUtility->isGetter('hmmSomethingYouWant'));
-    }
+        $this->assertFalse($methodNameUtility->isGetter('setSomethingYouWant'));
+        $this->assertTrue($methodNameUtility->isGetter('getSomethingYouWant'));
+        $this->assertTrue($methodNameUtility->isGetter('isSomethingYouWant'));
+        $this->assertFalse($methodNameUtility->isGetter('hmmSomethingYouWant'));
 
-    public function testIsSetter()
-    {
-        $this->assertTrue($this->methodNameUtility->isSetter('setSomethingYouWant'));
-        $this->assertFalse($this->methodNameUtility->isSetter('getSomethingYouWant'));
-        $this->assertFalse($this->methodNameUtility->isSetter('isSomethingYouWant'));
-        $this->assertFalse($this->methodNameUtility->isSetter('hmmSomethingYouWant'));
+        $this->assertTrue($methodNameUtility->isSetter('setSomethingYouWant'));
+        $this->assertFalse($methodNameUtility->isSetter('getSomethingYouWant'));
+        $this->assertFalse($methodNameUtility->isSetter('isSomethingYouWant'));
+        $this->assertFalse($methodNameUtility->isSetter('hmmSomethingYouWant'));
     }
 }
