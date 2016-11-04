@@ -18,7 +18,9 @@
 
 namespace N86io\Rest\Tests\DomainObject\PropertyInfo;
 
+use DI\Container;
 use N86io\Rest\DomainObject\PropertyInfo\Common;
+use N86io\Rest\DomainObject\PropertyInfo\Factory\FactoryInterface;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoFactory;
 use N86io\Rest\DomainObject\PropertyInfo\Relation;
 use N86io\Rest\Tests\DomainObject\FakeEntity1;
@@ -31,35 +33,32 @@ use N86io\Rest\UnitTestCase;
 class PropertyInfoFactoryTest extends UnitTestCase
 {
     /**
-     * @var PropertyInfoFactory
-     */
-    protected $propertyInfoFactory;
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->propertyInfoFactory = static::$container->get(PropertyInfoFactory::class);
-    }
-
-    /**
      * @dataProvider buildPropertyInfoDataProvider
      * @param $expectedClassName
      * @param $data
+     * @param Container $containerMock
      */
-    public function testBuildPropertyInfo($expectedClassName, $data)
+    public function testBuild($expectedClassName, $data, $containerMock = null)
     {
-        $this->assertEquals(
-            $expectedClassName,
-            get_class($this->propertyInfoFactory->buildPropertyInfo($data['name'], $data['attributes']))
+        $propertyInfoFactory = new PropertyInfoFactory;
+        $this->inject($propertyInfoFactory, 'container', $containerMock);
+
+        $this->assertTrue(
+            is_a($propertyInfoFactory->buildPropertyInfo($data['name'], $data['attributes']), $expectedClassName)
         );
     }
 
-    public function testBuildUidPropertyInfo()
+    public function testRegister()
     {
-        $this->assertEquals(
-            Common::class,
-            get_class($this->propertyInfoFactory->buildUidPropertyInfo(true))
-        );
+        $factory = new PropertyInfoFactory;
+        $factory->registerPropertyInfoFactory(\Mockery::mock(FactoryInterface::class));
+    }
+
+    public function testRegisterException()
+    {
+        $factory = new PropertyInfoFactory;
+        $this->setExpectedException(\InvalidArgumentException::class);
+        $factory->registerPropertyInfoFactory(PropertyInfoFactoryTest::class);
     }
 
     /**
@@ -75,7 +74,8 @@ class PropertyInfoFactoryTest extends UnitTestCase
                     'attributes' => [
                         'type' => FakeEntity1::class
                     ]
-                ]
+                ],
+                $this->createContainerMock(\N86io\Rest\DomainObject\PropertyInfo\Factory\Relation::class)
             ],
             [
                 Common::class,
@@ -84,8 +84,35 @@ class PropertyInfoFactoryTest extends UnitTestCase
                     'attributes' => [
                         'type' => 'string'
                     ]
-                ]
+                ],
+                $this->createContainerMock(FactoryInterface::class)
             ]
         ];
+    }
+
+    /**
+     * @param string $factoryClass
+     * @return Container
+     */
+    protected function createContainerMock($factoryClass)
+    {
+        $factoryMock = \Mockery::mock($factoryClass);
+        $factoryMock->shouldReceive('check')->withAnyArgs()->andReturn(true);
+        $factoryMock->shouldReceive('build')->withAnyArgs()->andReturn(\Mockery::mock(Relation::class));
+
+        $wrongFactoryMock = \Mockery::mock(FactoryInterface::class);
+        $wrongFactoryMock->shouldReceive('check')->withAnyArgs()->andReturn(false);
+
+        $containerMock = \Mockery::mock(Container::class);
+        $containerMock->shouldReceive('get')->with($factoryClass)->andReturn($factoryMock);
+        $containerMock->shouldReceive('get')->withAnyArgs()->andReturn($wrongFactoryMock);
+        $containerMock->shouldReceive('make')->with(Common::class, [
+            'name' => 'somename2',
+            'attributes' => [
+                'type' => 'string'
+            ]
+        ])->andReturn(\Mockery::mock(Common::class));
+
+        return $containerMock;
     }
 }

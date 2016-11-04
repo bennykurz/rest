@@ -27,14 +27,8 @@ use N86io\Rest\UnitTestCase;
  */
 class RelationTest extends UnitTestCase
 {
-    /**
-     * @var Relation
-     */
-    protected $propertyInfo;
-
-    public function setUp()
+    public function test()
     {
-        parent::setUp();
         $params = [
             'name' => 'testSomething',
             'attributes' => [
@@ -42,11 +36,7 @@ class RelationTest extends UnitTestCase
                 'constraint' => true,
             ]
         ];
-        $this->propertyInfo = static::$container->make(Relation::class, $params);
-    }
-
-    public function testIsConstraint()
-    {
-        $this->assertTrue($this->propertyInfo->isConstraint());
+        $propertyInfo = static::$container->make(Relation::class, $params);
+        $this->assertTrue($propertyInfo->isConstraint());
     }
 }

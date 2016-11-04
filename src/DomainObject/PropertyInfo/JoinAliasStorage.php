@@ -47,10 +47,4 @@ class JoinAliasStorage
         }
         return $this->aliases[$table];
     }
-
-    public function reset()
-    {
-        $this->counter = 0;
-        $this->aliases = [];
-    }
 }

@@ -27,41 +27,24 @@ use N86io\Rest\UnitTestCase;
  */
 class DynamicSqlTest extends UnitTestCase
 {
-    /**
-     * @var DynamicSql
-     */
-    protected $propertyInfo;
-
-    public function setUp()
+    public function test()
     {
-        parent::setUp();
         $attributes = [
             'type' => 'int',
             'ordering' => true,
             'constraint' => false,
             'sql' => 'thisIsNotRealSqlExpression',
         ];
-        $this->propertyInfo = new DynamicSql('testSomething', $attributes);
+        $propertyInfo = new DynamicSql('testSomething', $attributes);
+
+        $this->assertTrue($propertyInfo->isOrdering());
+        $this->assertFalse($propertyInfo->isConstraint());
+        $this->assertEquals('thisIsNotRealSqlExpression', $propertyInfo->getSql());
     }
 
     public function testConstructor()
     {
         $this->setExpectedException(\InvalidArgumentException::class);
-        $this->propertyInfo = new DynamicSql('testSomething', []);
-    }
-
-    public function testIsOrdering()
-    {
-        $this->assertTrue($this->propertyInfo->isOrdering());
-    }
-
-    public function testIsConstraint()
-    {
-        $this->assertFalse($this->propertyInfo->isConstraint());
-    }
-
-    public function testGetSql()
-    {
-        $this->assertEquals('thisIsNotRealSqlExpression', $this->propertyInfo->getSql());
+        new DynamicSql('testSomething', []);
     }
 }

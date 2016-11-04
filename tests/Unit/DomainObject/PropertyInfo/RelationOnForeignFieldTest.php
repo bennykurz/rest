@@ -27,22 +27,14 @@ use N86io\Rest\UnitTestCase;
  */
 class RelationOnForeignFieldTest extends UnitTestCase
 {
-    /**
-     * @var RelationOnForeignField
-     */
-    protected $propertyInfo;
-
-    public function setUp()
+    public function test()
     {
-        parent::setUp();
-        $params = [
-            'name' => 'testSomething',
-            'attributes' => [
-                'type' => 'int',
-                'foreignField' => 'some_thing',
-            ]
+        $attributes = [
+            'type' => 'int',
+            'foreignField' => 'some_thing',
         ];
-        $this->propertyInfo = static::$container->make(RelationOnForeignField::class, $params);
+        $propertyInfo = new RelationOnForeignField('testSomething', $attributes);
+        $this->assertEquals('some_thing', $propertyInfo->getForeignField());
     }
 
     public function testConstructor()
@@ -52,10 +44,5 @@ class RelationOnForeignFieldTest extends UnitTestCase
             'type' => 'int'
         ];
         new RelationOnForeignField('testSomething', $attributes);
-    }
-
-    public function testGetForeignField()
-    {
-        $this->assertEquals('some_thing', $this->propertyInfo->getForeignField());
     }
 }

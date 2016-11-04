@@ -38,7 +38,7 @@ class PropertyInfoUtilityTest extends UnitTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->propertyInfoUtility = static::$container->get(PropertyInfoUtility::class);
+        $this->propertyInfoUtility = new PropertyInfoUtility;
     }
 
     public function testCastValue()

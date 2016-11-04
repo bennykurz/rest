@@ -20,6 +20,7 @@ namespace N86io\Rest\DomainObject\PropertyInfo;
 
 use DI\Container;
 use N86io\Rest\DomainObject\PropertyInfo;
+use N86io\Rest\DomainObject\PropertyInfo\Factory\FactoryInterface;
 
 /**
  * Class PropertyInfoFactory
@@ -34,7 +35,7 @@ class PropertyInfoFactory
     protected $container;
 
     /**
-     * @var array
+     * @var FactoryInterface[]
      */
     protected $factories = [
         PropertyInfo\Factory\DynamicPhp::class,
@@ -51,7 +52,7 @@ class PropertyInfoFactory
     public function buildPropertyInfo($name, array $attributes)
     {
         foreach ($this->factories as $factoryClassName) {
-            /** @var PropertyInfo\Factory\FactoryInterface $factory */
+            /** @var FactoryInterface $factory */
             $factory = $this->container->get($factoryClassName);
             if ($factory->check($attributes)) {
                 return $factory->build($name, $attributes);
@@ -61,17 +62,14 @@ class PropertyInfoFactory
     }
 
     /**
-     * @param $isResourceId bool
-     * @return Common
+     * @param string $factory
      */
-    public function buildUidPropertyInfo($isResourceId)
+    public function registerPropertyInfoFactory($factory)
     {
-        $attributes = [
-            'type' => 'int',
-            'resourcePropertyName' => 'uid',
-            'hide' => true,
-            'resourceId' => $isResourceId
-        ];
-        return $this->container->make(PropertyInfo\Common::class, ['name' => '_uid', 'attributes' => $attributes]);
+        if (!is_subclass_of($factory, FactoryInterface::class)) {
+            throw new \InvalidArgumentException('"' . $factory . '" must implemented "' .
+                FactoryInterface::class . '".');
+        }
+        $this->factories[] = $factory;
     }
 }

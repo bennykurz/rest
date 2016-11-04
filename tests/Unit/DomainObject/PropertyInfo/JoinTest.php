@@ -28,40 +28,23 @@ use N86io\Rest\UnitTestCase;
  */
 class JoinTest extends UnitTestCase
 {
-    /**
-     * @var Join
-     */
-    protected $propertyInfo;
-
-    public function setUp()
+    public function test()
     {
-        parent::setUp();
-        $params = [
-            'name' => 'somename',
-            'attributes' => [
-                'type' => 'int',
-                'joinTable' => 'test_table',
-                'joinCondition' => 'prop = 123'
-            ]
+        $attributes = [
+            'type' => 'int',
+            'joinTable' => 'test_table',
+            'joinCondition' => 'prop = 123'
         ];
-        /** @var JoinAliasStorage $joinAliasStorage */
-        $joinAliasStorage = static::$container->get(JoinAliasStorage::class);
-        $joinAliasStorage->reset();
-        $this->propertyInfo = static::$container->make(Join::class, $params);
-    }
 
-    public function testGetTable()
-    {
-        $this->assertEquals('test_table', $this->propertyInfo->getTable());
-    }
+        /** @var JoinAliasStorage $mock */
+        $mock = \Mockery::mock(JoinAliasStorage::class);
+        $mock->shouldReceive('get')->with('test_table')->andReturn('j1');
 
-    public function testGetAlias()
-    {
-        $this->assertEquals('j1', $this->propertyInfo->getAlias());
-    }
+        $propertyInfo = new Join('somename', $attributes);
+        $this->inject($propertyInfo, 'aliasStorage', $mock);
 
-    public function testGetCondition()
-    {
-        $this->assertEquals('prop = 123', $this->propertyInfo->getCondition());
+        $this->assertEquals('test_table', $propertyInfo->getTable());
+        $this->assertEquals('j1', $propertyInfo->getAlias());
+        $this->assertEquals('prop = 123', $propertyInfo->getCondition());
     }
 }

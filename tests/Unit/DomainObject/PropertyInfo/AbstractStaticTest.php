@@ -27,23 +27,14 @@ use N86io\Rest\UnitTestCase;
  */
 class AbstractStaticTest extends UnitTestCase
 {
-    /**
-     * @var AbstractStatic
-     */
-    protected $abstractStatic;
-
-    public function setUp()
+    public function test()
     {
-        parent::setUp();
         $attributes = [
-            'type' => 'int'
+            'type' => 'int',
+            'resourcePropertyName' => 'test_something'
         ];
-        $this->abstractStatic = $this->getMockForAbstractClass(AbstractStatic::class, ['testSomething', $attributes]);
-        $this->inject($this->abstractStatic, 'container', static::$container);
-    }
-
-    public function testGetResourcePropertyName()
-    {
-        $this->assertEquals('test_something', $this->abstractStatic->getResourcePropertyName());
+        /** @var AbstractStatic $abstractStatic */
+        $abstractStatic = $this->getMockForAbstractClass(AbstractStatic::class, ['testSomething', $attributes]);
+        $this->assertEquals('test_something', $abstractStatic->getResourcePropertyName());
     }
 }

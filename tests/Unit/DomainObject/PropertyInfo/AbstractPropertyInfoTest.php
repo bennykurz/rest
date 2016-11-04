@@ -27,19 +27,8 @@ use N86io\Rest\UnitTestCase;
  */
 class AbstractPropertyInfoTest extends UnitTestCase
 {
-    /**
-     * @var AbstractPropertyInfo
-     */
-    protected $abstrPropertyInfo1;
-
-    /**
-     * @var AbstractPropertyInfo
-     */
-    protected $abstrPropertyInfo2;
-
-    public function setUp()
+    public function test()
     {
-        parent::setUp();
         $attributes1 = [
             'type' => 'int',
             'hide' => false,
@@ -52,50 +41,35 @@ class AbstractPropertyInfoTest extends UnitTestCase
             'hide' => true,
             'setter' => 'setTest'
         ];
-        $this->abstrPropertyInfo1 = $this->getMockForAbstractClass(AbstractPropertyInfo::class, ['test', $attributes1]);
-        $this->abstrPropertyInfo2 = $this->getMockForAbstractClass(AbstractPropertyInfo::class, ['test', $attributes2]);
+
+        /** @var AbstractPropertyInfo $abstrPropertyInfo1 */
+        $abstrPropertyInfo1 = $this->getMockForAbstractClass(AbstractPropertyInfo::class, ['test', $attributes1]);
+        /** @var AbstractPropertyInfo $abstrPropertyInfo2 */
+        $abstrPropertyInfo2 = $this->getMockForAbstractClass(AbstractPropertyInfo::class, ['test', $attributes2]);
+
+        $this->assertEquals('test', $abstrPropertyInfo1->getName());
+
+        $this->assertEquals('int', $abstrPropertyInfo1->getType());
+
+        $this->assertEquals(3, $abstrPropertyInfo1->getPosition());
+        $this->assertEquals(0, $abstrPropertyInfo2->getPosition());
+
+        $this->assertEquals('getTest', $abstrPropertyInfo1->getGetter());
+        $this->assertEquals('', $abstrPropertyInfo2->getGetter());
+
+        $this->assertEquals('', $abstrPropertyInfo1->getSetter());
+        $this->assertEquals('setTest', $abstrPropertyInfo2->getSetter());
+
+        $this->assertTrue($abstrPropertyInfo1->shouldShow(2));
+        $this->assertTrue($abstrPropertyInfo1->shouldShow(3));
+        $this->assertFalse($abstrPropertyInfo1->shouldShow(1));
+        $this->assertFalse($abstrPropertyInfo1->shouldShow(0));
+        $this->assertFalse($abstrPropertyInfo1->shouldShow(1));
     }
 
     public function testConstructor()
     {
         $this->setExpectedException(\InvalidArgumentException::class);
         $this->getMockForAbstractClass(AbstractPropertyInfo::class, ['test', []]);
-    }
-
-    public function testGetName()
-    {
-        $this->assertEquals('test', $this->abstrPropertyInfo1->getName());
-    }
-
-    public function testGetType()
-    {
-        $this->assertEquals('int', $this->abstrPropertyInfo1->getType());
-    }
-
-    public function testGetPosition()
-    {
-        $this->assertEquals(3, $this->abstrPropertyInfo1->getPosition());
-        $this->assertEquals(0, $this->abstrPropertyInfo2->getPosition());
-    }
-
-    public function testGetGetter()
-    {
-        $this->assertEquals('getTest', $this->abstrPropertyInfo1->getGetter());
-        $this->assertEquals('', $this->abstrPropertyInfo2->getGetter());
-    }
-
-    public function testGetSetter()
-    {
-        $this->assertEquals('', $this->abstrPropertyInfo1->getSetter());
-        $this->assertEquals('setTest', $this->abstrPropertyInfo2->getSetter());
-    }
-
-    public function testShouldShow()
-    {
-        $this->assertTrue($this->abstrPropertyInfo1->shouldShow(2));
-        $this->assertTrue($this->abstrPropertyInfo1->shouldShow(3));
-        $this->assertFalse($this->abstrPropertyInfo1->shouldShow(1));
-        $this->assertFalse($this->abstrPropertyInfo1->shouldShow(0));
-        $this->assertFalse($this->abstrPropertyInfo1->shouldShow(1));
     }
 }

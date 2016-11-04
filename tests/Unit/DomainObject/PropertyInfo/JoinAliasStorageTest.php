@@ -29,15 +29,11 @@ class JoinAliasStorageTest extends UnitTestCase
 {
     public function testGet()
     {
-        /** @var JoinAliasStorage $joinAliasStorage */
-        $joinAliasStorage = static::$container->get(JoinAliasStorage::class);
-        $joinAliasStorage->reset();
+        $joinAliasStorage = new JoinAliasStorage;
         $this->assertEquals('j1', $joinAliasStorage->get('tableA'));
         $this->assertEquals('j2', $joinAliasStorage->get('tableB'));
-        $joinAliasStorage = static::$container->get(JoinAliasStorage::class);
         $this->assertEquals('j1', $joinAliasStorage->get('tableA'));
         $this->assertEquals('j3', $joinAliasStorage->get('tableC'));
-        $joinAliasStorage = static::$container->get(JoinAliasStorage::class);
         $this->assertEquals('j2', $joinAliasStorage->get('tableB'));
     }
 }

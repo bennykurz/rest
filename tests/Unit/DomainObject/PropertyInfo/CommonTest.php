@@ -27,33 +27,16 @@ use N86io\Rest\UnitTestCase;
  */
 class CommonTest extends UnitTestCase
 {
-    /**
-     * @var Common
-     */
-    protected $propertyInfo;
-
-    public function setUp()
+    public function test()
     {
-        parent::setUp();
         $attributes = [
             'type' => 'int',
             'ordering' => true
         ];
-        $this->propertyInfo = new Common('testSomething', $attributes);
-    }
+        $propertyInfo = new Common('testSomething', $attributes);
 
-    public function testIsResourceId()
-    {
-        $this->assertFalse($this->propertyInfo->isResourceId());
-    }
-
-    public function testIsOrdering()
-    {
-        $this->assertTrue($this->propertyInfo->isOrdering());
-    }
-
-    public function testIsConstraint()
-    {
-        $this->assertFalse($this->propertyInfo->isConstraint());
+        $this->assertFalse($propertyInfo->isResourceId());
+        $this->assertTrue($propertyInfo->isOrdering());
+        $this->assertFalse($propertyInfo->isConstraint());
     }
 }
