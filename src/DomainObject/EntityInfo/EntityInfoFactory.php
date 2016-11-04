@@ -48,6 +48,12 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
     protected $propertyInfoUtility;
 
     /**
+     * @Inject
+     * @var EntityInfoConfLoader
+     */
+    protected $entityInfoConfLoader;
+
+    /**
      * @param $className
      * @return EntityInfoInterface
      */
@@ -55,10 +61,11 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
     {
         /** @var EntityClassReflection $entityClassRefl */
         $entityClassRefl = $this->container->make(EntityClassReflection::class, ['className' => $className]);
-        $classTags = $entityClassRefl->getClassTags();
         $properties = $entityClassRefl->getProperties();
+        $entityInfoConf = $this->loadEntityInfoConf($className, $entityClassRefl);
+        $this->mergeProperties($properties, $entityInfoConf);
         $this->setUndefinedPropertyAttributes($properties);
-        $entityInfo = $this->createEntityInfo($className, $classTags);
+        $entityInfo = $this->createEntityInfo($className, $entityInfoConf);
 
         foreach ($properties as $name => $attributes) {
             $propertyInfo = $this->propertyInfoFactory->buildPropertyInfo($name, $attributes);
@@ -73,14 +80,44 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
     }
 
     /**
-     * @param string $className
-     * @param array $classTags
-     * @return EntityInfoInterface
-     * @throws \Exception
+     * @param array $properties
+     * @param array $entityInfoConf
      */
-    protected function createEntityInfo($className, array $classTags)
+    protected function mergeProperties(array &$properties, array $entityInfoConf)
     {
-        $attributes = $classTags;
+        if (!array_key_exists('properties', $entityInfoConf)) {
+            return;
+        }
+        $properties = array_merge_recursive($entityInfoConf['properties'], $properties);
+    }
+
+    /**
+     * @param string $className
+     * @param EntityClassReflection $entityClassRefl
+     * @return array
+     */
+    protected function loadEntityInfoConf($className, EntityClassReflection $entityClassRefl)
+    {
+        return $this->entityInfoConfLoader->loadSingle(
+            $className,
+            $entityClassRefl->getParentClasses()
+        );
+    }
+
+    /**
+     * @param string $className
+     * @param array $entityInfoConf
+     * @return EntityInfoInterface
+     */
+    protected function createEntityInfo($className, array $entityInfoConf)
+    {
+        $attributes = [];
+        $keys = ['storage', 'table', 'mode'];
+        foreach ($keys as $key) {
+            if (array_key_exists($key, $entityInfoConf)) {
+                $attributes[$key] = $entityInfoConf[$key];
+            }
+        }
         $attributes['className'] = $className;
         return $this->container->make(EntityInfo::class, ['attributes' => $attributes]);
     }

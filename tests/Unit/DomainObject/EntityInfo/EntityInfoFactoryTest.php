@@ -20,7 +20,9 @@ namespace N86io\Rest\Tests\DomainObject\EntityInfo;
 
 use N86io\Rest\DomainObject\EntityInfo\EntityInfo;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoFactoryInterface;
-use N86io\Rest\Tests\DomainObject\FakeEntity1;
+use N86io\Rest\Object\ContainerFactory;
+use N86io\Rest\Service\Configuration;
+use N86io\Rest\Tests\DomainObject\FakeEntity2;
 use N86io\Rest\Tests\DomainObject\FakeEntity4;
 use N86io\Rest\UnitTestCase;
 
@@ -30,25 +32,45 @@ use N86io\Rest\UnitTestCase;
  */
 class EntityInfoFactoryTest extends UnitTestCase
 {
-    /**
-     * @var EntityInfoFactoryInterface
-     */
-    protected $factory;
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->factory = static::$container->get(EntityInfoFactoryInterface::class);
-    }
-
     public function test()
     {
+        /** @var EntityInfoFactoryInterface $factory */
+        $factory = static::$container->get(EntityInfoFactoryInterface::class);
+        /** @var Configuration $configuration */
+        $configuration = static::$container->get(Configuration::class);
+        $configuration->registerEntityInfoConfiguration(
+            __DIR__ . '/../EntityInfoConf.json',
+            Configuration::ENTITY_INFO_CONF_FILE + Configuration::ENTITY_INFO_CONF_JSON
+        );
+        $configuration->registerEntityInfoConfiguration(
+            __DIR__ . '/../EntityInfoConf.yml',
+            Configuration::ENTITY_INFO_CONF_FILE + Configuration::ENTITY_INFO_CONF_YAML
+        );
+        $configuration->registerEntityInfoConfiguration(
+            __DIR__ . '/../EntityInfoConf.php',
+            Configuration::ENTITY_INFO_CONF_FILE + Configuration::ENTITY_INFO_CONF_ARRAY
+        );
+
         /** @var EntityInfo $actual */
-        $actual = $this->factory->buildEntityInfoFromClassName(FakeEntity1::class);
-        $this->assertEquals('N86io\Rest\Tests\DomainObject\FakeEntity1', $actual->getClassName());
+        $actual = $factory->buildEntityInfoFromClassName(FakeEntity2::class);
+        $this->assertEquals('N86io\Rest\Tests\DomainObject\FakeEntity2', $actual->getClassName());
         $this->assertEquals('fakeId', $actual->getPropertyInfo('fakeId')->getName());
+        $this->assertTrue($actual->getPropertyInfo('fakeId')->isResourceId());
         $this->assertEquals('dateTimeTimestamp', $actual->mapResourcePropertyName('date_time_timestamp'));
-        $actual = $this->factory->buildEntityInfoFromClassName(FakeEntity4::class);
+        $this->assertEquals(102, $actual->getPropertyInfo('array')->getPosition());
+
+        $actual = $factory->buildEntityInfoFromClassName(FakeEntity4::class);
         $this->assertEquals('fakeId', $actual->getPropertyInfo('fakeId')->getName());
+        $this->assertTrue($actual->getPropertyInfo('string')->isOrdering());
+    }
+
+    public function testWithoutConfFile()
+    {
+        static::$container = ContainerFactory::create();
+        /** @var EntityInfoFactoryInterface $factory */
+        $factory = static::$container->get(EntityInfoFactoryInterface::class);
+        $actual = $factory->buildEntityInfoFromClassName(FakeEntity4::class);
+        $this->assertEquals('fakeId', $actual->getPropertyInfo('fakeId')->getName());
+        $this->assertFalse($actual->getPropertyInfo('string')->isOrdering());
     }
 }
