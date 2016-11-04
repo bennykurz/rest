@@ -63,8 +63,7 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
         $entityClassRefl = $this->container->make(EntityClassReflection::class, ['className' => $className]);
         $properties = $entityClassRefl->getProperties();
         $entityInfoConf = $this->loadEntityInfoConf($className, $entityClassRefl);
-        $this->mergeProperties($properties, $entityInfoConf);
-        $this->setUndefinedPropertyAttributes($properties);
+        $properties = $this->mergeProperties($properties, $entityInfoConf);
         $entityInfo = $this->createEntityInfo($className, $entityInfoConf);
 
         foreach ($properties as $name => $attributes) {
@@ -82,13 +81,14 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
     /**
      * @param array $properties
      * @param array $entityInfoConf
+     * @return array
      */
-    protected function mergeProperties(array &$properties, array $entityInfoConf)
+    protected function mergeProperties(array $properties, array $entityInfoConf)
     {
         if (!array_key_exists('properties', $entityInfoConf)) {
-            return;
+            return $properties;
         }
-        $properties = array_merge_recursive($entityInfoConf['properties'], $properties);
+        return array_merge_recursive($entityInfoConf['properties'], $properties);
     }
 
     /**
@@ -120,20 +120,5 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
         }
         $attributes['className'] = $className;
         return $this->container->make(EntityInfo::class, ['attributes' => $attributes]);
-    }
-
-    /**
-     * @param array $properties
-     */
-    protected function setUndefinedPropertyAttributes(array &$properties)
-    {
-        foreach ($properties as $propertyName => &$attributes) {
-            if (!array_key_exists('resourcePropertyName', $attributes) &&
-                !array_key_exists('sqlExpression', $attributes) && !array_key_exists('foreignField', $attributes) &&
-                array_key_exists('type', $attributes)
-            ) {
-                $attributes['resourcePropertyName'] = $this->propertyInfoUtility->convertPropertyName($propertyName);
-            }
-        }
     }
 }
