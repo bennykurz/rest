@@ -36,18 +36,6 @@ class EntityInfoConfLoaderTest extends UnitTestCase
         /** @var Configuration $configuration */
         $configuration = static::$container->get(Configuration::class);
         $configuration->registerEntityInfoConfiguration(
-            __DIR__ . '/../EntityInfoConf.json',
-            Configuration::ENTITY_INFO_CONF_FILE + Configuration::ENTITY_INFO_CONF_JSON
-        );
-        $configuration->registerEntityInfoConfiguration(
-            __DIR__ . '/../EntityInfoConf.yml',
-            Configuration::ENTITY_INFO_CONF_FILE + Configuration::ENTITY_INFO_CONF_YAML
-        );
-        $configuration->registerEntityInfoConfiguration(
-            __DIR__ . '/../EntityInfoConf.php',
-            Configuration::ENTITY_INFO_CONF_FILE + Configuration::ENTITY_INFO_CONF_ARRAY
-        );
-        $configuration->registerEntityInfoConfiguration(
             __DIR__ . '/../EntityInfoConf2.php',
             Configuration::ENTITY_INFO_CONF_FILE + Configuration::ENTITY_INFO_CONF_ARRAY
         );
