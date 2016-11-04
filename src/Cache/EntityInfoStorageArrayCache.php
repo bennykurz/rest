@@ -20,6 +20,10 @@ namespace N86io\Rest\Cache;
 
 use DI\Cache\ArrayCache;
 
+/**
+ * Class EntityInfoStorageArrayCache
+ * @package N86io\Rest\Cache
+ */
 class EntityInfoStorageArrayCache extends ArrayCache implements EntityInfoStorageArrayCacheInterface
 {
 }

@@ -20,6 +20,10 @@ namespace N86io\Rest\Cache;
 
 use Doctrine\Common\Cache\ArrayCache;
 
+/**
+ * Class EntityInfoStorageCache
+ * @package N86io\Rest\Cache
+ */
 class EntityInfoStorageCache extends ArrayCache implements EntityInfoStorageCacheInterface
 {
 }
