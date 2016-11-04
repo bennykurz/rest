@@ -18,10 +18,17 @@
 
 namespace N86io\Rest\Http;
 
+use Psr\Http\Message\ServerRequestInterface;
+
 /**
  * Interface RequestFactoryInterface
  * @package N86io\Rest\Http
  */
 interface RequestFactoryInterface
 {
+    /**
+     * @param ServerRequestInterface $serverRequest
+     * @return RequestInterface
+     */
+    public function fromServerRequest(ServerRequestInterface $serverRequest);
 }
