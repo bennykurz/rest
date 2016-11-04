@@ -18,40 +18,36 @@
 
 namespace N86io\Rest\Tests\DomainObject\PropertyInfo\Factory;
 
+use DI\Container;
 use N86io\Rest\DomainObject\PropertyInfo\Factory\FactoryInterface;
-use N86io\Rest\DomainObject\PropertyInfo\Factory\Relation;
-use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoUtility;
-use N86io\Rest\Tests\DomainObject\FakeEntity1;
+use N86io\Rest\UnitTestCase;
 
 /**
- * Class RelationTest
+ * Class AbstractFactoryTest
  * @package N86io\Rest\Tests\DomainObject\PropertyInfo\Factory
  */
-class RelationTest extends AbstractFactoryTest
+abstract class AbstractFactoryTest extends UnitTestCase
 {
     /**
      * @var array
      */
-    protected $attributes = [
-        'type' => 'Entity'
-    ];
+    protected $attributes;
 
     /**
      * @var string
      */
-    protected $factoryClass = Relation::class;
+    protected $factoryClass;
 
     /**
      * @var string
      */
-    protected $propertyInfoClass = \N86io\Rest\DomainObject\PropertyInfo\Relation::class;
+    protected $propertyInfoClass;
 
     public function test()
     {
-        parent::test();
-        $this->attributes['foreignField'] = 'field';
         $factory = $this->buildFactory();
-        $this->assertFalse($factory->check($this->attributes));
+        $this->assertTrue(is_a($factory->build('_name_', $this->attributes), $this->propertyInfoClass));
+        $this->assertTrue($factory->check($this->attributes));
     }
 
     /**
@@ -59,18 +55,27 @@ class RelationTest extends AbstractFactoryTest
      */
     protected function buildFactory()
     {
-        $parentFactory = parent::buildFactory();
-        $this->inject($parentFactory, 'propertyInfoUtility', $this->createPropertyInfoUtilityMock());
-        return $parentFactory;
+        $args = [
+            $this->propertyInfoClass,
+            [
+                'name' => '_name_',
+                'attributes' => $this->attributes
+            ]
+        ];
+
+        $containerMock = \Mockery::mock(Container::class);
+        $containerMock->shouldReceive('make')
+            ->withArgs($args)
+            ->andReturn(\Mockery::mock($this->propertyInfoClass));
+
+        $factory = new $this->factoryClass;
+        $this->inject($factory, 'container', $containerMock);
+
+        return $factory;
     }
 
-    /**
-     * @return PropertyInfoUtility
-     */
-    protected function createPropertyInfoUtilityMock()
+    public function tearDown()
     {
-        $mock = \Mockery::mock(PropertyInfoUtility::class);
-        $mock->shouldReceive('checkForAbstractEntitySubclass')->withAnyArgs()->andReturn(true);
-        return $mock;
+        \Mockery::close();
     }
 }

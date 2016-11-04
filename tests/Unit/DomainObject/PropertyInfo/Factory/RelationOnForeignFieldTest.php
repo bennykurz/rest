@@ -18,32 +18,59 @@
 
 namespace N86io\Rest\Tests\DomainObject\PropertyInfo\Factory;
 
+use N86io\Rest\DomainObject\PropertyInfo\Factory\FactoryInterface;
 use N86io\Rest\DomainObject\PropertyInfo\Factory\RelationOnForeignField;
-use N86io\Rest\Tests\DomainObject\FakeEntity1;
-use N86io\Rest\UnitTestCase;
+use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoUtility;
 
 /**
  * Class RelationOnForeignFieldTest
  * @package N86io\Rest\Tests\DomainObject\PropertyInfo\Factory
  */
-class RelationOnForeignFieldTest extends UnitTestCase
+class RelationOnForeignFieldTest extends AbstractFactoryTest
 {
+    /**
+     * @var array
+     */
+    protected $attributes = [
+        'type' => 'Entity',
+        'foreignField' => 'field'
+    ];
+
+    /**
+     * @var string
+     */
+    protected $factoryClass = RelationOnForeignField::class;
+
+    /**
+     * @var string
+     */
+    protected $propertyInfoClass = \N86io\Rest\DomainObject\PropertyInfo\RelationOnForeignField::class;
+
     public function test()
     {
-        $attributes1 = [
-            'type' => FakeEntity1::class,
-            'foreignField' => 'field'
-        ];
-        $attributes2 = [
-            'type' => FakeEntity1::class
-        ];
-        /** @var RelationOnForeignField $factory */
-        $factory = static::$container->get(RelationOnForeignField::class);
-        $this->assertTrue(
-            $factory->build('testName', $attributes1) instanceof
-            \N86io\Rest\DomainObject\PropertyInfo\RelationOnForeignField
-        );
-        $this->assertTrue($factory->check($attributes1));
-        $this->assertFalse($factory->check($attributes2));
+        parent::test();
+        unset($this->attributes['foreignField']);
+        $factory = $this->buildFactory();
+        $this->assertFalse($factory->check($this->attributes));
+    }
+
+    /**
+     * @return FactoryInterface
+     */
+    protected function buildFactory()
+    {
+        $parentFactory = parent::buildFactory();
+        $this->inject($parentFactory, 'propertyInfoUtility', $this->createPropertyInfoUtilityMock());
+        return $parentFactory;
+    }
+
+    /**
+     * @return PropertyInfoUtility
+     */
+    protected function createPropertyInfoUtilityMock()
+    {
+        $mock = \Mockery::mock(PropertyInfoUtility::class);
+        $mock->shouldReceive('checkForAbstractEntitySubclass')->withAnyArgs()->andReturn(true);
+        return $mock;
     }
 }

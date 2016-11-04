@@ -18,43 +18,30 @@
 
 namespace N86io\Rest\Tests\DomainObject\PropertyInfo\Factory;
 
-use N86io\Rest\DomainObject\PropertyInfo\Factory\FactoryInterface;
 use N86io\Rest\DomainObject\PropertyInfo\Factory\Join;
-use N86io\Rest\UnitTestCase;
 
 /**
  * Class JoinTest
  * @package N86io\Rest\Tests\DomainObject\PropertyInfo\Factory
  */
-class JoinTest extends UnitTestCase
+class JoinTest extends AbstractFactoryTest
 {
     /**
-     * @var FactoryInterface
+     * @var array
      */
-    protected $factory;
-
     protected $attributes = [
         'type' => 'int',
         'joinTable' => 'table',
         'joinCondition' => 'condition'
     ];
 
-    public function setUp()
-    {
-        parent::setUp();
-        $this->factory = $this->factory = static::$container->get(Join::class);
-    }
+    /**
+     * @var string
+     */
+    protected $factoryClass = Join::class;
 
-    public function testBuild()
-    {
-        $this->assertTrue(
-            $this->factory->build('testName', $this->attributes) instanceof
-            \N86io\Rest\DomainObject\PropertyInfo\Join
-        );
-    }
-
-    public function testCheck()
-    {
-        $this->assertTrue($this->factory->check($this->attributes));
-    }
+    /**
+     * @var string
+     */
+    protected $propertyInfoClass = \N86io\Rest\DomainObject\PropertyInfo\Join::class;
 }

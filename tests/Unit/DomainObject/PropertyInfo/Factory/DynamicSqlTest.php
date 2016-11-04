@@ -19,41 +19,28 @@
 namespace N86io\Rest\Tests\DomainObject\PropertyInfo\Factory;
 
 use N86io\Rest\DomainObject\PropertyInfo\Factory\DynamicSql;
-use N86io\Rest\DomainObject\PropertyInfo\Factory\FactoryInterface;
-use N86io\Rest\UnitTestCase;
 
 /**
  * Class DynamicSqlTest
  * @package N86io\Rest\Tests\DomainObject\PropertyInfo\Factory
  */
-class DynamicSqlTest extends UnitTestCase
+class DynamicSqlTest extends AbstractFactoryTest
 {
     /**
-     * @var FactoryInterface
+     * @var array
      */
-    protected $factory;
-
     protected $attributes = [
         'type' => 'int',
         'sql' => 'some_sql_expression'
     ];
 
-    public function setUp()
-    {
-        parent::setUp();
-        $this->factory = $this->factory = static::$container->get(DynamicSql::class);
-    }
+    /**
+     * @var string
+     */
+    protected $factoryClass = DynamicSql::class;
 
-    public function testBuild()
-    {
-        $this->assertTrue(
-            $this->factory->build('testName', $this->attributes) instanceof
-            \N86io\Rest\DomainObject\PropertyInfo\DynamicSql
-        );
-    }
-
-    public function testCheck()
-    {
-        $this->assertTrue($this->factory->check($this->attributes));
-    }
+    /**
+     * @var string
+     */
+    protected $propertyInfoClass = \N86io\Rest\DomainObject\PropertyInfo\DynamicSql::class;
 }

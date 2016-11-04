@@ -19,40 +19,27 @@
 namespace N86io\Rest\Tests\DomainObject\PropertyInfo\Factory;
 
 use N86io\Rest\DomainObject\PropertyInfo\Factory\DynamicPhp;
-use N86io\Rest\DomainObject\PropertyInfo\Factory\FactoryInterface;
-use N86io\Rest\UnitTestCase;
 
 /**
  * Class DynamicPhpTest
  * @package N86io\Rest\Tests\DomainObject\PropertyInfo\Factory
  */
-class DynamicPhpTest extends UnitTestCase
+class DynamicPhpTest extends AbstractFactoryTest
 {
     /**
-     * @var FactoryInterface
+     * @var array
      */
-    protected $factory;
-
     protected $attributes = [
         'type' => '__dynamic'
     ];
 
-    public function setUp()
-    {
-        parent::setUp();
-        $this->factory = static::$container->get(DynamicPhp::class);
-    }
+    /**
+     * @var string
+     */
+    protected $factoryClass = DynamicPhp::class;
 
-    public function testBuild()
-    {
-        $this->assertTrue(
-            $this->factory->build('testName', $this->attributes) instanceof
-            \N86io\Rest\DomainObject\PropertyInfo\DynamicPhp
-        );
-    }
-
-    public function testCheck()
-    {
-        $this->assertTrue($this->factory->check($this->attributes));
-    }
+    /**
+     * @var string
+     */
+    protected $propertyInfoClass = \N86io\Rest\DomainObject\PropertyInfo\DynamicPhp::class;
 }
