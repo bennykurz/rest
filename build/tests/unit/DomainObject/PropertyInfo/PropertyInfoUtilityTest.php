@@ -18,10 +18,9 @@
 
 namespace N86io\Rest\Tests\Unit\DomainObject\PropertyInfo;
 
+use N86io\Rest\DomainObject\AbstractEntity;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoUtility;
 use N86io\Rest\Object\ContainerFactory;
-use N86io\Rest\Tests\Unit\DomainObject\FakeEntity1;
-use N86io\Rest\Tests\Unit\DomainObject\FakeEntity2;
 use N86io\Rest\UnitTestCase;
 
 /**
@@ -76,8 +75,8 @@ class PropertyInfoUtilityTest extends UnitTestCase
 
     public function testCheckForAbstractEntitySubclass()
     {
-        $this->assertTrue($this->propertyInfoUtility->checkForAbstractEntitySubclass(FakeEntity1::class));
-        $this->assertTrue($this->propertyInfoUtility->checkForAbstractEntitySubclass(FakeEntity2::class));
+        $entityMock = get_class(\Mockery::mock(AbstractEntity::class));
+        $this->assertTrue($this->propertyInfoUtility->checkForAbstractEntitySubclass($entityMock));
         $this->assertFalse($this->propertyInfoUtility->checkForAbstractEntitySubclass(ContainerFactory::class));
     }
 }

@@ -1,4 +1,4 @@
-N86io\Rest\Tests\Unit\DomainObject\FakeEntity1:
+N86io\Rest\Examples\Example1:
   table: table_fake
   mode:
     - read

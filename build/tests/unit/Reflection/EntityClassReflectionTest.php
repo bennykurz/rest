@@ -18,12 +18,12 @@
 
 namespace N86io\Rest\Tests\Unit\Reflection;
 
+use N86io\Rest\Examples\Example1;
+use N86io\Rest\Examples\Example2;
+use N86io\Rest\Examples\Example3;
 use N86io\Rest\Object\ContainerFactory;
 use N86io\Rest\Reflection\EntityClassReflection;
 use N86io\Rest\Reflection\MethodNameUtility;
-use N86io\Rest\Tests\Unit\DomainObject\FakeEntity1;
-use N86io\Rest\Tests\Unit\DomainObject\FakeEntity2;
-use N86io\Rest\Tests\Unit\DomainObject\FakeEntity3;
 use N86io\Rest\UnitTestCase;
 
 /**
@@ -34,21 +34,21 @@ class EntityClassReflectionTest extends UnitTestCase
 {
     public function test()
     {
-        $fakeEntity1 = new EntityClassReflection(FakeEntity1::class);
-        $this->inject($fakeEntity1, 'methodNameUtility', $this->createMethodNameUtilityMock());
+        $example1 = new EntityClassReflection(Example1::class);
+        $this->inject($example1, 'methodNameUtility', $this->createMethodNameUtilityMock());
 
-        $fakeEntity2 = new EntityClassReflection(FakeEntity2::class);
-        $this->inject($fakeEntity2, 'methodNameUtility', $this->createMethodNameUtilityMock());
+        $example2 = new EntityClassReflection(Example2::class);
+        $this->inject($example2, 'methodNameUtility', $this->createMethodNameUtilityMock());
 
-        $fakeEntity3 = new EntityClassReflection(FakeEntity3::class);
-        $this->inject($fakeEntity3, 'methodNameUtility', $this->createMethodNameUtilityMock());
+        $example3 = new EntityClassReflection(Example3::class);
+        $this->inject($example3, 'methodNameUtility', $this->createMethodNameUtilityMock());
 
-        $this->assertEquals('Class FakeEntity1', $fakeEntity1->getClassSummary());
-        $this->assertEquals('Class FakeEntity2', $fakeEntity2->getClassSummary());
-        $this->assertEquals('Class FakeEntity1', $fakeEntity3->getClassSummary());
+        $this->assertEquals('Class Example1', $example1->getClassSummary());
+        $this->assertEquals('Class Example2', $example2->getClassSummary());
+        $this->assertEquals('Class Example1', $example3->getClassSummary());
 
-        $this->assertEquals('Some description', $fakeEntity1->getClassDescription());
-        $this->assertEquals('Some description', $fakeEntity2->getClassDescription());
+        $this->assertEquals('Some description', $example1->getClassDescription());
+        $this->assertEquals('Some description', $example2->getClassDescription());
 
         $expected1 = [
             'fakeId' => [
@@ -74,16 +74,16 @@ class EntityClassReflectionTest extends UnitTestCase
                 'type' => 'array',
             ],
             'demoList' => [
-                'type' => '\N86io\Rest\Tests\Unit\DomainObject\FakeEntity1'
+                'type' => '\N86io\Rest\Examples\Example1'
             ],
             'demoList2' => [
-                'type' => '\N86io\Rest\Tests\Unit\DomainObject\FakeEntity1'
+                'type' => '\N86io\Rest\Examples\Example1'
             ],
             'demoList3' => [
-                'type' => '\N86io\Rest\Tests\Unit\DomainObject\FakeEntity1'
+                'type' => '\N86io\Rest\Examples\Example1'
             ],
             'demoList4' => [
-                'type' => '\N86io\Rest\Tests\Unit\DomainObject\FakeEntity1'
+                'type' => '\N86io\Rest\Examples\Example1'
             ]
         ];
         $expected2 = $expected1;
@@ -95,12 +95,12 @@ class EntityClassReflectionTest extends UnitTestCase
         $expected2['statusCombined'] = [
             'type' => 'int'
         ];
-        $this->assertEquals($expected1, $fakeEntity1->getProperties());
-        $this->assertEquals($expected2, $fakeEntity2->getProperties());
+        $this->assertEquals($expected1, $example1->getProperties());
+        $this->assertEquals($expected2, $example2->getProperties());
 
-        $this->assertEquals([], $fakeEntity1->getParentClasses());
-        $this->assertEquals(['N86io\Rest\Tests\Unit\DomainObject\FakeEntity1'], $fakeEntity2->getParentClasses());
-        $this->assertEquals(['N86io\Rest\Tests\Unit\DomainObject\FakeEntity1'], $fakeEntity3->getParentClasses());
+        $this->assertEquals([], $example1->getParentClasses());
+        $this->assertEquals(['N86io\Rest\Examples\Example1'], $example2->getParentClasses());
+        $this->assertEquals(['N86io\Rest\Examples\Example1'], $example3->getParentClasses());
     }
 
     public function testWrongEntityClass()

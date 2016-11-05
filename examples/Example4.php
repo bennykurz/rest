@@ -16,18 +16,18 @@
  * along with N86io/Rest or see <http://www.gnu.org/licenses/>.
  */
 
-namespace N86io\Rest\Tests\Unit\DomainObject;
+namespace N86io\Rest\Examples;
 
 use N86io\Rest\DomainObject\AbstractEntity;
 
 /**
- * Class FakeEntity4
+ * Class Example4
  *
  * Some description
  *
- * @package N86io\Rest\Tests\Unit\DomainObject
+ * @package N86io\Rest\Examples
  */
-class FakeEntity4 extends AbstractEntity
+class Example4 extends AbstractEntity
 {
     /**
      * @var int

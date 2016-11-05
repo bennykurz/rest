@@ -1,6 +1,6 @@
 <?php
 return [
-    \N86io\Rest\Tests\Unit\DomainObject\FakeEntity4::class => [
+    \N86io\Rest\Examples\Example4::class => [
         'table' => 'table_fake',
         'mode' => ['read', 'write'],
         'properties' => [

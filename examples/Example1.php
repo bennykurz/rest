@@ -16,20 +16,20 @@
  * along with N86io/Rest or see <http://www.gnu.org/licenses/>.
  */
 
-namespace N86io\Rest\Tests\Unit\DomainObject;
+namespace N86io\Rest\Examples;
 
 use N86io\Rest\DomainObject\AbstractEntity;
-use N86io\Rest\Tests\Unit\DomainObject;
-use N86io\Rest\Tests\Unit\DomainObject as Test;
+use N86io\Rest\Examples;
+use N86io\Rest\Examples as Test;
 
 /**
- * Class FakeEntity1
+ * Class Example1
  *
  * Some description
  *
- * @package N86io\Rest\Tests\Unit\DomainObject
+ * @package N86io\Rest\Examples
  */
-class FakeEntity1 extends AbstractEntity
+class Example1 extends AbstractEntity
 {
     /**
      * @var int
@@ -62,22 +62,22 @@ class FakeEntity1 extends AbstractEntity
     protected $array;
 
     /**
-     * @var FakeEntity1
+     * @var Example1
      */
     protected $demoList;
 
     /**
-     * @var DomainObject\FakeEntity1
+     * @var Examples\Example1
      */
     protected $demoList2;
 
     /**
-     * @var Test\FakeEntity1
+     * @var Test\Example1
      */
     protected $demoList3;
 
     /**
-     * @var \N86io\Rest\Tests\Unit\DomainObject\FakeEntity1
+     * @var \N86io\Rest\Examples\Example1
      */
     protected $demoList4;
 

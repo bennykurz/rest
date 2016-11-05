@@ -23,7 +23,6 @@ use N86io\Rest\DomainObject\PropertyInfo\Common;
 use N86io\Rest\DomainObject\PropertyInfo\Factory\FactoryInterface;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoFactory;
 use N86io\Rest\DomainObject\PropertyInfo\Relation;
-use N86io\Rest\Tests\Unit\DomainObject\FakeEntity1;
 use N86io\Rest\UnitTestCase;
 
 /**
@@ -72,7 +71,7 @@ class PropertyInfoFactoryTest extends UnitTestCase
                 [
                     'name' => 'somename',
                     'attributes' => [
-                        'type' => FakeEntity1::class
+                        'type' => 'Entity1'
                     ]
                 ],
                 $this->createContainerMock(\N86io\Rest\DomainObject\PropertyInfo\Factory\Relation::class)

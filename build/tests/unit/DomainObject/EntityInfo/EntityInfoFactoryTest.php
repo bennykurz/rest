@@ -26,8 +26,6 @@ use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoFactory;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoUtility;
 use N86io\Rest\Reflection\EntityClassReflection;
-use N86io\Rest\Tests\Unit\DomainObject\FakeEntity2;
-use N86io\Rest\Tests\Unit\DomainObject\FakeEntity4;
 use N86io\Rest\UnitTestCase;
 
 /**
@@ -44,11 +42,11 @@ class EntityInfoFactoryTest extends UnitTestCase
         $this->inject($factory, 'propertyInfoFactory', $this->createPropertyInfoFactoryMock());
         $this->inject($factory, 'container', $this->createContainerMock());
 
-        $factory->buildEntityInfoFromClassName(FakeEntity2::class);
-        $factory->buildEntityInfoFromClassName(FakeEntity4::class);
+        $factory->buildEntityInfoFromClassName('Entity2');
+        $factory->buildEntityInfoFromClassName('Entity4');
 
         $this->inject($factory, 'entityInfoConfLoader', $this->createEntityInfoConfLoaderMock2());
-        $factory->buildEntityInfoFromClassName(FakeEntity2::class);
+        $factory->buildEntityInfoFromClassName('Entity2');
     }
 
     public function tearDown()
@@ -75,17 +73,17 @@ class EntityInfoFactoryTest extends UnitTestCase
     {
         $mock = \Mockery::mock(Container::class);
         $mock->shouldReceive('make')
-            ->with(EntityClassReflection::class, ['className' => FakeEntity2::class])
+            ->with(EntityClassReflection::class, ['className' => 'Entity2'])
             ->andReturn($this->createEntityClassReflectionMock1());
 
         $mock->shouldReceive('make')
-            ->with(EntityClassReflection::class, ['className' => FakeEntity4::class])
+            ->with(EntityClassReflection::class, ['className' => 'Entity4'])
             ->andReturn($this->createEntityClassReflectionMock2());
 
         $mock->shouldReceive('make')
             ->with(EntityInfo::class, [
                 'attributes' => [
-                    'className' => 'N86io\Rest\Tests\Unit\DomainObject\FakeEntity2',
+                    'className' => 'Entity2',
                     'table' => 'fake_table'
                 ]
             ])
@@ -94,7 +92,7 @@ class EntityInfoFactoryTest extends UnitTestCase
         $mock->shouldReceive('make')
             ->with(
                 EntityInfo::class,
-                ['attributes' => ['className' => 'N86io\Rest\Tests\Unit\DomainObject\FakeEntity4']]
+                ['attributes' => ['className' => 'Entity4']]
             )
             ->andReturn($this->createEntityInfoMock2());
 
@@ -102,7 +100,7 @@ class EntityInfoFactoryTest extends UnitTestCase
     }
 
     /**
-     * build mock for EntityInfo for class N86io\Rest\Tests\Unit\DomainObject\FakeEntity2
+     * build mock for EntityInfo for class Entity2
      *
      * @return EntityInfo
      */
@@ -116,7 +114,7 @@ class EntityInfoFactoryTest extends UnitTestCase
     }
 
     /**
-     * build mock for EntityInfo for class N86io\Rest\Tests\Unit\DomainObject\FakeEntity4
+     * build mock for EntityInfo for class Entity4
      *
      * @return EntityInfo
      */
@@ -131,7 +129,7 @@ class EntityInfoFactoryTest extends UnitTestCase
     }
 
     /**
-     * build mock for reflection of N86io\Rest\Tests\Unit\DomainObject\FakeEntity2
+     * build mock for reflection of Entity2
      *
      * @return EntityClassReflection
      */
@@ -139,7 +137,7 @@ class EntityInfoFactoryTest extends UnitTestCase
     {
         $mock = \Mockery::mock(EntityClassReflection::class);
         $mock->shouldReceive('getParentClasses')
-            ->andReturn(['N86io\Rest\Tests\Unit\DomainObject\FakeEntity1']);
+            ->andReturn(['N86io\Rest\Examples\Example1']);
         $mock->shouldReceive('getProperties')
             ->andReturn([
                 'fakeId' => ['type' => 'int'],
@@ -151,7 +149,7 @@ class EntityInfoFactoryTest extends UnitTestCase
     }
 
     /**
-     * build mock for reflection of N86io\Rest\Tests\Unit\DomainObject\FakeEntity4
+     * build mock for reflection of Entity4
      *
      * @return EntityClassReflection
      */
@@ -191,8 +189,8 @@ class EntityInfoFactoryTest extends UnitTestCase
         $mock = \Mockery::mock(EntityInfoConfLoader::class);
         $mock->shouldReceive('loadSingle')
             ->with(
-                'N86io\Rest\Tests\Unit\DomainObject\FakeEntity2',
-                ['N86io\\Rest\\Tests\\Unit\\DomainObject\\FakeEntity1']
+                'Entity2',
+                ['N86io\\Rest\\Examples\\Example1']
             )
             ->andReturn([
                 'table' => 'fake_table',
@@ -202,7 +200,7 @@ class EntityInfoFactoryTest extends UnitTestCase
             ]);
 
         $mock->shouldReceive('loadSingle')
-            ->with('N86io\Rest\Tests\Unit\DomainObject\FakeEntity4', [])
+            ->with('Entity4', [])
             ->andReturn([
                 'properties' => [
                     'string' => ['ordering' => true]
@@ -220,8 +218,8 @@ class EntityInfoFactoryTest extends UnitTestCase
         $mock = \Mockery::mock(EntityInfoConfLoader::class);
         $mock->shouldReceive('loadSingle')
             ->with(
-                'N86io\Rest\Tests\Unit\DomainObject\FakeEntity2',
-                ['N86io\\Rest\\Tests\\Unit\\DomainObject\\FakeEntity1']
+                'Entity2',
+                ['N86io\\Rest\\Examples\\Example1']
             )
             ->andReturn(['table' => 'fake_table']);
 

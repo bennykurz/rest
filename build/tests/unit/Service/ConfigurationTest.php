@@ -19,11 +19,8 @@
 namespace N86io\Rest\Tests\Unit\Service;
 
 use N86io\Rest\ControllerInterface;
+use N86io\Rest\DomainObject\EntityInterface;
 use N86io\Rest\Service\Configuration;
-use N86io\Rest\Tests\Unit\DomainObject\FakeEntity1;
-use N86io\Rest\Tests\Unit\DomainObject\FakeEntity2;
-use N86io\Rest\Tests\Unit\DomainObject\FakeEntity3;
-use N86io\Rest\Tests\Unit\DomainObject\FakeEntity4;
 use N86io\Rest\UnitTestCase;
 
 /**
@@ -47,16 +44,28 @@ class ConfigurationTest extends UnitTestCase
      */
     protected $controllerMock2Name;
 
+    /**
+     * @var array
+     */
+    protected $entityClassNames;
+
     public function setUp()
     {
         $this->controllerMock1Name = get_class(\Mockery::mock(ControllerInterface::class));
         $this->controllerMock2Name = get_class(\Mockery::mock(ControllerInterface::class));
 
+        $this->entityClassNames = [
+            1 => get_class(\Mockery::mock(EntityInterface::class)),
+            2 => get_class(\Mockery::mock(EntityInterface::class)),
+            3 => get_class(\Mockery::mock(EntityInterface::class)),
+            4 => get_class(\Mockery::mock(EntityInterface::class))
+        ];
+
         $this->configuration = new Configuration;
-        $this->configuration->registerApiModel('api1', FakeEntity1::class, '1');
-        $this->configuration->registerApiModel('api1', FakeEntity2::class, '2');
-        $this->configuration->registerApiModel('api2', FakeEntity3::class, '1');
-        $this->configuration->registerApiModel('api2', FakeEntity4::class, '2');
+        $this->configuration->registerApiModel('api1', $this->entityClassNames[1], '1');
+        $this->configuration->registerApiModel('api1', $this->entityClassNames[2], '2');
+        $this->configuration->registerApiModel('api2', $this->entityClassNames[3], '1');
+        $this->configuration->registerApiModel('api2', $this->entityClassNames[4], '2');
         $this->configuration->registerApiController('api1', $this->controllerMock1Name, '1');
         $this->configuration->registerApiController('api2', $this->controllerMock2Name, '2');
         $this->configuration->registerAlias('aliasForApi1', 'api1');
@@ -79,19 +88,19 @@ class ConfigurationTest extends UnitTestCase
 
         $expectedApi1 = [
             '1' => [
-                'model' => FakeEntity1::class,
+                'model' => $this->entityClassNames[1],
                 'controller' => $this->controllerMock1Name
             ],
             '2' => [
-                'model' => FakeEntity2::class
+                'model' => $this->entityClassNames[2]
             ]
         ];
         $expectedApi2 = [
             '1' => [
-                'model' => FakeEntity3::class
+                'model' => $this->entityClassNames[3]
             ],
             '2' => [
-                'model' => FakeEntity4::class,
+                'model' => $this->entityClassNames[4],
                 'controller' => $this->controllerMock2Name
             ]
         ];

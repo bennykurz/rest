@@ -32,12 +32,8 @@
   },
   "autoload": {
     "psr-4": {
-      "N86io\\Rest\\": "src"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "N86io\\Rest\\Tests\\Unit\\": "build/tests/unit"
+      "N86io\\Rest\\": "src",
+      "N86io\\Rest\\Examples\\": "examples"
     }
   },
   "suggest": {

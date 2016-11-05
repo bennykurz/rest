@@ -16,11 +16,11 @@
  * along with N86io/Rest or see <http://www.gnu.org/licenses/>.
  */
 
-namespace N86io\Rest\Tests\Unit\DomainObject;
+namespace N86io\Rest\Examples;
 
 /**
- * @package N86io\Rest\Tests\Unit\DomainObject
+ * @package N86io\Rest\Examples
  */
-class FakeEntity3 extends FakeEntity1
+class Example3 extends Example1
 {
 }
