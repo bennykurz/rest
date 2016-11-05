@@ -22,7 +22,8 @@ use N86io\Rest\Persistence\Constraint\ConstraintInterface;
 
 /**
  * Interface RequestInterface
- * @package N86io\Rest\Http
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 interface RequestInterface
 {

@@ -22,7 +22,8 @@ use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 
 /**
  * Interface EntityInfoInterface
- * @package N86io\Rest\DomainObject\EntityInfo
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 interface EntityInfoInterface
 {

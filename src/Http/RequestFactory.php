@@ -30,7 +30,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Class RequestFactory
- * @package N86io\Rest\Http
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class RequestFactory implements RequestFactoryInterface
 {

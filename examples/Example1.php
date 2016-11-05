@@ -27,7 +27,6 @@ use N86io\Rest\Examples as Test;
  *
  * Some description
  *
- * @package N86io\Rest\Examples
  */
 class Example1 extends AbstractEntity
 {

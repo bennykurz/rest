@@ -22,7 +22,8 @@ use N86io\Rest\DomainObject\PropertyInfo\Factory\DynamicPhp;
 
 /**
  * Class DynamicPhpTest
- * @package N86io\Rest\Tests\Unit\DomainObject\PropertyInfo\Factory
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class DynamicPhpTest extends AbstractFactoryTest
 {

@@ -27,7 +27,8 @@ use N86io\Rest\Persistence\Ordering\OrderingFactory;
 
 /**
  * Class QueryUtility
- * @package N86io\Rest\Http\Utility
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class QueryUtility
 {

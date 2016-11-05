@@ -25,7 +25,8 @@ use N86io\Rest\Reflection\EntityClassReflection;
 
 /**
  * Class EntityInfoFactory
- * @package N86io\Rest\DomainObject\EntityInfo
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class EntityInfoFactory implements EntityInfoFactoryInterface
 {

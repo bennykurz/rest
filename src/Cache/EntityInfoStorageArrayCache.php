@@ -22,7 +22,8 @@ use DI\Cache\ArrayCache;
 
 /**
  * Class EntityInfoStorageArrayCache
- * @package N86io\Rest\Cache
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class EntityInfoStorageArrayCache extends ArrayCache implements EntityInfoStorageArrayCacheInterface
 {

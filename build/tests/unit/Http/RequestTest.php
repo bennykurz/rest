@@ -24,7 +24,8 @@ use N86io\Rest\UnitTestCase;
 
 /**
  * Class RequestTest
- * @package N86io\Rest\Tests\Unit\Http
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class RequestTest extends UnitTestCase
 {

@@ -22,7 +22,8 @@ use N86io\Rest\DomainObject\PropertyInfo\Factory\DynamicSql;
 
 /**
  * Class DynamicSqlTest
- * @package N86io\Rest\Tests\Unit\DomainObject\PropertyInfo\Factory
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class DynamicSqlTest extends AbstractFactoryTest
 {

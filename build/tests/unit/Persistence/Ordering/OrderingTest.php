@@ -25,7 +25,8 @@ use N86io\Rest\UnitTestCase;
 
 /**
  * Class OrderingTest
- * @package N86io\Rest\Tests\Unit\Persistence\Ordering
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class OrderingTest extends UnitTestCase
 {

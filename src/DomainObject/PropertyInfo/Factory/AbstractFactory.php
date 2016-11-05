@@ -22,7 +22,8 @@ use DI\Container;
 
 /**
  * Class AbstractFactory
- * @package N86io\Rest\DomainObject\PropertyInfo\Factory
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 abstract class AbstractFactory implements FactoryInterface
 {

@@ -24,7 +24,8 @@ use N86io\Rest\UnitTestCase;
 
 /**
  * Class AbstractFactoryTest
- * @package N86io\Rest\Tests\Unit\DomainObject\PropertyInfo\Factory
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 abstract class AbstractFactoryTest extends UnitTestCase
 {

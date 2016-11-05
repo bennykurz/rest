@@ -22,7 +22,8 @@ use DI\Container;
 
 /**
  * Class RoutingFactory
- * @package N86io\Rest\Http\Routing
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class RoutingFactory implements RoutingFactoryInterface
 {

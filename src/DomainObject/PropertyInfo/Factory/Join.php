@@ -20,7 +20,8 @@ namespace N86io\Rest\DomainObject\PropertyInfo\Factory;
 
 /**
  * Class Join
- * @package N86io\Rest\DomainObject\PropertyInfo\Factory
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class Join extends AbstractFactory
 {

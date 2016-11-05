@@ -26,7 +26,8 @@ use N86io\Rest\UnitTestCase;
 
 /**
  * Class ComparisonTest
- * @package N86io\Rest\Tests\Unit\Persistence\Constraint
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class ComparisonTest extends UnitTestCase
 {

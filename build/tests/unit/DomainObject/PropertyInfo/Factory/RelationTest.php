@@ -24,7 +24,8 @@ use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoUtility;
 
 /**
  * Class RelationTest
- * @package N86io\Rest\Tests\Unit\DomainObject\PropertyInfo\Factory
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class RelationTest extends AbstractFactoryTest
 {

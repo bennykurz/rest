@@ -20,7 +20,8 @@ namespace N86io\Rest\DomainObject\PropertyInfo;
 
 /**
  * Interface RestrictableInterface
- * @package N86io\Rest\DomainObject\PropertyInfo
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 interface RestrictableInterface
 {

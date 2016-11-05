@@ -23,7 +23,8 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * Interface ControllerInterface
- * @package N86io\Rest
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 interface ControllerInterface
 {

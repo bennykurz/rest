@@ -20,7 +20,8 @@ namespace N86io\Rest\Reflection;
 
 /**
  * Class MethodNameUtility
- * @package N86io\Rest\Reflection
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class MethodNameUtility
 {

@@ -30,7 +30,8 @@ use N86io\Rest\UnitTestCase;
 
 /**
  * Class EntityInfoFactoryTest
- * @package N86io\Rest\Tests\Unit\DomainObject\EntityInfo
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class EntityInfoFactoryTest extends UnitTestCase
 {
@@ -175,8 +176,8 @@ class EntityInfoFactoryTest extends UnitTestCase
         $methodName = 'convertPropertyName';
         $mock = \Mockery::mock(PropertyInfoUtility::class);
         $mock->shouldReceive($methodName)->with('fakeId')->andReturn('fake_id')
-            ->shouldReceive($methodName)->with('string')->andReturn('string')
-            ->shouldReceive($methodName)->with('array')->andReturn('array');
+            ->getMock()->shouldReceive($methodName)->with('string')->andReturn('string')
+            ->getMock()->shouldReceive($methodName)->with('array')->andReturn('array');
 
         return $mock;
     }

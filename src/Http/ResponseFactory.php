@@ -26,7 +26,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Class ResponseFactory
- * @package N86io\Rest\Http
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class ResponseFactory
 {

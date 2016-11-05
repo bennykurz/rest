@@ -23,7 +23,8 @@ use N86io\Rest\UnitTestCase;
 
 /**
  * Class DynamicSqlTest
- * @package N86io\Rest\Tests\Unit\DomainObject\PropertyInfo
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class DynamicSqlTest extends UnitTestCase
 {

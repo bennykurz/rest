@@ -23,7 +23,8 @@ use N86io\Rest\UnitTestCase;
 
 /**
  * Class JsonConverterTest
- * @package N86io\Rest\Tests\Unit\ContentConverter
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class JsonConverterTest extends UnitTestCase
 {

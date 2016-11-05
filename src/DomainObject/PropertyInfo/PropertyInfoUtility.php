@@ -22,7 +22,8 @@ use N86io\Rest\DomainObject\AbstractEntity;
 
 /**
  * Class PropertyInfoUtility
- * @package N86io\Rest\DomainObject\PropertyInfo
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class PropertyInfoUtility
 {

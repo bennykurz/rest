@@ -22,7 +22,8 @@ use DI\Container;
 
 /**
  * Class AbstractPropertyInfo
- * @package N86io\Rest\DomainObject\PropertyInfo
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 abstract class AbstractPropertyInfo implements PropertyInfoInterface
 {

@@ -21,14 +21,14 @@ namespace N86io\Rest\Tests\Unit\DomainObject\EntityInfo;
 use N86io\Rest\DomainObject\AbstractEntity;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfo;
 use N86io\Rest\DomainObject\PropertyInfo\AbstractPropertyInfo;
-use N86io\Rest\DomainObject\PropertyInfo\AbstractStatic;
 use N86io\Rest\DomainObject\PropertyInfo\Common;
 use N86io\Rest\Http\RequestInterface;
 use N86io\Rest\UnitTestCase;
 
 /**
  * Class EntityInfoTest
- * @package N86io\Rest\Tests\Unit\DomainObject\EntityInfo
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class EntityInfoTest extends UnitTestCase
 {

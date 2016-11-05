@@ -28,7 +28,8 @@ use N86io\Rest\UnitTestCase;
 
 /**
  * Class EntityClassReflectionTest
- * @package N86io\Rest\Tests\Unit\Reflection
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class EntityClassReflectionTest extends UnitTestCase
 {

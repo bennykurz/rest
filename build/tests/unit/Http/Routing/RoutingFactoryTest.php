@@ -26,7 +26,8 @@ use N86io\Rest\UnitTestCase;
 
 /**
  * Class RoutingFactoryTest
- * @package N86io\Rest\Tests\Unit\Service
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class RoutingFactoryTest extends UnitTestCase
 {

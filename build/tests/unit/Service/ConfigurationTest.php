@@ -25,7 +25,8 @@ use N86io\Rest\UnitTestCase;
 
 /**
  * Class ConfigurationTest
- * @package N86io\Rest\Tests\Unit\Service
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class ConfigurationTest extends UnitTestCase
 {

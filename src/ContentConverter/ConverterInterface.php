@@ -20,7 +20,8 @@ namespace N86io\Rest\ContentConverter;
 
 /**
  * Interface ConverterInterface
- * @package N86io\Rest\ContentConverter
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 interface ConverterInterface
 {

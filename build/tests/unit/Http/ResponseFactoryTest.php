@@ -29,7 +29,8 @@ use Psr\Http\Message\StreamInterface;
 
 /**
  * Class ResponseFactoryTest
- * @package N86io\Rest\Tests\Unit\Http
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class ResponseFactoryTest extends UnitTestCase
 {

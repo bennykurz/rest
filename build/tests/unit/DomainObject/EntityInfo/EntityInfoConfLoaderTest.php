@@ -26,7 +26,8 @@ use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class EntityInfoConfLoaderTest
- * @package N86io\Rest\Tests\Unit\DomainObject\EntityInfo
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class EntityInfoConfLoaderTest extends UnitTestCase
 {

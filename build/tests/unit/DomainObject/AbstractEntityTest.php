@@ -23,7 +23,8 @@ use N86io\Rest\UnitTestCase;
 
 /**
  * Class AbstractEntityTest
- * @package N86io\Rest\Tests\Unit\DomainObject
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class AbstractEntityTest extends UnitTestCase
 {

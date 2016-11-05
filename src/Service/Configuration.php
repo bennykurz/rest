@@ -23,7 +23,8 @@ use N86io\Rest\DomainObject\EntityInterface;
 
 /**
  * Class Configuration
- * @package N86io\Rest\Service
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class Configuration
 {

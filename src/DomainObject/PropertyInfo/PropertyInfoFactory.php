@@ -24,7 +24,8 @@ use N86io\Rest\DomainObject\PropertyInfo\Factory\FactoryInterface;
 
 /**
  * Class PropertyInfoFactory
- * @package N86io\Rest\DomainObject\PropertyInfo
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class PropertyInfoFactory
 {

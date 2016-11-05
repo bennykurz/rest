@@ -23,7 +23,8 @@ use N86io\Rest\Cache\EntityInfoStorageCacheInterface;
 
 /**
  * Class EntityInfoStorage
- * @package N86io\Rest\DomainObject\EntityInfo
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class EntityInfoStorage
 {

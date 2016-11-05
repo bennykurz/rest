@@ -22,7 +22,8 @@ use DI\Container;
 
 /**
  * Class ConverterFactory
- * @package N86io\Rest\ContentConverter
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class ConverterFactory
 {

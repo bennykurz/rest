@@ -22,6 +22,11 @@ use DI\Scope;
 use N86io\Rest\Object\ContainerFactory;
 use N86io\Rest\UnitTestCase;
 
+/**
+ * Class ContainerFactoryTest
+ *
+ * @author Viktor Firus <v@n86.io>
+ */
 class ContainerFactoryTest extends UnitTestCase
 {
     public function test()

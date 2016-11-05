@@ -22,7 +22,8 @@ use Doctrine\Common\Cache\ArrayCache;
 
 /**
  * Class EntityInfoStorageCache
- * @package N86io\Rest\Cache
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class EntityInfoStorageCache extends ArrayCache implements EntityInfoStorageCacheInterface
 {

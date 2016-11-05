@@ -20,7 +20,8 @@ namespace N86io\Rest\Http\Routing;
 
 /**
  * Interface RoutingParameterInterface
- * @package N86io\Rest\Http\Routing
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 interface RoutingParameterInterface
 {

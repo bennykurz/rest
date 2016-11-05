@@ -25,7 +25,6 @@ use N86io\Rest\DomainObject\AbstractEntity;
  *
  * Some description
  *
- * @package N86io\Rest\Examples
  */
 class Example4 extends AbstractEntity
 {

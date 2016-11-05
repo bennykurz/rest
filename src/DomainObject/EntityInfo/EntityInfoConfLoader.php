@@ -23,7 +23,8 @@ use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class EntityInfoConfLoader
- * @package N86io\Rest\DomainObject\EntityInfo
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class EntityInfoConfLoader
 {

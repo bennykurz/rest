@@ -20,7 +20,8 @@ namespace N86io\Rest\DomainObject\PropertyInfo\Factory;
 
 /**
  * Class DynamicPhp
- * @package N86io\Rest\DomainObject\PropertyInfo\Factory
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class DynamicPhp extends AbstractFactory
 {

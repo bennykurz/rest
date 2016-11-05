@@ -20,7 +20,6 @@ namespace N86io\Rest\Examples;
 
 /**
  * Class Example2
- * @package N86io\Rest\Examples
  */
 class Example2 extends Example1
 {

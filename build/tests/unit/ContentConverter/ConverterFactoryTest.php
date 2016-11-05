@@ -25,7 +25,8 @@ use N86io\Rest\UnitTestCase;
 
 /**
  * Class ConverterFactoryTest
- * @package N86io\Rest\Tests\Unit\ContentConverter
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class ConverterFactoryTest extends UnitTestCase
 {

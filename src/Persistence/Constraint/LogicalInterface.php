@@ -20,7 +20,8 @@ namespace N86io\Rest\Persistence\Constraint;
 
 /**
  * Interface LogicalInterface
- * @package N86io\Rest\Persistence\Constraint
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 interface LogicalInterface extends ConstraintInterface, \Iterator
 {

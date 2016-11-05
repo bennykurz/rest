@@ -22,7 +22,8 @@ use Doctrine\Common\Cache\Cache;
 
 /**
  * Interface EntityInfoStorageCacheInterface
- * @package N86io\Rest\Cache
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 interface EntityInfoStorageCacheInterface extends Cache
 {

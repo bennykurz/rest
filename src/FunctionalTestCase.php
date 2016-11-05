@@ -16,15 +16,25 @@
  * along with N86io/Rest or see <http://www.gnu.org/licenses/>.
  */
 
-namespace N86io\Rest\Cache;
+namespace N86io\Rest;
 
-use Doctrine\Common\Cache\Cache;
+use DI\Container;
+use N86io\Rest\Object\ContainerFactory;
 
 /**
- * Interface EntityInfoStorageArrayCacheInterface
+ * Class FunctionalTestCase
  *
  * @author Viktor Firus <v@n86.io>
  */
-interface EntityInfoStorageArrayCacheInterface extends Cache
+abstract class FunctionalTestCase extends UnitTestCase
 {
+    /**
+     * @var Container
+     */
+    protected $container;
+
+    public function setUp()
+    {
+        $this->container = ContainerFactory::create();
+    }
 }

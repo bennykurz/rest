@@ -20,7 +20,8 @@ namespace N86io\Rest\Persistence\Constraint;
 
 /**
  * Class Logical
- * @package N86io\Rest\Persistence\Constraint
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class Logical implements LogicalInterface
 {

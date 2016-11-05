@@ -23,7 +23,8 @@ use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 
 /**
  * Class OrderingFactory
- * @package N86io\Rest\Persistence\Ordering
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class OrderingFactory
 {

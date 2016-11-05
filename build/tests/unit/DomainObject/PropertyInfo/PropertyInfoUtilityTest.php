@@ -25,7 +25,8 @@ use N86io\Rest\UnitTestCase;
 
 /**
  * Class PropertyInfoUtilityTest
- * @package N86io\Rest\Tests\Unit\DomainObject\PropertyInfo
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class PropertyInfoUtilityTest extends UnitTestCase
 {

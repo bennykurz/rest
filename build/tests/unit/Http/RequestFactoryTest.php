@@ -36,7 +36,8 @@ use Psr\Http\Message\UriInterface;
 
 /**
  * Class RequestFactoryTest
- * @package N86io\Rest\Tests\Unit\Http
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class RequestFactoryTest extends UnitTestCase
 {

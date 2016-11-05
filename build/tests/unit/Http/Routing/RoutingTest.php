@@ -26,7 +26,8 @@ use Psr\Http\Message\UriInterface;
 
 /**
  * Class RoutingAndFactoryTest
- * @package N86io\Rest\Tests\Unit\Service
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class RoutingTest extends UnitTestCase
 {

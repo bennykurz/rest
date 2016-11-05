@@ -22,7 +22,8 @@ use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 
 /**
  * Class Ordering
- * @package N86io\Rest\Persistence\Ordering
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class Ordering implements OrderingInterface
 {

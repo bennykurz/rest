@@ -22,7 +22,8 @@ use Psr\Http\Message\UriInterface;
 
 /**
  * Interface RoutingInterface
- * @package N86io\Rest\Http\Routing
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 interface RoutingInterface
 {

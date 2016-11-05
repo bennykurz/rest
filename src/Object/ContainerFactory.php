@@ -25,7 +25,8 @@ use Doctrine\Common\Cache\Cache;
 
 /**
  * Class ContainerFactory
- * @package N86io\Rest\Object
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class ContainerFactory
 {

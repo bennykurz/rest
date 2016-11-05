@@ -18,6 +18,7 @@
 
 namespace N86io\Rest\Tests\Unit\DomainObject\EntityInfo;
 
+use Doctrine\Common\Cache\ArrayCache;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoFactory;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
@@ -25,14 +26,15 @@ use N86io\Rest\UnitTestCase;
 
 /**
  * Class EntityInfoStorageTest
- * @package N86io\Rest\Tests\Unit\DomainObject\EntityInfo
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class EntityInfoStorageTest extends UnitTestCase
 {
     public function test()
     {
-        $cache = new \Doctrine\Common\Cache\ArrayCache;
-        $arrayCache = new \Doctrine\Common\Cache\ArrayCache;
+        $cache = new ArrayCache;
+        $arrayCache = new ArrayCache;
 
         $entityInfoStorage = new EntityInfoStorage;
 

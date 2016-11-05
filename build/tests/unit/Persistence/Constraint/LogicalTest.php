@@ -27,7 +27,8 @@ use N86io\Rest\UnitTestCase;
 
 /**
  * Class LogicalTest
- * @package N86io\Rest\Tests\Unit\Persistence\Constraint
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class LogicalTest extends UnitTestCase
 {

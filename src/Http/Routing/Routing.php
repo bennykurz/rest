@@ -23,7 +23,8 @@ use Psr\Http\Message\UriInterface;
 
 /**
  * Class Routing
- * @package N86io\Rest\Http\Routing
+ *
+ * @author Viktor Firus <v@n86.io>
  * @Injectable(scope="prototype")
  */
 class Routing implements RoutingInterface

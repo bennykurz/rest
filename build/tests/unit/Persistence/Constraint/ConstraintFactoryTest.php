@@ -19,6 +19,7 @@
 namespace N86io\Rest\Tests\Unit\Persistence\Constraint;
 
 use DI\Container;
+use Mockery\Mock;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 use N86io\Rest\Persistence\Constraint\ComparisonInterface;
 use N86io\Rest\Persistence\Constraint\ConstraintFactory;
@@ -27,7 +28,8 @@ use N86io\Rest\UnitTestCase;
 
 /**
  * Class ConstraintFactoryTest
- * @package N86io\Rest\Tests\Unit\Persistence\Constraint
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class ConstraintFactoryTest extends UnitTestCase
 {
@@ -68,6 +70,7 @@ class ConstraintFactoryTest extends UnitTestCase
         /** @var PropertyInfoInterface $propInfoMock */
         $propInfoMock = \Mockery::mock(PropertyInfoInterface::class);
 
+        /** @var ConstraintFactory|Mock $factoryMock */
         $factoryMock = \Mockery::mock(ConstraintFactory::class)->makePartial();
 
         $ltMock = \Mockery::mock(ComparisonInterface::class);

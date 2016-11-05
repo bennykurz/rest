@@ -23,7 +23,8 @@ use N86io\Rest\DomainObject\AbstractEntity;
 
 /**
  * Class EntityClassReflection
- * @package N86io\Rest\Reflection
+ *
+ * @author Viktor Firus <v@n86.io>
  * @Injectable(scope="prototype")
  */
 class EntityClassReflection

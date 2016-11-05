@@ -20,7 +20,8 @@ namespace N86io\Rest\Exception;
 
 /**
  * Class InvalidRequestException
- * @package N86io\Rest\Exception
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class InvalidRequestException extends \InvalidArgumentException
 {

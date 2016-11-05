@@ -22,7 +22,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Interface RequestFactoryInterface
- * @package N86io\Rest\Http
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 interface RequestFactoryInterface
 {

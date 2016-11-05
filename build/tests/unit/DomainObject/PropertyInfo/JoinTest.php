@@ -24,7 +24,8 @@ use N86io\Rest\UnitTestCase;
 
 /**
  * Class JoinTest
- * @package N86io\Rest\Tests\Unit\DomainObject\PropertyInfo
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class JoinTest extends UnitTestCase
 {

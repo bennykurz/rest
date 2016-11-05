@@ -20,7 +20,8 @@ namespace N86io\Rest\ContentConverter;
 
 /**
  * Class JsonConverter
- * @package N86io\Rest\ContentConverter
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class JsonConverter implements ConverterInterface
 {

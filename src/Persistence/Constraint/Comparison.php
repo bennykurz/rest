@@ -22,7 +22,8 @@ use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 
 /**
  * Class Comparison
- * @package N86io\Rest\Persistence\Constraint
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class Comparison implements ComparisonInterface
 {

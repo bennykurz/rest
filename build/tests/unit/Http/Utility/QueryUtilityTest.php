@@ -31,7 +31,8 @@ use N86io\Rest\UnitTestCase;
 
 /**
  * Class QueryUtilityTest
- * @package N86io\Rest\Tests\Unit\Http\Utility
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class QueryUtilityTest extends UnitTestCase
 {

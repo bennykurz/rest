@@ -22,7 +22,8 @@ use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 
 /**
  * Interface FactoryInterface
- * @package N86io\Rest\DomainObject\PropertyInfo\Factory
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 interface FactoryInterface
 {

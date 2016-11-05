@@ -22,7 +22,8 @@ use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoUtility;
 
 /**
  * Class RelationOnForeignField
- * @package N86io\Rest\DomainObject\PropertyInfo\Factory
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class RelationOnForeignField extends AbstractFactory
 {

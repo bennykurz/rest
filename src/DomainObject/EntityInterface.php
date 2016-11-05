@@ -20,7 +20,8 @@ namespace N86io\Rest\DomainObject;
 
 /**
  * Interface EntityInterface
- * @package N86io\Rest\DomainObject
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 interface EntityInterface
 {

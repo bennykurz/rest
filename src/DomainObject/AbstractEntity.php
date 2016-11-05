@@ -20,7 +20,8 @@ namespace N86io\Rest\DomainObject;
 
 /**
  * Class AbstractEntity
- * @package N86io\Rest\DomainObject
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 abstract class AbstractEntity implements EntityInterface
 {

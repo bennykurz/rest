@@ -23,7 +23,8 @@ use N86io\Rest\UnitTestCase;
 
 /**
  * Class RoutingParameterTest
- * @package N86io\Rest\Tests\Unit\Service
+ *
+ * @author Viktor Firus <v@n86.io>
  */
 class RoutingParameterTest extends UnitTestCase
 {

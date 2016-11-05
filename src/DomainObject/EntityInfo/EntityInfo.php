@@ -27,7 +27,8 @@ use N86io\Rest\Http\RequestInterface;
 
 /**
  * Class EntityInfo
- * @package N86io\Rest\DomainObject\EntityInfo
+ *
+ * @author Viktor Firus <v@n86.io>
  * @Injectable(scope="prototype")
  */
 class EntityInfo implements EntityInfoInterface
