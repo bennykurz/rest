@@ -33,6 +33,11 @@ use N86io\Rest\UnitTestCase;
 class ConfigurationTest extends UnitTestCase
 {
     /**
+     * @var Configuration
+     */
+    protected $configuration;
+
+    /**
      * @var string
      */
     protected $controllerMock1Name;
@@ -44,34 +49,33 @@ class ConfigurationTest extends UnitTestCase
 
     public function setUp()
     {
-        parent::setUpBeforeClass();
-
         $this->controllerMock1Name = get_class(\Mockery::mock(ControllerInterface::class));
         $this->controllerMock2Name = get_class(\Mockery::mock(ControllerInterface::class));
 
-        static::$configuration->registerApiModel('api1', FakeEntity1::class, '1');
-        static::$configuration->registerApiModel('api1', FakeEntity2::class, '2');
-        static::$configuration->registerApiModel('api2', FakeEntity3::class, '1');
-        static::$configuration->registerApiModel('api2', FakeEntity4::class, '2');
-        static::$configuration->registerApiController('api1', $this->controllerMock1Name, '1');
-        static::$configuration->registerApiController('api2', $this->controllerMock2Name, '2');
-        static::$configuration->registerAlias('aliasForApi1', 'api1');
+        $this->configuration = new Configuration;
+        $this->configuration->registerApiModel('api1', FakeEntity1::class, '1');
+        $this->configuration->registerApiModel('api1', FakeEntity2::class, '2');
+        $this->configuration->registerApiModel('api2', FakeEntity3::class, '1');
+        $this->configuration->registerApiModel('api2', FakeEntity4::class, '2');
+        $this->configuration->registerApiController('api1', $this->controllerMock1Name, '1');
+        $this->configuration->registerApiController('api2', $this->controllerMock2Name, '2');
+        $this->configuration->registerAlias('aliasForApi1', 'api1');
     }
 
     public function test()
     {
         $secondConfiguration = new Configuration;
-        $secondConfiguration->injectConfiguration(static::$configuration);
+        $secondConfiguration->injectConfiguration($this->configuration);
 
-        $this->assertEquals(static::$configuration, $secondConfiguration);
+        $this->assertEquals($this->configuration, $secondConfiguration);
 
-        static::$configuration->setApiBaseUrl('http://example.com/api');
-        $this->assertEquals('http://example.com/api', static::$configuration->getApiBaseUrl());
+        $this->configuration->setApiBaseUrl('http://example.com/api');
+        $this->assertEquals('http://example.com/api', $this->configuration->getApiBaseUrl());
 
-        static::$configuration->setApiBaseUrl('http://example.com/api/');
-        $this->assertEquals('http://example.com/api', static::$configuration->getApiBaseUrl());
+        $this->configuration->setApiBaseUrl('http://example.com/api/');
+        $this->assertEquals('http://example.com/api', $this->configuration->getApiBaseUrl());
 
-        $this->assertEquals(['api1', 'api2', 'aliasForApi1'], static::$configuration->getApiIdentifiers());
+        $this->assertEquals(['api1', 'api2', 'aliasForApi1'], $this->configuration->getApiIdentifiers());
 
         $expectedApi1 = [
             '1' => [
@@ -91,26 +95,26 @@ class ConfigurationTest extends UnitTestCase
                 'controller' => $this->controllerMock2Name
             ]
         ];
-        $this->assertEquals($expectedApi1, static::$configuration->getApiConfiguration('api1'));
-        $this->assertEquals($expectedApi1, static::$configuration->getApiConfiguration('aliasForApi1'));
-        $this->assertEquals($expectedApi2, static::$configuration->getApiConfiguration('api2'));
+        $this->assertEquals($expectedApi1, $this->configuration->getApiConfiguration('api1'));
+        $this->assertEquals($expectedApi1, $this->configuration->getApiConfiguration('aliasForApi1'));
+        $this->assertEquals($expectedApi2, $this->configuration->getApiConfiguration('api2'));
 
         $settings1 = ['settings1'];
         $settings2 = ['settings2'];
         $settings3 = ['settings3'];
-        static::$configuration->registerApiControllerSettings('api1', $settings1);
-        static::$configuration->registerApiControllerSettings('api2', $settings2);
-        $this->assertEquals($settings1, static::$configuration->getApiControllerSettings('api1'));
-        $this->assertEquals($settings2, static::$configuration->getApiControllerSettings('api2'));
-        $this->assertEquals([], static::$configuration->getApiControllerSettings('aliasForApi1'));
-        static::$configuration->registerApiControllerSettings('aliasForApi1', $settings3);
-        $this->assertEquals($settings3, static::$configuration->getApiControllerSettings('aliasForApi1'));
+        $this->configuration->registerApiControllerSettings('api1', $settings1);
+        $this->configuration->registerApiControllerSettings('api2', $settings2);
+        $this->assertEquals($settings1, $this->configuration->getApiControllerSettings('api1'));
+        $this->assertEquals($settings2, $this->configuration->getApiControllerSettings('api2'));
+        $this->assertEquals([], $this->configuration->getApiControllerSettings('aliasForApi1'));
+        $this->configuration->registerApiControllerSettings('aliasForApi1', $settings3);
+        $this->assertEquals($settings3, $this->configuration->getApiControllerSettings('aliasForApi1'));
 
 
         $clearConf = new Configuration;
-        static::$configuration->injectConfiguration($clearConf);
-        static::$configuration->registerEntityInfoConfiguration('SomeContent', Configuration::ENTITY_INFO_CONF_ARRAY);
-        static::$configuration->registerEntityInfoConfiguration(
+        $this->configuration->injectConfiguration($clearConf);
+        $this->configuration->registerEntityInfoConfiguration('SomeContent', Configuration::ENTITY_INFO_CONF_ARRAY);
+        $this->configuration->registerEntityInfoConfiguration(
             'SomeFurtherContent',
             Configuration::ENTITY_INFO_CONF_JSON + Configuration::ENTITY_INFO_CONF_FILE
         );
@@ -124,49 +128,49 @@ class ConfigurationTest extends UnitTestCase
                 'content' => 'SomeFurtherContent'
             ]
         ];
-        $this->assertEquals($expected, static::$configuration->getEntityInfoConfiguration());
+        $this->assertEquals($expected, $this->configuration->getEntityInfoConfiguration());
     }
 
     public function testExceptionRegisterApiModel()
     {
         $this->setExpectedException(\InvalidArgumentException::class);
-        static::$configuration->registerApiModel('api1', Configuration::class);
+        $this->configuration->registerApiModel('api1', Configuration::class);
     }
 
     public function testExceptionRegisterApiController()
     {
         $this->setExpectedException(\InvalidArgumentException::class);
-        static::$configuration->registerApiController('api1', Configuration::class);
+        $this->configuration->registerApiController('api1', Configuration::class);
     }
 
     public function testExceptionRegisterAliasOnAlias()
     {
         $this->setExpectedException(\InvalidArgumentException::class);
-        static::$configuration->registerAlias('otherAlias', 'aliasForApi1');
+        $this->configuration->registerAlias('otherAlias', 'aliasForApi1');
     }
 
     public function testExceptionRegisterAliasExistedApiIdentifier()
     {
         $this->setExpectedException(\InvalidArgumentException::class);
-        static::$configuration->registerAlias('api1', 'api2');
+        $this->configuration->registerAlias('api1', 'api2');
     }
 
     public function testExceptionRegisterAliasOnUnknownApiIdentifier()
     {
         $this->setExpectedException(\InvalidArgumentException::class);
-        static::$configuration->registerAlias('aliasForUnknown', 'Unknown');
+        $this->configuration->registerAlias('aliasForUnknown', 'Unknown');
     }
 
     public function testExceptionRegisterModelOnAlias()
     {
         $this->setExpectedException(\InvalidArgumentException::class);
-        static::$configuration->registerApiModel('aliasForApi1', 'Irrelevant');
+        $this->configuration->registerApiModel('aliasForApi1', 'Irrelevant');
     }
 
     public function testExceptionInvalidEntityInfoConfType()
     {
         $this->setExpectedException(\InvalidArgumentException::class);
-        static::$configuration->registerEntityInfoConfiguration(
+        $this->configuration->registerEntityInfoConfiguration(
             'Content',
             Configuration::ENTITY_INFO_CONF_YAML + Configuration::ENTITY_INFO_CONF_ARRAY
         );
