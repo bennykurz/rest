@@ -67,7 +67,7 @@ class EntityClassReflectionTest extends UnitTestCase
                 'type' => 'float'
             ],
             'dateTimeTimestamp' => [
-                'type' => '\DateTime',
+                'type' => 'DateTime',
                 'getter' => 'getDateTimeTimestamp',
                 'setter' => 'setDateTimeTimestamp'
             ],
@@ -75,16 +75,16 @@ class EntityClassReflectionTest extends UnitTestCase
                 'type' => 'array',
             ],
             'demoList' => [
-                'type' => '\N86io\Rest\Examples\Example1'
+                'type' => 'N86io\Rest\Examples\Example1'
             ],
             'demoList2' => [
-                'type' => '\N86io\Rest\Examples\Example1'
+                'type' => 'N86io\Rest\Examples\Example1'
             ],
             'demoList3' => [
-                'type' => '\N86io\Rest\Examples\Example1'
+                'type' => 'N86io\Rest\Examples\Example1'
             ],
             'demoList4' => [
-                'type' => '\N86io\Rest\Examples\Example1'
+                'type' => 'N86io\Rest\Examples\Example1'
             ]
         ];
         $expected2 = $expected1;

@@ -204,6 +204,9 @@ class EntityClassReflection
             // @codeCoverageIgnoreEnd
             $attr = &$propertiesAttr[$property->getName()];
             $attr['type'] = current($property->getParsedDocComment()->getTags()['var']);
+            if (class_exists($attr['type']) && $attr['type'][0] === '\\') {
+                $attr['type'] = substr($attr['type'], 1);
+            }
             unset($attr['var'], $attr['getter'], $attr['setter']);
             if ($property->hasGetter()) {
                 $attr['getter'] = $property->getGetter()->getName();
