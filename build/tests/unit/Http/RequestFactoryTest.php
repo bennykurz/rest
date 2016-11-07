@@ -21,7 +21,7 @@ namespace N86io\Rest\Tests\Unit\Http;
 use DI\Container;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfo;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
-use N86io\Rest\Exception\InvalidRequestException;
+use N86io\Rest\Exception\RequestNotFoundException;
 use N86io\Rest\Http\RequestFactory;
 use N86io\Rest\Http\RequestInterface;
 use N86io\Rest\Http\Routing\Routing;
@@ -104,7 +104,7 @@ class RequestFactoryTest extends UnitTestCase
         $serverRequest = $mocks['serverRequest'];
         $this->inject($this->requestFactory, 'routingFactory', $mocks['routingFactory']);
 
-        $this->setExpectedException(InvalidRequestException::class);
+        $this->setExpectedException(RequestNotFoundException::class);
         $this->requestFactory->fromServerRequest($serverRequest);
     }
 
@@ -115,10 +115,13 @@ class RequestFactoryTest extends UnitTestCase
         $this->inject($this->requestFactory, 'routingFactory', $mocks['routingFactory']);
         $this->inject($this->requestFactory, 'configuration', $this->createConfigurationMock2());
 
-        $this->setExpectedException(InvalidRequestException::class);
+        $this->setExpectedException(RequestNotFoundException::class);
         $this->requestFactory->fromServerRequest($serverRequest);
     }
 
+    /**
+     * @return Container
+     */
     protected function createContainerMock()
     {
         $requestMock = \Mockery::mock(RequestInterface::class);

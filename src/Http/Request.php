@@ -28,6 +28,11 @@ use N86io\Rest\Persistence\Constraint\ConstraintInterface;
 class Request implements RequestInterface
 {
     /**
+     * @var array
+     */
+    protected $route;
+
+    /**
      * @var string
      */
     protected $version;
@@ -88,6 +93,24 @@ class Request implements RequestInterface
     protected $controllerClassName;
 
     /**
+     * @return array
+     */
+    public function getRoute()
+    {
+        return $this->route;
+    }
+
+    /**
+     * @param array $route
+     * @return RequestInterface
+     */
+    public function setRoute($route)
+    {
+        $this->route = $route;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getVersion()
@@ -97,7 +120,7 @@ class Request implements RequestInterface
 
     /**
      * @param string $version
-     * @return Request
+     * @return RequestInterface
      */
     public function setVersion($version)
     {
@@ -115,7 +138,7 @@ class Request implements RequestInterface
 
     /**
      * @param string $apiIdentifier
-     * @return Request
+     * @return RequestInterface
      */
     public function setApiIdentifier($apiIdentifier)
     {
@@ -133,7 +156,7 @@ class Request implements RequestInterface
 
     /**
      * @param array $resourceIds
-     * @return Request
+     * @return RequestInterface
      */
     public function setResourceIds(array $resourceIds)
     {
@@ -151,7 +174,7 @@ class Request implements RequestInterface
 
     /**
      * @param ConstraintInterface $constraints
-     * @return Request
+     * @return RequestInterface
      */
     public function setConstraints(ConstraintInterface $constraints)
     {
@@ -169,7 +192,7 @@ class Request implements RequestInterface
 
     /**
      * @param array $orderings
-     * @return Request
+     * @return RequestInterface
      */
     public function setOrderings(array $orderings)
     {
@@ -187,7 +210,7 @@ class Request implements RequestInterface
 
     /**
      * @param int $limit
-     * @return Request
+     * @return RequestInterface
      */
     public function setLimit($limit)
     {
@@ -205,7 +228,7 @@ class Request implements RequestInterface
 
     /**
      * @param int $page
-     * @return Request
+     * @return RequestInterface
      */
     public function setPage($page)
     {
@@ -223,7 +246,7 @@ class Request implements RequestInterface
 
     /**
      * @param int $outputLevel
-     * @return Request
+     * @return RequestInterface
      */
     public function setOutputLevel($outputLevel)
     {
@@ -241,7 +264,7 @@ class Request implements RequestInterface
 
     /**
      * @param int $mode
-     * @return Request
+     * @return RequestInterface
      */
     public function setMode($mode)
     {
@@ -259,7 +282,7 @@ class Request implements RequestInterface
 
     /**
      * @param string $modelClassName
-     * @return Request
+     * @return RequestInterface
      */
     public function setModelClassName($modelClassName)
     {
@@ -277,7 +300,7 @@ class Request implements RequestInterface
 
     /**
      * @param string $controllerClassName
-     * @return Request
+     * @return RequestInterface
      */
     public function setControllerClassName($controllerClassName)
     {

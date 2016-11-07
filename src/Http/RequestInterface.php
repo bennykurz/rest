@@ -34,6 +34,17 @@ interface RequestInterface
     const REQUEST_MODE_DELETE = 16;
 
     /**
+     * @return array
+     */
+    public function getRoute();
+
+    /**
+     * @param array $route
+     * @return RequestInterface
+     */
+    public function setRoute($route);
+
+    /**
      * @return string
      */
     public function getVersion();

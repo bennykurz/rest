@@ -19,10 +19,10 @@
 namespace N86io\Rest\Exception;
 
 /**
- * Class InvalidRequestException
+ * Class RequestNotFoundException
  *
  * @author Viktor Firus <v@n86.io>
  */
-class InvalidRequestException extends \InvalidArgumentException
+class RequestNotFoundException extends \InvalidArgumentException
 {
 }

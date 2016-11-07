@@ -21,7 +21,7 @@ namespace N86io\Rest\Http;
 use DI\Container;
 use N86io\Rest\ControllerInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
-use N86io\Rest\Exception\InvalidRequestException;
+use N86io\Rest\Exception\RequestNotFoundException;
 use N86io\Rest\Http\Routing\RoutingFactoryInterface;
 use N86io\Rest\Http\Utility\QueryUtility;
 use N86io\Rest\Persistence\Constraint\ConstraintInterface;
@@ -76,7 +76,7 @@ class RequestFactory implements RequestFactoryInterface
         $route = $routing->getRoute($serverRequest->getUri());
 
         if (empty($route)) {
-            throw new InvalidRequestException;
+            throw new RequestNotFoundException;
         }
 
         $version = array_key_exists('version', $route) ? $route['version'] : '';
@@ -101,7 +101,8 @@ class RequestFactory implements RequestFactoryInterface
             ->setOutputLevel($queryParams['outputLevel'])
             ->setModelClassName($modelClassName)
             ->setControllerClassName($controllerClassName)
-            ->setMode($this->getRequestMode($serverRequest));
+            ->setMode($this->getRequestMode($serverRequest))
+            ->setRoute($route);
 
         if (array_key_exists('constraints', $queryParams) &&
             $queryParams['constraints'] instanceof ConstraintInterface
@@ -151,7 +152,7 @@ class RequestFactory implements RequestFactoryInterface
         }
 
         if (!array_key_exists($version, $apiConf)) {
-            throw new InvalidRequestException;
+            throw new RequestNotFoundException;
         }
 
         $controller = array_key_exists('controller', $apiConf[$version]) ? $apiConf[$version]['controller'] :

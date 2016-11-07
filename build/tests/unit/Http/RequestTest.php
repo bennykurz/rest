@@ -42,7 +42,8 @@ class RequestTest extends UnitTestCase
             ->setOutputLevel(4)
             ->setMode(5)
             ->setModelClassName('ClassName')
-            ->setControllerClassName('ControllerName');
+            ->setControllerClassName('ControllerName')
+            ->setRoute(['route']);
         $this->assertEquals(1, $request->getVersion());
         $this->assertEquals('test', $request->getApiIdentifier());
         $this->assertEquals([1, 2, 3], $request->getResourceIds());
@@ -54,5 +55,6 @@ class RequestTest extends UnitTestCase
         $this->assertEquals(5, $request->getMode());
         $this->assertEquals('ClassName', $request->getModelClassName());
         $this->assertEquals('ControllerName', $request->getControllerClassName());
+        $this->assertEquals(['route'], $request->getRoute());
     }
 }
