@@ -21,6 +21,7 @@ namespace N86io\Rest\Tests\Unit\Http\Routing;
 use DI\Container;
 use N86io\Rest\Http\Routing\Routing;
 use N86io\Rest\Http\Routing\RoutingFactory;
+use N86io\Rest\Http\Routing\RoutingInterface;
 use N86io\Rest\Http\Routing\RoutingParameterInterface;
 use N86io\Rest\UnitTestCase;
 
@@ -45,7 +46,7 @@ class RoutingFactoryTest extends UnitTestCase
     protected function createContainerMock()
     {
         $mock = \Mockery::mock(Container::class);
-        $mock->shouldReceive('get')->with(Routing::class)->andReturn(
+        $mock->shouldReceive('get')->with(RoutingInterface::class)->andReturn(
             \Mockery::mock(Routing::class)->shouldReceive('addParameter')->withAnyArgs()->getMock()
         );
 

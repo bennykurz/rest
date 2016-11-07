@@ -39,8 +39,8 @@ class RoutingFactory implements RoutingFactoryInterface
      */
     public function build(array $apiIdentifiers)
     {
-        /** @var Routing $routing */
-        $routing = $this->container->get(Routing::class);
+        /** @var RoutingInterface $routing */
+        $routing = $this->container->get(RoutingInterface::class);
         $routing->addParameter($this->getVersionRoutingParameter());
         $routing->addParameter($this->getApiIdentifierRouting($apiIdentifiers));
         $routing->addParameter($this->getResourceIdRouting());

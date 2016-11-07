@@ -11,8 +11,10 @@ use N86io\Rest\Http\Request;
 use N86io\Rest\Http\RequestFactory;
 use N86io\Rest\Http\RequestFactoryInterface;
 use N86io\Rest\Http\RequestInterface;
+use N86io\Rest\Http\Routing\Routing;
 use N86io\Rest\Http\Routing\RoutingFactory;
 use N86io\Rest\Http\Routing\RoutingFactoryInterface;
+use N86io\Rest\Http\Routing\RoutingInterface;
 use N86io\Rest\Http\Routing\RoutingParameter;
 use N86io\Rest\Http\Routing\RoutingParameterInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -35,6 +37,9 @@ return [
 
     RoutingFactoryInterface::class =>
         \DI\object(RoutingFactory::class),
+
+    RoutingInterface::class =>
+        \DI\object(Routing::class),
 
     RoutingParameterInterface::class =>
         \DI\object(RoutingParameter::class),
