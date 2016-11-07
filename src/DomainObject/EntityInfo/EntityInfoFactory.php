@@ -65,8 +65,8 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
         $properties = $entityClassRefl->getProperties();
         $entityInfoConf = $this->loadEntityInfoConf($className, $entityClassRefl);
         $properties = $this->mergeProperties($properties, $entityInfoConf);
+        $properties = $this->setUndefinedPropertiesAttributes($properties);
         $entityInfo = $this->createEntityInfo($className, $entityInfoConf);
-
         foreach ($properties as $name => $attributes) {
             $propertyInfo = $this->propertyInfoFactory->buildPropertyInfo($name, $attributes);
             $entityInfo->addPropertyInfo($propertyInfo);
@@ -120,5 +120,31 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
         }
         $attributes['className'] = $className;
         return $this->container->make(EntityInfo::class, ['attributes' => $attributes]);
+    }
+
+    /**
+     * @param array $properties
+     * @return array
+     */
+    protected function setUndefinedPropertiesAttributes(array $properties)
+    {
+        foreach ($properties as $propertyName => &$attributes) {
+            if (!array_key_exists('resourcePropertyName', $attributes) &&
+                !array_key_exists('sqlExpression', $attributes) &&
+                $attributes['type'] !== '__dynamic'
+            ) {
+                $attributes['resourcePropertyName'] = $this->convertPropertyName($propertyName);
+            }
+        }
+        return $properties;
+    }
+
+    /**
+     * @param string $string
+     * @return string
+     */
+    protected function convertPropertyName($string)
+    {
+        return strtolower(preg_replace('/(?<=\\w)([A-Z])/', '_$1', $string));
     }
 }

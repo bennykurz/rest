@@ -87,8 +87,8 @@ class EntityInfoConfLoaderTest extends UnitTestCase
             'Model1' => [
                 'mode' => ['read'],
                 'properties' => [
-                    'integer' => ['constraint' => false, 'resourcePropertyName' => 'integer'],
-                    'someThing' => ['foreignField' => 'field', 'resourcePropertyName' => 'some_thing']
+                    'integer' => ['constraint' => false],
+                    'someThing' => ['foreignField' => 'field']
                 ]
             ],
             'Model2' => [
@@ -101,7 +101,7 @@ class EntityInfoConfLoaderTest extends UnitTestCase
             ],
             'Model3' => [
                 'properties' => [
-                    'nothing' => ['ordering' => true, 'resourcePropertyName' => 'nothing']
+                    'nothing' => ['ordering' => true]
                 ]
             ]
         ];
@@ -149,10 +149,10 @@ return [
             'table' => 'table_fake_2',
             'properties' => [
                 'fakeId' => ['resourcePropertyName' => 'fake_id'],
-                'integer' => ['constraint' => true, 'resourcePropertyName' => 'integer'],
+                'integer' => ['constraint' => true],
                 'someThing' => ['foreignField' => 'field', 'resourcePropertyName' => 'something_else'],
                 'sql' => ['sqlExpression' => 'sql'],
-                'nothing' => ['ordering' => true, 'resourcePropertyName' => 'nothing']
+                'nothing' => ['ordering' => true]
             ]
         ];
         $this->assertEquals($expected, $loader->loadSingle('Model3', ['Model1', 'Model2']));

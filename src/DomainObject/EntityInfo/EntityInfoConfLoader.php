@@ -127,7 +127,6 @@ class EntityInfoConfLoader
             foreach (array_keys($attributes2) as $attributeName) {
                 $this->mergeSingle($attributes1, $attributes2, $attributeName);
             }
-            $attributes1 = $this->setUndefinedPropertyAttributes($propertyName, $attributes1);
         }
     }
 
@@ -183,29 +182,5 @@ class EntityInfoConfLoader
             return require $path;
         }
         return file_get_contents($path);
-    }
-
-    /**
-     * @param string $propertyName
-     * @param array $attributes
-     * @return array
-     */
-    protected function setUndefinedPropertyAttributes($propertyName, array $attributes)
-    {
-        if (!array_key_exists('resourcePropertyName', $attributes) &&
-            !array_key_exists('sqlExpression', $attributes)
-        ) {
-            $attributes['resourcePropertyName'] = $this->convertPropertyName($propertyName);
-        }
-        return $attributes;
-    }
-
-    /**
-     * @param string $string
-     * @return string
-     */
-    protected function convertPropertyName($string)
-    {
-        return strtolower(preg_replace('/(?<=\\w)([A-Z])/', '_$1', $string));
     }
 }
