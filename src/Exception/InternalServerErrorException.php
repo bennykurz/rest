@@ -19,14 +19,14 @@
 namespace N86io\Rest\Exception;
 
 /**
- * Class RequestNotFoundException
+ * Class InternalServerErrorException
  *
  * @author Viktor Firus <v@n86.io>
  */
-class RequestNotFoundException extends \Exception
+class InternalServerErrorException extends \Exception
 {
     /**
      * @var int
      */
-    protected $code = 404;
+    protected $code = 500;
 }
