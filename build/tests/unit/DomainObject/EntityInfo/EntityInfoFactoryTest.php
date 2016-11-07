@@ -35,19 +35,32 @@ use N86io\Rest\UnitTestCase;
  */
 class EntityInfoFactoryTest extends UnitTestCase
 {
+    /**
+     * @var EntityInfoFactory
+     */
+    protected $factory;
+
+    public function setUp()
+    {
+        $this->factory = new EntityInfoFactory;
+        $this->inject($this->factory, 'entityInfoConfLoader', $this->createEntityInfoConfLoaderMock1());
+        $this->inject($this->factory, 'propertyInfoUtility', $this->createPropertyInfoUtilityMock());
+        $this->inject($this->factory, 'propertyInfoFactory', $this->createPropertyInfoFactoryMock());
+        $this->inject($this->factory, 'container', $this->createContainerMock());
+    }
+
     public function test()
     {
-        $factory = new EntityInfoFactory;
-        $this->inject($factory, 'entityInfoConfLoader', $this->createEntityInfoConfLoaderMock1());
-        $this->inject($factory, 'propertyInfoUtility', $this->createPropertyInfoUtilityMock());
-        $this->inject($factory, 'propertyInfoFactory', $this->createPropertyInfoFactoryMock());
-        $this->inject($factory, 'container', $this->createContainerMock());
+        $this->factory->buildEntityInfoFromClassName('Entity2');
 
-        $factory->buildEntityInfoFromClassName('Entity2');
-        $factory->buildEntityInfoFromClassName('Entity4');
+        $this->inject($this->factory, 'entityInfoConfLoader', $this->createEntityInfoConfLoaderMock2());
+        $this->factory->buildEntityInfoFromClassName('Entity2');
+    }
 
-        $this->inject($factory, 'entityInfoConfLoader', $this->createEntityInfoConfLoaderMock2());
-        $factory->buildEntityInfoFromClassName('Entity2');
+    public function testNoUidDefined()
+    {
+        $this->setExpectedException(\Exception::class);
+        $this->factory->buildEntityInfoFromClassName('Entity4');
     }
 
     public function tearDown()

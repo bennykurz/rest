@@ -55,8 +55,9 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
     protected $entityInfoConfLoader;
 
     /**
-     * @param $className
+     * @param string $className
      * @return EntityInfoInterface
+     * @throws \Exception
      */
     public function buildEntityInfoFromClassName($className)
     {
@@ -73,7 +74,7 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
         }
 
         if (!$entityInfo->hasUidPropertyInfo()) {
-            // TODO: throw an exception
+            throw new \Exception('It is necessary to define a field for unique id.');
         }
         return $entityInfo;
     }
