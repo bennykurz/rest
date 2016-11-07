@@ -50,7 +50,14 @@ class ResponseFactoryTest extends UnitTestCase
         $this->assertTrue($responseFactory->unauthorized() instanceof ResponseInterface);
         $this->assertTrue($responseFactory->notFound() instanceof ResponseInterface);
         $this->assertTrue($responseFactory->methodNotAllowed() instanceof ResponseInterface);
+        $this->assertTrue($responseFactory->internalServerError() instanceof ResponseInterface);
         $this->assertTrue($responseFactory->createResponse(200, []) instanceof ResponseInterface);
+
+        $this->assertTrue($responseFactory->errorRequest(400) instanceof ResponseInterface);
+        $this->assertTrue($responseFactory->errorRequest(401) instanceof ResponseInterface);
+        $this->assertTrue($responseFactory->errorRequest(404) instanceof ResponseInterface);
+        $this->assertTrue($responseFactory->errorRequest(405) instanceof ResponseInterface);
+        $this->assertTrue($responseFactory->errorRequest(500) instanceof ResponseInterface);
     }
 
     /**

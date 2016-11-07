@@ -63,6 +63,25 @@ class ResponseFactory
     }
 
     /**
+     * @param $status
+     * @return ResponseInterface
+     */
+    public function errorRequest($status)
+    {
+        switch ($status) {
+            case 400:
+                return $this->badRequest();
+            case 401:
+                return $this->unauthorized();
+            case 404:
+                return $this->notFound();
+            case 405:
+                return $this->methodNotAllowed();
+        }
+        return $this->internalServerError();
+    }
+
+    /**
      * @return ResponseInterface
      */
     public function badRequest()
@@ -108,6 +127,18 @@ class ResponseFactory
             'Method not allowed.'
         ];
         return $this->createResponse(405, $errorMessage);
+    }
+
+    /**
+     * @return ResponseInterface
+     */
+    public function internalServerError()
+    {
+        $errorMessage = [
+            '500. Error.',
+            'Internal server error.'
+        ];
+        return $this->createResponse(500, $errorMessage);
     }
 
     /**
