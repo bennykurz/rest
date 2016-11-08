@@ -1,64 +1,40 @@
 <?php
 use DI\Scope;
-use GuzzleHttp\Psr7\Response;
-use N86io\Rest\Authentication\UserAuthentication;
-use N86io\Rest\Authentication\UserAuthenticationInterface;
-use N86io\Rest\Cache\EntityInfoStorageArrayCache;
-use N86io\Rest\Cache\EntityInfoStorageArrayCacheInterface;
-use N86io\Rest\Cache\EntityInfoStorageCache;
-use N86io\Rest\Cache\EntityInfoStorageCacheInterface;
-use N86io\Rest\Controller;
-use N86io\Rest\ControllerInterface;
-use N86io\Rest\DomainObject\EntityInfo\EntityInfoFactory;
-use N86io\Rest\DomainObject\EntityInfo\EntityInfoFactoryInterface;
-use N86io\Rest\Http\Request;
-use N86io\Rest\Http\RequestFactory;
-use N86io\Rest\Http\RequestFactoryInterface;
-use N86io\Rest\Http\RequestInterface;
-use N86io\Rest\Http\Routing\Routing;
-use N86io\Rest\Http\Routing\RoutingFactory;
-use N86io\Rest\Http\Routing\RoutingFactoryInterface;
-use N86io\Rest\Http\Routing\RoutingInterface;
-use N86io\Rest\Http\Routing\RoutingParameter;
-use N86io\Rest\Http\Routing\RoutingParameterInterface;
-use N86io\Rest\Persistence\RepositoryQuery;
-use N86io\Rest\Persistence\RepositoryQueryInterface;
-use Psr\Http\Message\ResponseInterface;
 
 return [
-    EntityInfoStorageArrayCacheInterface::class =>
-        \DI\object(EntityInfoStorageArrayCache::class)->scope(Scope::PROTOTYPE),
+    \N86io\Rest\Authentication\UserAuthenticationInterface::class =>
+        \DI\object(\N86io\Rest\Authentication\UserAuthentication::class)->scope(Scope::SINGLETON),
 
-    EntityInfoStorageCacheInterface::class =>
-        \DI\object(EntityInfoStorageCache::class)->scope(Scope::PROTOTYPE),
+    \N86io\Rest\Cache\EntityInfoStorageArrayCacheInterface::class =>
+        \DI\object(\N86io\Rest\Cache\EntityInfoStorageArrayCache::class)->scope(Scope::PROTOTYPE),
 
-    EntityInfoFactoryInterface::class =>
-        \DI\object(EntityInfoFactory::class),
+    \N86io\Rest\Cache\EntityInfoStorageCacheInterface::class =>
+        \DI\object(\N86io\Rest\Cache\EntityInfoStorageCache::class)->scope(Scope::PROTOTYPE),
 
-    RequestInterface::class =>
-        \DI\object(Request::class),
+    \N86io\Rest\ControllerInterface::class =>
+        \DI\object(\N86io\Rest\Controller::class)->scope(Scope::PROTOTYPE),
 
-    RequestFactoryInterface::class =>
-        \DI\object(RequestFactory::class),
+    \N86io\Rest\DomainObject\EntityInfo\EntityInfoFactoryInterface::class =>
+        \DI\object(\N86io\Rest\DomainObject\EntityInfo\EntityInfoFactory::class)->scope(Scope::SINGLETON),
 
-    RoutingFactoryInterface::class =>
-        \DI\object(RoutingFactory::class),
+    \N86io\Rest\Http\RequestFactoryInterface::class =>
+        \DI\object(\N86io\Rest\Http\RequestFactory::class)->scope(Scope::SINGLETON),
 
-    RoutingInterface::class =>
-        \DI\object(Routing::class),
+    \N86io\Rest\Http\RequestInterface::class =>
+        \DI\object(\N86io\Rest\Http\Request::class)->scope(Scope::PROTOTYPE),
 
-    RoutingParameterInterface::class =>
-        \DI\object(RoutingParameter::class),
+    \N86io\Rest\Http\Routing\RoutingFactoryInterface::class =>
+        \DI\object(\N86io\Rest\Http\Routing\RoutingFactory::class)->scope(Scope::SINGLETON),
 
-    ResponseInterface::class =>
-        \DI\object(Response::class),
+    \N86io\Rest\Http\Routing\RoutingInterface::class =>
+        \DI\object(\N86io\Rest\Http\Routing\Routing::class)->scope(Scope::PROTOTYPE),
 
-    UserAuthenticationInterface::class =>
-        \DI\object(UserAuthentication::class),
+    \N86io\Rest\Http\Routing\RoutingParameterInterface::class =>
+        \DI\object(\N86io\Rest\Http\Routing\RoutingParameter::class)->scope(Scope::PROTOTYPE),
 
-    ControllerInterface::class =>
-        \DI\object(Controller::class),
+    \N86io\Rest\Persistence\RepositoryQueryInterface::class =>
+        \DI\object(\N86io\Rest\Persistence\RepositoryQuery::class)->scope(Scope::PROTOTYPE),
 
-    RepositoryQueryInterface::class =>
-        \DI\object(RepositoryQuery::class)
+    \Psr\Http\Message\ResponseInterface::class =>
+        \DI\object(\GuzzleHttp\Psr7\Response::class)->scope(Scope::PROTOTYPE),
 ];
