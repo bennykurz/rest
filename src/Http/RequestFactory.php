@@ -20,7 +20,9 @@ namespace N86io\Rest\Http;
 
 use DI\Container;
 use N86io\Rest\ControllerInterface;
+use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
+use N86io\Rest\Exception\MethodNotAllowedException;
 use N86io\Rest\Exception\RequestNotFoundException;
 use N86io\Rest\Http\Routing\RoutingFactoryInterface;
 use N86io\Rest\Http\Utility\QueryUtility;
@@ -75,9 +77,7 @@ class RequestFactory implements RequestFactoryInterface
 
         $route = $routing->getRoute($serverRequest->getUri());
 
-        if (empty($route)) {
-            throw new RequestNotFoundException;
-        }
+        $this->checkRoute($route);
 
         $version = array_key_exists('version', $route) ? $route['version'] : '';
         list($modelClassName, $controllerClassName) = $this->resolveClasses(
@@ -85,6 +85,7 @@ class RequestFactory implements RequestFactoryInterface
             $version
         );
         $entityInfo = $this->entityInfoStorage->get($modelClassName);
+        $this->checkEntityInfo($entityInfo, $serverRequest);
 
         $queryParams = $this->queryUtility->resolveQueryParams($serverRequest->getUri()->getQuery(), $entityInfo);
 
@@ -114,6 +115,29 @@ class RequestFactory implements RequestFactoryInterface
     }
 
     /**
+     * @param EntityInfoInterface $entityInfo
+     * @param ServerRequestInterface $serverRequest
+     * @throws MethodNotAllowedException
+     */
+    protected function checkEntityInfo(EntityInfoInterface $entityInfo, ServerRequestInterface $serverRequest)
+    {
+        if (!$entityInfo->canHandleRequestMode($this->getRequestMode($serverRequest))) {
+            throw new MethodNotAllowedException;
+        }
+    }
+
+    /**
+     * @param array $route
+     * @throws RequestNotFoundException
+     */
+    protected function checkRoute(array $route)
+    {
+        if (empty($route)) {
+            throw new RequestNotFoundException;
+        }
+    }
+
+    /**
      * @param ServerRequestInterface $serverRequest
      * @return int
      */
@@ -136,7 +160,8 @@ class RequestFactory implements RequestFactoryInterface
     /**
      * @param string $apiIdentifier
      * @param string $version
-     * @return string
+     * @return array
+     * @throws RequestNotFoundException
      */
     protected function resolveClasses($apiIdentifier, $version = '')
     {

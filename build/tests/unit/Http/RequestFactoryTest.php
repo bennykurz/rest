@@ -136,6 +136,7 @@ class RequestFactoryTest extends UnitTestCase
         $requestMock->shouldReceive('setControllerClassName')->withAnyArgs()->andReturn($requestMock);
         $requestMock->shouldReceive('setMode')->withAnyArgs()->andReturn($requestMock);
         $requestMock->shouldReceive('setConstraints')->withAnyArgs()->andReturn($requestMock);
+        $requestMock->shouldReceive('setRoute')->withAnyArgs()->andReturn($requestMock);
 
         $mock = \Mockery::mock(Container::class);
         $mock->shouldReceive('make')->with(RequestInterface::class)->andReturn($requestMock);
@@ -227,6 +228,9 @@ class RequestFactoryTest extends UnitTestCase
     protected function createEntityInfoStorageMock()
     {
         $entityInfo1 = \Mockery::mock(EntityInfo::class);
+        $entityInfo1->shouldReceive('canHandleRequestMode')->withAnyArgs()->andReturn(true);
+        $entityInfo2 = \Mockery::mock(EntityInfo::class);
+        $entityInfo2->shouldReceive('canHandleRequestMode')->withAnyArgs()->andReturn(false);
 
         $mock = \Mockery::mock(EntityInfoStorage::class);
         $mock->shouldReceive('get')->with('Entity1')->andReturn($entityInfo1);
