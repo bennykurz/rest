@@ -1,10 +1,14 @@
 <?php
 use DI\Scope;
 use GuzzleHttp\Psr7\Response;
+use N86io\Rest\Authentication\UserAuthentication;
+use N86io\Rest\Authentication\UserAuthenticationInterface;
 use N86io\Rest\Cache\EntityInfoStorageArrayCache;
 use N86io\Rest\Cache\EntityInfoStorageArrayCacheInterface;
 use N86io\Rest\Cache\EntityInfoStorageCache;
 use N86io\Rest\Cache\EntityInfoStorageCacheInterface;
+use N86io\Rest\Controller;
+use N86io\Rest\ControllerInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoFactory;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoFactoryInterface;
 use N86io\Rest\Http\Request;
@@ -17,6 +21,8 @@ use N86io\Rest\Http\Routing\RoutingFactoryInterface;
 use N86io\Rest\Http\Routing\RoutingInterface;
 use N86io\Rest\Http\Routing\RoutingParameter;
 use N86io\Rest\Http\Routing\RoutingParameterInterface;
+use N86io\Rest\Persistence\RepositoryQuery;
+use N86io\Rest\Persistence\RepositoryQueryInterface;
 use Psr\Http\Message\ResponseInterface;
 
 return [
@@ -46,4 +52,13 @@ return [
 
     ResponseInterface::class =>
         \DI\object(Response::class),
+
+    UserAuthenticationInterface::class =>
+        \DI\object(UserAuthentication::class),
+
+    ControllerInterface::class =>
+        \DI\object(Controller::class),
+
+    RepositoryQueryInterface::class =>
+        \DI\object(RepositoryQuery::class)
 ];
