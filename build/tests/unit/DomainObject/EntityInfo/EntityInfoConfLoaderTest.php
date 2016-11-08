@@ -37,6 +37,12 @@ class EntityInfoConfLoaderTest extends UnitTestCase
         $content = json_encode([
             'Model1' => [
                 'mode' => ['read'],
+                'enableFields' => [
+                    'deleted' => 'delete',
+                    'disabled' => 'disable',
+                    'startTime' => 'startTime',
+                    'endTime' => 'endTime'
+                ],
                 'properties' => [
                     'integer' => ['constraint' => false],
                     'someThing' => ['foreignField' => 'field']
@@ -86,6 +92,12 @@ class EntityInfoConfLoaderTest extends UnitTestCase
         $expected = [
             'Model1' => [
                 'mode' => ['read'],
+                'enableFields' => [
+                    'deleted' => 'delete',
+                    'disabled' => 'disable',
+                    'startTime' => 'startTime',
+                    'endTime' => 'endTime'
+                ],
                 'properties' => [
                     'integer' => ['constraint' => false],
                     'someThing' => ['foreignField' => 'field']
@@ -147,6 +159,12 @@ return [
         $expected = [
             'mode' => ['write'],
             'table' => 'table_fake_2',
+            'enableFields' => [
+                'deleted' => 'delete',
+                'disabled' => 'disable',
+                'startTime' => 'startTime',
+                'endTime' => 'endTime'
+            ],
             'properties' => [
                 'fakeId' => ['resourcePropertyName' => 'fake_id'],
                 'integer' => ['constraint' => true],

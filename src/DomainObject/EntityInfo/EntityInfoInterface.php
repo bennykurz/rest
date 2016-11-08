@@ -43,6 +43,11 @@ interface EntityInfoInterface
     public function getTable();
 
     /**
+     * @return array
+     */
+    public function getEnableFields();
+
+    /**
      * @return PropertyInfoInterface
      */
     public function getResourceIdPropertyInfo();

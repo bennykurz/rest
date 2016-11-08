@@ -102,11 +102,19 @@ class EntityInfoConfLoader
      * @param array $modelConf1
      * @param array $modelConf2
      */
-    protected function mergeModelConf(array &$modelConf1, array &$modelConf2)
+    protected function mergeModelConf(array &$modelConf1, array $modelConf2)
     {
-        $this->mergeSingle($modelConf1, $modelConf2, 'table');
-        $this->mergeSingle($modelConf1, $modelConf2, 'mode');
-
+        $this->mergeSingle($modelConf1, $modelConf2, ['table', 'mode']);
+        if (array_key_exists('enableFields', $modelConf2)) {
+            if (!array_key_exists('enableFields', $modelConf1)) {
+                $modelConf1['enableFields'] = [];
+            }
+            $this->mergeSingle(
+                $modelConf1['enableFields'],
+                $modelConf2['enableFields'],
+                ['deleted', 'disabled', 'startTime', 'endTime']
+            );
+        }
         if (!array_key_exists('properties', $modelConf1)) {
             $modelConf1['properties'] = [];
         }
@@ -124,21 +132,21 @@ class EntityInfoConfLoader
                 $properties1[$propertyName] = [];
             }
             $attributes1 = &$properties1[$propertyName];
-            foreach (array_keys($attributes2) as $attributeName) {
-                $this->mergeSingle($attributes1, $attributes2, $attributeName);
-            }
+            $this->mergeSingle($attributes1, $attributes2, array_keys($attributes2));
         }
     }
 
     /**
      * @param array $array1
      * @param array $array2
-     * @param string $key
+     * @param array $keys
      */
-    protected function mergeSingle(array &$array1, array $array2, $key)
+    protected function mergeSingle(array &$array1, array $array2, array $keys)
     {
-        if (array_key_exists($key, $array2)) {
-            $array1[$key] = $array2[$key];
+        foreach ($keys as $key) {
+            if (array_key_exists($key, $array2)) {
+                $array1[$key] = $array2[$key];
+            }
         }
     }
 

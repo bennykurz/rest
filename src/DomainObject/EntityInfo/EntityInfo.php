@@ -76,6 +76,11 @@ class EntityInfo implements EntityInfoInterface
     /**
      * @var array
      */
+    protected $enableFields;
+
+    /**
+     * @var array
+     */
     protected $propertyInfoList = [];
 
     /**
@@ -102,6 +107,9 @@ class EntityInfo implements EntityInfoInterface
             $this->readMode = array_search('read', $attributes['mode']) !== false;
             $this->writeMode = array_search('write', $attributes['mode']) !== false;
         }
+        if (array_key_exists('enableFields', $attributes)) {
+            $this->enableFields = $attributes['enableFields'];
+        }
     }
 
     /**
@@ -126,6 +134,14 @@ class EntityInfo implements EntityInfoInterface
     public function getTable()
     {
         return $this->table;
+    }
+
+    /**
+     * @return array
+     */
+    public function getEnableFields()
+    {
+        return $this->enableFields;
     }
 
     /**

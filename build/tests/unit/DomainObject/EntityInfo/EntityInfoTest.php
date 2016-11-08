@@ -59,6 +59,7 @@ class EntityInfoTest extends UnitTestCase
         $this->assertEquals($entityClassName, $entityInfo->getClassName());
         $this->assertEquals('_storage_', $entityInfo->getStorage());
         $this->assertEquals('_table_', $entityInfo->getTable());
+        $this->assertEquals(['deleted' => 'delete'], $entityInfo->getEnableFields());
         $this->assertTrue($entityInfo->canHandleRequestMode(RequestInterface::REQUEST_MODE_READ));
         $this->assertFalse($entityInfo->canHandleRequestMode(RequestInterface::REQUEST_MODE_DELETE));
 
@@ -184,6 +185,9 @@ class EntityInfoTest extends UnitTestCase
             'className' => $entityClassName,
             'storage' => '_storage_',
             'table' => '_table_',
+            'enableFields' => [
+                'deleted' => 'delete'
+            ],
             'mode' => ['read']
         ]);
         return [$entityClassName, $entityInfo];
