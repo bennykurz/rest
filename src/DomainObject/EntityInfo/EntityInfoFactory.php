@@ -113,7 +113,7 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
     protected function createEntityInfo($className, array $entityInfoConf)
     {
         $attributes = [];
-        $keys = ['storage', 'table', 'mode'];
+        $keys = ['repository', 'table', 'mode', 'enableFields'];
         foreach ($keys as $key) {
             if (array_key_exists($key, $entityInfoConf)) {
                 $attributes[$key] = $entityInfoConf[$key];

@@ -36,7 +36,7 @@ class EntityInfo implements EntityInfoInterface
     /**
      * @var string
      */
-    protected $storage;
+    protected $repository;
 
     /**
      * @var string
@@ -97,8 +97,8 @@ class EntityInfo implements EntityInfoInterface
         if (array_key_exists('className', $attributes)) {
             $this->className = $attributes['className'];
         }
-        if (array_key_exists('storage', $attributes)) {
-            $this->storage = $attributes['storage'];
+        if (array_key_exists('repository', $attributes)) {
+            $this->repository = $attributes['repository'];
         }
         if (array_key_exists('table', $attributes)) {
             $this->table = $attributes['table'];
@@ -115,9 +115,9 @@ class EntityInfo implements EntityInfoInterface
     /**
      * @return string
      */
-    public function getStorage()
+    public function getRepository()
     {
-        return $this->storage;
+        return $this->repository;
     }
 
     /**

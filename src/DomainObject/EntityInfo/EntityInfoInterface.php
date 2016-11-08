@@ -30,7 +30,7 @@ interface EntityInfoInterface
     /**
      * @return string
      */
-    public function getStorage();
+    public function getRepository();
 
     /**
      * @return string
