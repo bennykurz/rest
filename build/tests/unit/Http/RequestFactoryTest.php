@@ -128,7 +128,7 @@ class RequestFactoryTest extends UnitTestCase
         $requestMock->shouldReceive('setVersion')->withAnyArgs()->andReturn($requestMock);
         $requestMock->shouldReceive('setApiIdentifier')->withAnyArgs()->andReturn($requestMock);
         $requestMock->shouldReceive('setResourceIds')->withAnyArgs()->andReturn($requestMock);
-        $requestMock->shouldReceive('setOrderings')->withAnyArgs()->andReturn($requestMock);
+        $requestMock->shouldReceive('setOrdering')->withAnyArgs()->andReturn($requestMock);
         $requestMock->shouldReceive('setLimit')->withAnyArgs()->andReturn($requestMock);
         $requestMock->shouldReceive('setPage')->withAnyArgs()->andReturn($requestMock);
         $requestMock->shouldReceive('setOutputLevel')->withAnyArgs()->andReturn($requestMock);
@@ -204,7 +204,7 @@ class RequestFactoryTest extends UnitTestCase
     {
         $mock = \Mockery::mock(QueryUtility::class);
         $mock->shouldReceive('resolveQueryParams')->with('', $entityInfo)->andReturn([
-            'ordering' => [],
+            'ordering' => null,
             'limit' => null,
             'page' => null,
             'outputLevel' => null
@@ -213,7 +213,7 @@ class RequestFactoryTest extends UnitTestCase
             'integer.gt=123&sort=string.asc&limit=10&page=2&level=5',
             $entityInfo
         )->andReturn([
-            'ordering' => [\Mockery::mock(OrderingInterface::class)],
+            'ordering' => \Mockery::mock(OrderingInterface::class),
             'limit' => 10,
             'page' => 2,
             'outputLevel' => 5,

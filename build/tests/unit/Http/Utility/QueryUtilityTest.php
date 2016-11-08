@@ -65,7 +65,7 @@ class QueryUtilityTest extends UnitTestCase
         $this->assertEquals(10, $queryParams['limit']);
         $this->assertEquals(2, $queryParams['page']);
         $this->assertEquals(5, $queryParams['outputLevel']);
-        $this->assertTrue($queryParams['ordering'][0] instanceof OrderingInterface);
+        $this->assertTrue($queryParams['ordering'] instanceof OrderingInterface);
         $this->assertTrue($queryParams['constraints'] instanceof ConstraintInterface);
     }
 
@@ -76,9 +76,7 @@ class QueryUtilityTest extends UnitTestCase
             $this->entityInfo
         );
 
-        $this->assertEmpty($queryParams['ordering']);
-        $this->assertFalse(array_key_exists('constraints', $queryParams));
-        $this->assertEmpty($queryParams['ordering']);
+        $this->assertFalse(array_key_exists('ordering', $queryParams));
         $this->assertFalse(array_key_exists('constraints', $queryParams));
     }
 
@@ -90,8 +88,7 @@ class QueryUtilityTest extends UnitTestCase
         );
 
         $this->assertFalse(array_key_exists('constraints', $queryParams));
-        $this->assertTrue($queryParams['ordering'][0] instanceof OrderingInterface);
-        $this->assertFalse(array_key_exists('constraints', $queryParams));
+        $this->assertTrue(array_key_exists('ordering', $queryParams));
     }
 
     /**

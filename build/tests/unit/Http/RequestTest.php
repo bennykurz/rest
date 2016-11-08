@@ -20,6 +20,7 @@ namespace N86io\Rest\Tests\Unit\Http;
 
 use N86io\Rest\Http\Request;
 use N86io\Rest\Persistence\Constraint\ConstraintInterface;
+use N86io\Rest\Persistence\Ordering\OrderingInterface;
 use N86io\Rest\UnitTestCase;
 
 /**
@@ -31,12 +32,14 @@ class RequestTest extends UnitTestCase
 {
     public function test()
     {
+        $constraint = \Mockery::mock(ConstraintInterface::class);
+        $ordering = \Mockery::mock(OrderingInterface::class);
         $request = (new Request)
             ->setVersion(1)
             ->setApiIdentifier('test')
             ->setResourceIds([1, 2, 3])
-            ->setConstraints($this->getMock(ConstraintInterface::class))
-            ->setOrderings(['test' => 'asc'])
+            ->setConstraints($constraint)
+            ->setOrdering($ordering)
             ->setLimit(2)
             ->setPage(3)
             ->setOutputLevel(4)
@@ -47,8 +50,8 @@ class RequestTest extends UnitTestCase
         $this->assertEquals(1, $request->getVersion());
         $this->assertEquals('test', $request->getApiIdentifier());
         $this->assertEquals([1, 2, 3], $request->getResourceIds());
-        $this->assertTrue($request->getConstraints() instanceof ConstraintInterface);
-        $this->assertEquals(['test' => 'asc'], $request->getOrderings());
+        $this->assertEquals($constraint, $request->getConstraints());
+        $this->assertEquals($ordering, $request->getOrdering());
         $this->assertEquals(2, $request->getLimit());
         $this->assertEquals(3, $request->getPage());
         $this->assertEquals(4, $request->getOutputLevel());

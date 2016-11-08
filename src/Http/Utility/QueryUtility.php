@@ -22,8 +22,10 @@ use DI\Container;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
 use N86io\Rest\DomainObject\PropertyInfo\RestrictableInterface;
 use N86io\Rest\DomainObject\PropertyInfo\SortableInterface;
+use N86io\Rest\Exception\InvalidOrderingException;
 use N86io\Rest\Persistence\Constraint\ConstraintFactory;
 use N86io\Rest\Persistence\Ordering\OrderingFactory;
+use N86io\Rest\Persistence\Ordering\OrderingInterface;
 
 /**
  * Class QueryUtility
@@ -54,7 +56,6 @@ class QueryUtility
         parse_str($queryParams, $parsed);
         $parsed = $parsed ?: [];
         $result = [
-            'ordering' => [],
             'limit' => null,
             'page' => null,
             'outputLevel' => null
@@ -63,7 +64,11 @@ class QueryUtility
         foreach ($parsed as $name => $value) {
             switch ($name) {
                 case 'sort':
-                    $this->createOrdering($result['ordering'], $value, $entityInfo);
+                    try {
+                        $result['ordering'] = $this->createOrdering($value, $entityInfo);
+                    } catch (InvalidOrderingException $e) {
+                        // Nothing to do, because no or invalid ordering.
+                    }
                     break;
                 case 'limit':
                     $result['limit'] = $this->parseNumericValue($value);
@@ -95,28 +100,30 @@ class QueryUtility
     }
 
     /**
-     * @param array $ordering
      * @param string $propNameAndDirection
      * @param EntityInfoInterface $entityInfo
+     * @return OrderingInterface
+     * @throws InvalidOrderingException
      */
-    protected function createOrdering(array &$ordering, $propNameAndDirection, EntityInfoInterface $entityInfo)
+    protected function createOrdering($propNameAndDirection, EntityInfoInterface $entityInfo)
     {
         list($propertyName, $direction) = explode('.', $propNameAndDirection);
         if (!$entityInfo->hasPropertyInfo($propertyName)) {
-            return;
+            throw new InvalidOrderingException;
         }
         $orderingFactory = $this->container->get(OrderingFactory::class);
         $propertyInfo = $entityInfo->getPropertyInfo($propertyName);
         if ($propertyInfo instanceof SortableInterface && $propertyInfo->isOrdering()) {
             switch ($direction) {
                 case 'desc':
-                    $ordering[] = $orderingFactory->descending($propertyInfo);
+                    return $orderingFactory->descending($propertyInfo);
                     break;
                 case 'asc':
                 default:
-                    $ordering[] = $orderingFactory->ascending($propertyInfo);
+                    return $orderingFactory->ascending($propertyInfo);
             }
         }
+        throw new InvalidOrderingException;
     }
 
     /**

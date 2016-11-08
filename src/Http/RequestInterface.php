@@ -19,6 +19,7 @@
 namespace N86io\Rest\Http;
 
 use N86io\Rest\Persistence\Constraint\ConstraintInterface;
+use N86io\Rest\Persistence\Ordering\OrderingInterface;
 
 /**
  * Interface RequestInterface
@@ -89,15 +90,15 @@ interface RequestInterface
     public function setConstraints(ConstraintInterface $constraints);
 
     /**
-     * @return array
+     * @return OrderingInterface
      */
-    public function getOrderings();
+    public function getOrdering();
 
     /**
-     * @param array $orderings
+     * @param OrderingInterface $ordering
      * @return RequestInterface
      */
-    public function setOrderings(array $orderings);
+    public function setOrdering(OrderingInterface $ordering);
 
     /**
      * @return int

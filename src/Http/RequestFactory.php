@@ -27,6 +27,7 @@ use N86io\Rest\Exception\RequestNotFoundException;
 use N86io\Rest\Http\Routing\RoutingFactoryInterface;
 use N86io\Rest\Http\Utility\QueryUtility;
 use N86io\Rest\Persistence\Constraint\ConstraintInterface;
+use N86io\Rest\Persistence\Ordering\OrderingInterface;
 use N86io\Rest\Service\Configuration;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -96,7 +97,6 @@ class RequestFactory implements RequestFactoryInterface
         $request->setVersion($version)
             ->setApiIdentifier($route['apiIdentifier'])
             ->setResourceIds($resourceIds)
-            ->setOrderings($queryParams['ordering'])
             ->setLimit($queryParams['limit'])
             ->setPage($queryParams['page'])
             ->setOutputLevel($queryParams['outputLevel'])
@@ -109,6 +109,12 @@ class RequestFactory implements RequestFactoryInterface
             $queryParams['constraints'] instanceof ConstraintInterface
         ) {
             $request->setConstraints($queryParams['constraints']);
+        }
+
+        if (array_key_exists('ordering', $queryParams) &&
+            $queryParams['ordering'] instanceof OrderingInterface
+        ) {
+            $request->setOrdering($queryParams['ordering']);
         }
 
         return $request;

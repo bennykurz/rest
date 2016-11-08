@@ -19,6 +19,7 @@
 namespace N86io\Rest\Http;
 
 use N86io\Rest\Persistence\Constraint\ConstraintInterface;
+use N86io\Rest\Persistence\Ordering\OrderingInterface;
 
 /**
  * Class Request
@@ -53,9 +54,9 @@ class Request implements RequestInterface
     protected $constraints;
 
     /**
-     * @var array
+     * @var OrderingInterface
      */
-    protected $orderings;
+    protected $ordering;
 
     /**
      * @var int
@@ -183,20 +184,20 @@ class Request implements RequestInterface
     }
 
     /**
-     * @return array
+     * @return OrderingInterface
      */
-    public function getOrderings()
+    public function getOrdering()
     {
-        return $this->orderings;
+        return $this->ordering;
     }
 
     /**
-     * @param array $orderings
+     * @param OrderingInterface $ordering
      * @return RequestInterface
      */
-    public function setOrderings(array $orderings)
+    public function setOrdering(OrderingInterface $ordering)
     {
-        $this->orderings = $orderings;
+        $this->ordering = $ordering;
         return $this;
     }
 
