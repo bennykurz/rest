@@ -19,6 +19,7 @@
 namespace N86io\Rest\DomainObject\EntityInfo;
 
 use DI\Container;
+use N86io\Rest\DomainObject\PropertyInfo\EnableFieldPropertyInfoFactory;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoFactory;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoUtility;
 use N86io\Rest\Reflection\EntityClassReflection;
@@ -55,6 +56,12 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
     protected $entityInfoConfLoader;
 
     /**
+     * @Inject
+     * @var EnableFieldPropertyInfoFactory
+     */
+    protected $enablFieldPropInfFac;
+
+    /**
      * @param string $className
      * @return EntityInfoInterface
      * @throws \Exception
@@ -71,6 +78,12 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
         foreach ($properties as $name => $attributes) {
             $propertyInfo = $this->propertyInfoFactory->buildPropertyInfo($name, $attributes);
             $entityInfo->addPropertyInfo($propertyInfo);
+        }
+
+        if (array_key_exists('enableFields', $entityInfoConf)) {
+            foreach ($entityInfoConf['enableFields'] as $type => $enableField) {
+                $entityInfo->addPropertyInfo($this->enablFieldPropInfFac->build($type, $enableField));
+            }
         }
 
         if (!$entityInfo->hasUidPropertyInfo()) {
