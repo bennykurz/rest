@@ -18,11 +18,12 @@
 
 namespace N86io\Rest\Http\Utility;
 
-use DI\Container;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
 use N86io\Rest\DomainObject\PropertyInfo\RestrictableInterface;
 use N86io\Rest\DomainObject\PropertyInfo\SortableInterface;
 use N86io\Rest\Exception\InvalidOrderingException;
+use N86io\Rest\Object\Container;
+use N86io\Rest\Object\SingletonInterface;
 use N86io\Rest\Persistence\Constraint\ConstraintFactory;
 use N86io\Rest\Persistence\Ordering\OrderingFactory;
 use N86io\Rest\Persistence\Ordering\OrderingInterface;
@@ -32,16 +33,16 @@ use N86io\Rest\Persistence\Ordering\OrderingInterface;
  *
  * @author Viktor Firus <v@n86.io>
  */
-class QueryUtility
+class QueryUtility implements SingletonInterface
 {
     /**
-     * @Inject
+     * @inject
      * @var Container
      */
     protected $container;
 
     /**
-     * @Inject
+     * @inject
      * @var ConstraintFactory
      */
     protected $constraintFactory;

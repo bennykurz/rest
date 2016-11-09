@@ -18,11 +18,11 @@
 
 namespace N86io\Rest\Tests\Unit\Http\Routing;
 
-use DI\Container;
 use N86io\Rest\Http\Routing\Routing;
 use N86io\Rest\Http\Routing\RoutingFactory;
 use N86io\Rest\Http\Routing\RoutingInterface;
 use N86io\Rest\Http\Routing\RoutingParameterInterface;
+use N86io\Rest\Object\Container;
 use N86io\Rest\UnitTestCase;
 
 /**
@@ -50,32 +50,19 @@ class RoutingFactoryTest extends UnitTestCase
             \Mockery::mock(Routing::class)->shouldReceive('addParameter')->withAnyArgs()->getMock()
         );
 
-        $mock->shouldReceive('make')->with(
+        $mock->shouldReceive('get')->with(
             RoutingParameterInterface::class,
-            [
-                'name' => 'version',
-                'expression' => '[\w\d]+',
-                'optional' => true
-            ]
+            ['version', '[\w\d]+', true]
         )->andReturn(\Mockery::mock(RoutingParameterInterface::class));
 
-        $mock->shouldReceive('make')->with(
+        $mock->shouldReceive('get')->with(
             RoutingParameterInterface::class,
-            [
-                'name' => 'apiIdentifier',
-                'expression' => '(api1|api2)',
-                'optional' => false,
-                'takeResult' => 2
-            ]
+            ['apiIdentifier', '(api1|api2)', false, 2]
         )->andReturn(\Mockery::mock(RoutingParameterInterface::class));
 
-        $mock->shouldReceive('make')->with(
+        $mock->shouldReceive('get')->with(
             RoutingParameterInterface::class,
-            [
-                'name' => 'resourceId',
-                'expression' => '.+',
-                'optional' => true
-            ]
+            ['resourceId', '.+', true]
         )->andReturn(\Mockery::mock(RoutingParameterInterface::class));
 
         return $mock;

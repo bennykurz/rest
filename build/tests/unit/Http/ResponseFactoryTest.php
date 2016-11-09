@@ -18,7 +18,6 @@
 
 namespace N86io\Rest\Tests\Unit\Http;
 
-use DI\Container;
 use N86io\Rest\ContentConverter\ConverterFactory;
 use N86io\Rest\ContentConverter\ConverterInterface;
 use N86io\Rest\Http\ResponseFactory;
@@ -87,7 +86,7 @@ class ResponseFactoryTest extends UnitTestCase
     protected function createContainerMock()
     {
         $mock = \Mockery::mock(Container::class);
-        $mock->shouldReceive('make')->with(ResponseInterface::class)->andReturn($this->createResponseMock());
+        $mock->shouldReceive('get')->with(ResponseInterface::class)->andReturn($this->createResponseMock());
         return $mock;
     }
 

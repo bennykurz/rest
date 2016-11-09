@@ -18,10 +18,10 @@
 
 namespace N86io\Rest\DomainObject\EntityInfo;
 
-use DI\Container;
 use N86io\Rest\DomainObject\PropertyInfo\EnableFieldPropertyInfoFactory;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoFactory;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoUtility;
+use N86io\Rest\Object\Container;
 use N86io\Rest\Reflection\EntityClassReflection;
 
 /**
@@ -32,31 +32,31 @@ use N86io\Rest\Reflection\EntityClassReflection;
 class EntityInfoFactory implements EntityInfoFactoryInterface
 {
     /**
-     * @Inject
+     * @inject
      * @var Container
      */
     protected $container;
 
     /**
-     * @Inject
+     * @inject
      * @var PropertyInfoFactory
      */
     protected $propertyInfoFactory;
 
     /**
-     * @Inject
+     * @inject
      * @var PropertyInfoUtility
      */
     protected $propertyInfoUtility;
 
     /**
-     * @Inject
+     * @inject
      * @var EntityInfoConfLoader
      */
     protected $entityInfoConfLoader;
 
     /**
-     * @Inject
+     * @inject
      * @var EnableFieldPropertyInfoFactory
      */
     protected $enablFieldPropInfFac;
@@ -69,7 +69,7 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
     public function buildEntityInfoFromClassName($className)
     {
         /** @var EntityClassReflection $entityClassRefl */
-        $entityClassRefl = $this->container->make(EntityClassReflection::class, ['className' => $className]);
+        $entityClassRefl = $this->container->get(EntityClassReflection::class, [$className]);
         $properties = $entityClassRefl->getProperties();
         $entityInfoConf = $this->loadEntityInfoConf($className, $entityClassRefl);
         $properties = $this->mergeProperties($properties, $entityInfoConf);
@@ -133,7 +133,7 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
             }
         }
         $attributes['className'] = $className;
-        return $this->container->make(EntityInfo::class, ['attributes' => $attributes]);
+        return $this->container->get(EntityInfo::class, [$attributes]);
     }
 
     /**

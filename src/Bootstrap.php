@@ -18,13 +18,12 @@
 
 namespace N86io\Rest;
 
-use DI\Container;
 use Doctrine\Common\Cache\Cache;
 use N86io\Rest\Authentication\UserAuthenticationInterface;
 use N86io\Rest\Http\RequestFactoryInterface;
 use N86io\Rest\Http\RequestInterface;
 use N86io\Rest\Http\ResponseFactory;
-use N86io\Rest\Object\ContainerFactory;
+use N86io\Rest\Object\Container;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -89,19 +88,19 @@ class Bootstrap
 
     /**
      * @param Cache $cache
-     * @param array $overrideDiObjects
+     * @param array $classMapping
      * @return Container
      */
-    public function createContainer(Cache $cache = null, array $overrideDiObjects = [])
+    public function createContainer(Cache $cache = null, array $classMapping = [])
     {
         if ($this->container) {
-            if ($cache !== null || $overrideDiObjects !== []) {
+            if ($cache !== null || $classMapping !== []) {
                 throw new \InvalidArgumentException('Container is already initialized. Can\'t set cache or ' .
-                    'overrideDiObjects.');
+                    'classMapping.');
             }
             return $this->container;
         }
-        $this->container = ContainerFactory::create($cache, $overrideDiObjects);
+        $this->container = new Container($cache, $classMapping);
         return $this->container;
     }
 }

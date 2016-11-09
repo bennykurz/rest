@@ -18,17 +18,18 @@
 
 namespace N86io\Rest\ContentConverter;
 
-use DI\Container;
+use N86io\Rest\Object\Container;
+use N86io\Rest\Object\SingletonInterface;
 
 /**
  * Class ConverterFactory
  *
  * @author Viktor Firus <v@n86.io>
  */
-class ConverterFactory
+class ConverterFactory implements SingletonInterface
 {
     /**
-     * @Inject
+     * @inject
      * @var Container
      */
     protected $container;

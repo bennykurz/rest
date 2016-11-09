@@ -19,13 +19,14 @@
 namespace N86io\Rest\DomainObject\PropertyInfo\Factory;
 
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
+use N86io\Rest\Object\SingletonInterface;
 
 /**
  * Interface FactoryInterface
  *
  * @author Viktor Firus <v@n86.io>
  */
-interface FactoryInterface
+interface FactoryInterface extends SingletonInterface
 {
     /**
      * @param string $name

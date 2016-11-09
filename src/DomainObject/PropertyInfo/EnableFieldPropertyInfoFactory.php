@@ -18,15 +18,17 @@
 
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
+use N86io\Rest\Object\SingletonInterface;
+
 /**
  * Class EnableFieldPropertyInfoFactory
  *
  * @author Viktor Firus <v@n86.io>
  */
-class EnableFieldPropertyInfoFactory
+class EnableFieldPropertyInfoFactory implements SingletonInterface
 {
     /**
-     * @Inject
+     * @inject
      * @var PropertyInfoFactory
      */
     protected $propertyInfoFactory;

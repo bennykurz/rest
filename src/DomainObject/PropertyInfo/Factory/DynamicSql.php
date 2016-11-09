@@ -32,12 +32,9 @@ class DynamicSql extends AbstractFactory
      */
     public function build($name, array $attributes)
     {
-        return $this->container->make(
+        return $this->container->get(
             \N86io\Rest\DomainObject\PropertyInfo\DynamicSql::class,
-            [
-                'name' => $name,
-                'attributes' => $attributes
-            ]
+            [$name, $attributes]
         );
     }
 

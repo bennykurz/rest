@@ -22,12 +22,11 @@ namespace N86io\Rest\DomainObject\PropertyInfo;
  * Class Join
  *
  * @author Viktor Firus <v@n86.io>
- * @Injectable(scope="prototype")
  */
 class Join extends DynamicSql implements JoinInterface
 {
     /**
-     * @Inject
+     * @inject
      * @var JoinAliasStorage
      */
     protected $aliasStorage;

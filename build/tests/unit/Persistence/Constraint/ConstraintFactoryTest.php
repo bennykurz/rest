@@ -18,9 +18,9 @@
 
 namespace N86io\Rest\Tests\Unit\Persistence\Constraint;
 
-use DI\Container;
 use Mockery\Mock;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
+use N86io\Rest\Object\Container;
 use N86io\Rest\Persistence\Constraint\ComparisonInterface;
 use N86io\Rest\Persistence\Constraint\ConstraintFactory;
 use N86io\Rest\Persistence\Constraint\LogicalInterface;
@@ -36,7 +36,7 @@ class ConstraintFactoryTest extends UnitTestCase
     public function testSingle()
     {
         $containerMock = \Mockery::mock(Container::class);
-        $containerMock->shouldReceive('make')->withAnyArgs()->andReturn(
+        $containerMock->shouldReceive('get')->withAnyArgs()->andReturn(
             \Mockery::mock(LogicalInterface::class)
         );
         $factory = new ConstraintFactory;
@@ -47,7 +47,7 @@ class ConstraintFactoryTest extends UnitTestCase
 
 
         $containerMock = \Mockery::mock(Container::class);
-        $containerMock->shouldReceive('make')->withAnyArgs()->andReturn(
+        $containerMock->shouldReceive('get')->withAnyArgs()->andReturn(
             \Mockery::mock(ComparisonInterface::class)
         );
         $factory = new ConstraintFactory;

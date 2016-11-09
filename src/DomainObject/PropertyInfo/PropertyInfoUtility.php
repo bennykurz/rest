@@ -19,13 +19,14 @@
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
 use N86io\Rest\DomainObject\AbstractEntity;
+use N86io\Rest\Object\SingletonInterface;
 
 /**
  * Class PropertyInfoUtility
  *
  * @author Viktor Firus <v@n86.io>
  */
-class PropertyInfoUtility
+class PropertyInfoUtility implements SingletonInterface
 {
     /**
      * @param string $type

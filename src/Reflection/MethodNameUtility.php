@@ -18,12 +18,14 @@
 
 namespace N86io\Rest\Reflection;
 
+use N86io\Rest\Object\SingletonInterface;
+
 /**
  * Class MethodNameUtility
  *
  * @author Viktor Firus <v@n86.io>
  */
-class MethodNameUtility
+class MethodNameUtility implements SingletonInterface
 {
     /**
      * @param string $methodName

@@ -18,11 +18,11 @@
 
 namespace N86io\Rest\Tests\Unit\DomainObject\PropertyInfo;
 
-use DI\Container;
 use N86io\Rest\DomainObject\PropertyInfo\Common;
 use N86io\Rest\DomainObject\PropertyInfo\Factory\FactoryInterface;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoFactory;
 use N86io\Rest\DomainObject\PropertyInfo\Relation;
+use N86io\Rest\Object\Container;
 use N86io\Rest\UnitTestCase;
 
 /**
@@ -105,13 +105,13 @@ class PropertyInfoFactoryTest extends UnitTestCase
 
         $containerMock = \Mockery::mock(Container::class);
         $containerMock->shouldReceive('get')->with($factoryClass)->andReturn($factoryMock);
-        $containerMock->shouldReceive('get')->withAnyArgs()->andReturn($wrongFactoryMock);
-        $containerMock->shouldReceive('make')->with(Common::class, [
-            'name' => 'somename2',
-            'attributes' => [
+        $containerMock->shouldReceive('get')->with(Common::class, [
+            'somename2',
+            [
                 'type' => 'string'
             ]
         ])->andReturn(\Mockery::mock(Common::class));
+        $containerMock->shouldReceive('get')->withAnyArgs()->andReturn($wrongFactoryMock);
 
         return $containerMock;
     }

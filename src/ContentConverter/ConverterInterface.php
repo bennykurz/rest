@@ -18,12 +18,14 @@
 
 namespace N86io\Rest\ContentConverter;
 
+use N86io\Rest\Object\SingletonInterface;
+
 /**
  * Interface ConverterInterface
  *
  * @author Viktor Firus <v@n86.io>
  */
-interface ConverterInterface
+interface ConverterInterface extends SingletonInterface
 {
     /**
      * @param array $array

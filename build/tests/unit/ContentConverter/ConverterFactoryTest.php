@@ -18,7 +18,6 @@
 
 namespace N86io\Rest\Tests\Unit\ContentConverter;
 
-use DI\Container;
 use N86io\Rest\ContentConverter\ConverterFactory;
 use N86io\Rest\ContentConverter\JsonConverter;
 use N86io\Rest\UnitTestCase;

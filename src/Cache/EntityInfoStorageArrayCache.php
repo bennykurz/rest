@@ -18,7 +18,7 @@
 
 namespace N86io\Rest\Cache;
 
-use DI\Cache\ArrayCache;
+use Doctrine\Common\Cache\ArrayCache;
 
 /**
  * Class EntityInfoStorageArrayCache

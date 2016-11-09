@@ -18,8 +18,8 @@
 
 namespace N86io\Rest\Tests\Unit\DomainObject\PropertyInfo\Factory;
 
-use DI\Container;
 use N86io\Rest\DomainObject\PropertyInfo\Factory\FactoryInterface;
+use N86io\Rest\Object\Container;
 use N86io\Rest\UnitTestCase;
 
 /**
@@ -59,13 +59,13 @@ abstract class AbstractFactoryTest extends UnitTestCase
         $args = [
             $this->propertyInfoClass,
             [
-                'name' => '_name_',
-                'attributes' => $this->attributes
+                '_name_',
+                $this->attributes
             ]
         ];
 
         $containerMock = \Mockery::mock(Container::class);
-        $containerMock->shouldReceive('make')
+        $containerMock->shouldReceive('get')
             ->withArgs($args)
             ->andReturn(\Mockery::mock($this->propertyInfoClass));
 

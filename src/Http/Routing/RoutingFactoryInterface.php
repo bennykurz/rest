@@ -18,12 +18,14 @@
 
 namespace N86io\Rest\Http\Routing;
 
+use N86io\Rest\Object\SingletonInterface;
+
 /**
  * Interface RoutingFactoryInterface
  *
  * @author Viktor Firus <v@n86.io>
  */
-interface RoutingFactoryInterface
+interface RoutingFactoryInterface extends SingletonInterface
 {
     /**
      * @param array $apiIdentifiers

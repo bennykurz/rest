@@ -18,19 +18,20 @@
 
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
-use DI\Container;
 use N86io\Rest\DomainObject\PropertyInfo;
 use N86io\Rest\DomainObject\PropertyInfo\Factory\FactoryInterface;
+use N86io\Rest\Object\Container;
+use N86io\Rest\Object\SingletonInterface;
 
 /**
  * Class PropertyInfoFactory
  *
  * @author Viktor Firus <v@n86.io>
  */
-class PropertyInfoFactory
+class PropertyInfoFactory implements SingletonInterface
 {
     /**
-     * @Inject
+     * @inject
      * @var Container
      */
     protected $container;
@@ -59,7 +60,7 @@ class PropertyInfoFactory
                 return $factory->build($name, $attributes);
             }
         }
-        return $this->container->make(PropertyInfo\Common::class, ['name' => $name, 'attributes' => $attributes]);
+        return $this->container->get(PropertyInfo\Common::class, [$name, $attributes]);
     }
 
     /**

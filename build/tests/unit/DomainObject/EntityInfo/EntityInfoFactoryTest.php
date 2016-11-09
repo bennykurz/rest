@@ -18,7 +18,6 @@
 
 namespace N86io\Rest\Tests\Unit\DomainObject\EntityInfo;
 
-use DI\Container;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfo;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoConfLoader;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoFactory;
@@ -26,6 +25,7 @@ use N86io\Rest\DomainObject\PropertyInfo\EnableFieldPropertyInfoFactory;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoFactory;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoUtility;
+use N86io\Rest\Object\Container;
 use N86io\Rest\Reflection\EntityClassReflection;
 use N86io\Rest\UnitTestCase;
 
@@ -99,17 +99,17 @@ class EntityInfoFactoryTest extends UnitTestCase
     protected function createContainerMock()
     {
         $mock = \Mockery::mock(Container::class);
-        $mock->shouldReceive('make')
-            ->with(EntityClassReflection::class, ['className' => 'Entity2'])
+        $mock->shouldReceive('get')
+            ->with(EntityClassReflection::class, ['Entity2'])
             ->andReturn($this->createEntityClassReflectionMock1());
 
-        $mock->shouldReceive('make')
-            ->with(EntityClassReflection::class, ['className' => 'Entity4'])
+        $mock->shouldReceive('get')
+            ->with(EntityClassReflection::class, ['Entity4'])
             ->andReturn($this->createEntityClassReflectionMock2());
 
-        $mock->shouldReceive('make')
+        $mock->shouldReceive('get')
             ->with(EntityInfo::class, [
-                'attributes' => [
+                [
                     'className' => 'Entity2',
                     'table' => 'fake_table',
                     'enableFields' => ['disabled' => 'disableFieldName']
@@ -117,10 +117,10 @@ class EntityInfoFactoryTest extends UnitTestCase
             ])
             ->andReturn($this->createEntityInfoMock1());
 
-        $mock->shouldReceive('make')
+        $mock->shouldReceive('get')
             ->with(
                 EntityInfo::class,
-                ['attributes' => ['className' => 'Entity4']]
+                [['className' => 'Entity4']]
             )
             ->andReturn($this->createEntityInfoMock2());
 

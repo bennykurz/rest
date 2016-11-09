@@ -18,8 +18,8 @@
 
 namespace N86io\Rest\Tests\Unit\Persistence\Ordering;
 
-use DI\Container;
 use N86io\Rest\DomainObject\PropertyInfo\Common;
+use N86io\Rest\Object\Container;
 use N86io\Rest\Persistence\Ordering\OrderingFactory;
 use N86io\Rest\Persistence\Ordering\OrderingInterface;
 use N86io\Rest\UnitTestCase;
@@ -51,7 +51,7 @@ class OrderingFactoryTest extends UnitTestCase
     protected function createContainerMock()
     {
         $mock = \Mockery::mock(Container::class);
-        $mock->shouldReceive('make')->andReturn(\Mockery::mock(OrderingInterface::class));
+        $mock->shouldReceive('get')->andReturn(\Mockery::mock(OrderingInterface::class));
         return $mock;
     }
 }

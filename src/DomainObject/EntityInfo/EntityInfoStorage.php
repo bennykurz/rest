@@ -20,28 +20,29 @@ namespace N86io\Rest\DomainObject\EntityInfo;
 
 use N86io\Rest\Cache\EntityInfoStorageArrayCacheInterface;
 use N86io\Rest\Cache\EntityInfoStorageCacheInterface;
+use N86io\Rest\Object\SingletonInterface;
 
 /**
  * Class EntityInfoStorage
  *
  * @author Viktor Firus <v@n86.io>
  */
-class EntityInfoStorage
+class EntityInfoStorage implements SingletonInterface
 {
     /**
-     * @Inject
+     * @inject
      * @var EntityInfoFactoryInterface
      */
     protected $entityInfoFactory;
 
     /**
-     * @Inject
+     * @inject
      * @var EntityInfoStorageCacheInterface
      */
     protected $cache;
 
     /**
-     * @Inject
+     * @inject
      * @var EntityInfoStorageArrayCacheInterface
      */
     protected $arrayCache;

@@ -18,7 +18,6 @@
 
 namespace N86io\Rest\Http;
 
-use DI\Container;
 use N86io\Rest\ControllerInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
@@ -26,6 +25,7 @@ use N86io\Rest\Exception\MethodNotAllowedException;
 use N86io\Rest\Exception\RequestNotFoundException;
 use N86io\Rest\Http\Routing\RoutingFactoryInterface;
 use N86io\Rest\Http\Utility\QueryUtility;
+use N86io\Rest\Object\Container;
 use N86io\Rest\Persistence\Constraint\ConstraintInterface;
 use N86io\Rest\Persistence\Ordering\OrderingInterface;
 use N86io\Rest\Service\Configuration;
@@ -39,31 +39,31 @@ use Psr\Http\Message\ServerRequestInterface;
 class RequestFactory implements RequestFactoryInterface
 {
     /**
-     * @Inject
+     * @inject
      * @var Container
      */
     protected $container;
 
     /**
-     * @Inject
+     * @inject
      * @var Configuration
      */
     protected $configuration;
 
     /**
-     * @Inject
+     * @inject
      * @var RoutingFactoryInterface
      */
     protected $routingFactory;
 
     /**
-     * @Inject
+     * @inject
      * @var EntityInfoStorage
      */
     protected $entityInfoStorage;
 
     /**
-     * @Inject
+     * @inject
      * @var QueryUtility
      */
     protected $queryUtility;
@@ -93,7 +93,7 @@ class RequestFactory implements RequestFactoryInterface
         $resourceIds = array_key_exists('resourceId', $route) ? explode(',', $route['resourceId']) : [];
 
         /** @var RequestInterface $request */
-        $request = $this->container->make(RequestInterface::class);
+        $request = $this->container->get(RequestInterface::class);
         $request->setVersion($version)
             ->setApiIdentifier($route['apiIdentifier'])
             ->setResourceIds($resourceIds)

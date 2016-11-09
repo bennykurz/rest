@@ -25,12 +25,11 @@ use N86io\Rest\DomainObject\AbstractEntity;
  * Class EntityClassReflection
  *
  * @author Viktor Firus <v@n86.io>
- * @Injectable(scope="prototype")
  */
 class EntityClassReflection
 {
     /**
-     * @Inject
+     * @inject
      * @var MethodNameUtility
      */
     protected $methodNameUtility;

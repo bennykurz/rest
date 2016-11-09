@@ -18,18 +18,19 @@
 
 namespace N86io\Rest\Persistence\Constraint;
 
-use DI\Container;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
+use N86io\Rest\Object\Container;
+use N86io\Rest\Object\SingletonInterface;
 
 /**
  * Class ConstraintFactory
  *
  * @author Viktor Firus <v@n86.io>
  */
-class ConstraintFactory
+class ConstraintFactory implements SingletonInterface
 {
     /**
-     * @Inject
+     * @inject
      * @var Container
      */
     protected $container;
@@ -71,12 +72,9 @@ class ConstraintFactory
      */
     public function logicalAnd(array $constraints)
     {
-        return $this->container->make(
+        return $this->container->get(
             Logical::class,
-            [
-                'constraints' => $constraints,
-                'type' => LogicalInterface::OPERATOR_AND
-            ]
+            [$constraints, LogicalInterface::OPERATOR_AND]
         );
     }
 
@@ -86,12 +84,9 @@ class ConstraintFactory
      */
     public function logicalOr(array $constraints)
     {
-        return $this->container->make(
+        return $this->container->get(
             Logical::class,
-            [
-                'constraints' => $constraints,
-                'type' => LogicalInterface::OPERATOR_OR
-            ]
+            [$constraints, LogicalInterface::OPERATOR_OR]
         );
     }
 
@@ -103,14 +98,9 @@ class ConstraintFactory
      */
     public function lessThan(PropertyInfoInterface $leftOperand, $rightOperand, $save = null)
     {
-        return $this->container->make(
+        return $this->container->get(
             Comparison::class,
-            [
-                'leftOperand' => $leftOperand,
-                'type' => ComparisonInterface::LESS_THAN,
-                'rightOperand' => $rightOperand,
-                'save' => $save
-            ]
+            [$leftOperand, ComparisonInterface::LESS_THAN, $rightOperand, $save]
         );
     }
 
@@ -122,14 +112,9 @@ class ConstraintFactory
      */
     public function lessThanOrEqualTo(PropertyInfoInterface $leftOperand, $rightOperand, $save = null)
     {
-        return $this->container->make(
+        return $this->container->get(
             Comparison::class,
-            [
-                'leftOperand' => $leftOperand,
-                'type' => ComparisonInterface::LESS_THAN_OR_EQUAL_TO,
-                'rightOperand' => $rightOperand,
-                'save' => $save
-            ]
+            [$leftOperand, ComparisonInterface::LESS_THAN_OR_EQUAL_TO, $rightOperand, $save]
         );
     }
 
@@ -141,14 +126,9 @@ class ConstraintFactory
      */
     public function greaterThan(PropertyInfoInterface $leftOperand, $rightOperand, $save = null)
     {
-        return $this->container->make(
+        return $this->container->get(
             Comparison::class,
-            [
-                'leftOperand' => $leftOperand,
-                'type' => ComparisonInterface::GREATER_THAN,
-                'rightOperand' => $rightOperand,
-                'save' => $save
-            ]
+            [$leftOperand, ComparisonInterface::GREATER_THAN, $rightOperand, $save]
         );
     }
 
@@ -160,14 +140,9 @@ class ConstraintFactory
      */
     public function greaterThanOrEqualTo(PropertyInfoInterface $leftOperand, $rightOperand, $save = null)
     {
-        return $this->container->make(
+        return $this->container->get(
             Comparison::class,
-            [
-                'leftOperand' => $leftOperand,
-                'type' => ComparisonInterface::GREATER_THAN_OR_EQUAL_TO,
-                'rightOperand' => $rightOperand,
-                'save' => $save
-            ]
+            [$leftOperand, ComparisonInterface::GREATER_THAN_OR_EQUAL_TO, $rightOperand, $save]
         );
     }
 
@@ -179,14 +154,9 @@ class ConstraintFactory
      */
     public function equalTo(PropertyInfoInterface $leftOperand, $rightOperand, $save = null)
     {
-        return $this->container->make(
+        return $this->container->get(
             Comparison::class,
-            [
-                'leftOperand' => $leftOperand,
-                'type' => ComparisonInterface::EQUAL_TO,
-                'rightOperand' => $rightOperand,
-                'save' => $save
-            ]
+            [$leftOperand, ComparisonInterface::EQUAL_TO, $rightOperand, $save]
         );
     }
 
@@ -198,14 +168,9 @@ class ConstraintFactory
      */
     public function notEqualTo(PropertyInfoInterface $leftOperand, $rightOperand, $save = null)
     {
-        return $this->container->make(
+        return $this->container->get(
             Comparison::class,
-            [
-                'leftOperand' => $leftOperand,
-                'type' => ComparisonInterface::NOT_EQUAL_TO,
-                'rightOperand' => $rightOperand,
-                'save' => $save
-            ]
+            [$leftOperand, ComparisonInterface::NOT_EQUAL_TO, $rightOperand, $save]
         );
     }
 
@@ -217,14 +182,9 @@ class ConstraintFactory
      */
     public function contains(PropertyInfoInterface $leftOperand, $rightOperand, $save = null)
     {
-        return $this->container->make(
+        return $this->container->get(
             Comparison::class,
-            [
-                'leftOperand' => $leftOperand,
-                'type' => ComparisonInterface::CONTAINS,
-                'rightOperand' => $rightOperand,
-                'save' => $save
-            ]
+            [$leftOperand, ComparisonInterface::CONTAINS, $rightOperand, $save]
         );
     }
 }

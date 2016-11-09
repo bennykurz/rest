@@ -18,18 +18,19 @@
 
 namespace N86io\Rest\Persistence\Ordering;
 
-use DI\Container;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
+use N86io\Rest\Object\Container;
+use N86io\Rest\Object\SingletonInterface;
 
 /**
  * Class OrderingFactory
  *
  * @author Viktor Firus <v@n86.io>
  */
-class OrderingFactory
+class OrderingFactory implements SingletonInterface
 {
     /**
-     * @Inject
+     * @inject
      * @var Container
      */
     protected $container;
@@ -40,12 +41,9 @@ class OrderingFactory
      */
     public function ascending(PropertyInfoInterface $propertyInfo)
     {
-        return $this->container->make(
+        return $this->container->get(
             Ordering::class,
-            [
-                'propertyInfo' => $propertyInfo,
-                'direction' => OrderingInterface::ASCENDING
-            ]
+            [$propertyInfo, OrderingInterface::ASCENDING]
         );
     }
 
@@ -55,12 +53,9 @@ class OrderingFactory
      */
     public function descending(PropertyInfoInterface $propertyInfo)
     {
-        return $this->container->make(
+        return $this->container->get(
             Ordering::class,
-            [
-                'propertyInfo' => $propertyInfo,
-                'direction' => OrderingInterface::DESCENDING
-            ]
+            [$propertyInfo, OrderingInterface::DESCENDING]
         );
     }
 }

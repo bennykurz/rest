@@ -18,8 +18,8 @@
 
 namespace N86io\Rest;
 
-use DI\Container;
-use N86io\Rest\Object\ContainerFactory;
+use Doctrine\Common\Cache\ArrayCache;
+use N86io\Rest\Object\Container;
 
 /**
  * Class FunctionalTestCase
@@ -35,6 +35,6 @@ abstract class FunctionalTestCase extends UnitTestCase
 
     public function setUp()
     {
-        $this->container = ContainerFactory::create();
+        $this->container = new Container(new ArrayCache);
     }
 }

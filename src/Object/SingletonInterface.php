@@ -16,20 +16,13 @@
  * along with N86io/Rest or see <http://www.gnu.org/licenses/>.
  */
 
-namespace N86io\Rest\DomainObject\EntityInfo;
-
-use N86io\Rest\Object\SingletonInterface;
+namespace N86io\Rest\Object;
 
 /**
- * Interface EntityInfoFactoryInterface
+ * Interface SingletonInterface
  *
  * @author Viktor Firus <v@n86.io>
  */
-interface EntityInfoFactoryInterface extends SingletonInterface
+interface SingletonInterface
 {
-    /**
-     * @param $className
-     * @return EntityInfoInterface
-     */
-    public function buildEntityInfoFromClassName($className);
 }

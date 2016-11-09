@@ -22,7 +22,6 @@ namespace N86io\Rest\DomainObject\PropertyInfo;
  * Class DynamicSql
  *
  * @author Viktor Firus <v@n86.io>
- * @Injectable(scope="prototype")
  */
 class DynamicSql extends AbstractPropertyInfo implements
     DynamicSqlInterface,

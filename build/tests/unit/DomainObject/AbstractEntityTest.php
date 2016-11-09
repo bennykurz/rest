@@ -49,6 +49,14 @@ class AbstractEntityTest extends UnitTestCase
 
     public function testGetProperties()
     {
-        $this->assertEquals(['name1' => 'value1', 'name2' => 'value2'], $this->abstractEntity->getProperties());
+        $expected = [
+            'name1' => 'value1',
+            'name2' => 'value2',
+            'deleted' => null,
+            'disabled' => null,
+            'startTime' => null,
+            'endTime' => null
+        ];
+        $this->assertEquals($expected, $this->abstractEntity->getProperties());
     }
 }

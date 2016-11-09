@@ -18,7 +18,6 @@
 
 namespace N86io\Rest\Tests\Unit\Http;
 
-use DI\Container;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfo;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
 use N86io\Rest\Exception\RequestNotFoundException;
@@ -27,6 +26,7 @@ use N86io\Rest\Http\RequestInterface;
 use N86io\Rest\Http\Routing\Routing;
 use N86io\Rest\Http\Routing\RoutingFactory;
 use N86io\Rest\Http\Utility\QueryUtility;
+use N86io\Rest\Object\Container;
 use N86io\Rest\Persistence\Constraint\LogicalInterface;
 use N86io\Rest\Persistence\Ordering\OrderingInterface;
 use N86io\Rest\Service\Configuration;
@@ -139,7 +139,7 @@ class RequestFactoryTest extends UnitTestCase
         $requestMock->shouldReceive('setRoute')->withAnyArgs()->andReturn($requestMock);
 
         $mock = \Mockery::mock(Container::class);
-        $mock->shouldReceive('make')->with(RequestInterface::class)->andReturn($requestMock);
+        $mock->shouldReceive('get')->with(RequestInterface::class)->andReturn($requestMock);
         return $mock;
     }
 

@@ -25,12 +25,11 @@ use Psr\Http\Message\UriInterface;
  * Class Routing
  *
  * @author Viktor Firus <v@n86.io>
- * @Injectable(scope="prototype")
  */
 class Routing implements RoutingInterface
 {
     /**
-     * @Inject
+     * @inject
      * @var Configuration
      */
     protected $configuration;

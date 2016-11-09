@@ -18,9 +18,10 @@
 
 namespace N86io\Rest\Http;
 
-use DI\Container;
 use N86io\Rest\ContentConverter\ConverterFactory;
 use N86io\Rest\ContentConverter\ConverterInterface;
+use N86io\Rest\Object\Container;
+use N86io\Rest\Object\SingletonInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -29,16 +30,16 @@ use Psr\Http\Message\ServerRequestInterface;
  *
  * @author Viktor Firus <v@n86.io>
  */
-class ResponseFactory
+class ResponseFactory implements SingletonInterface
 {
     /**
-     * @Inject
+     * @inject
      * @var Container
      */
     protected $container;
 
     /**
-     * @Inject
+     * @inject
      * @var ConverterFactory
      */
     protected $converterFactory;
@@ -148,7 +149,7 @@ class ResponseFactory
      */
     public function createResponse($status, array $content)
     {
-        $response = $this->container->make(ResponseInterface::class);
+        $response = $this->container->get(ResponseInterface::class);
         /** @var ResponseInterface $response */
         $response = $response->withAddedHeader(
             'Content-type',

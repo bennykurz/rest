@@ -18,7 +18,7 @@
 
 namespace N86io\Rest\Http\Routing;
 
-use DI\Container;
+use N86io\Rest\Object\Container;
 
 /**
  * Class RoutingFactory
@@ -28,7 +28,7 @@ use DI\Container;
 class RoutingFactory implements RoutingFactoryInterface
 {
     /**
-     * @Inject
+     * @inject
      * @var Container
      */
     protected $container;
@@ -52,13 +52,9 @@ class RoutingFactory implements RoutingFactoryInterface
      */
     public function getVersionRoutingParameter()
     {
-        return $this->container->make(
+        return $this->container->get(
             RoutingParameterInterface::class,
-            [
-                'name' => 'version',
-                'expression' => '[\w\d]+',
-                'optional' => true
-            ]
+            ['version', '[\w\d]+', true]
         );
     }
 
@@ -68,14 +64,9 @@ class RoutingFactory implements RoutingFactoryInterface
      */
     public function getApiIdentifierRouting(array $apiIdentifier)
     {
-        return $this->container->make(
+        return $this->container->get(
             RoutingParameterInterface::class,
-            [
-                'name' => 'apiIdentifier',
-                'expression' => '(' . implode('|', $apiIdentifier) . ')',
-                'optional' => false,
-                'takeResult' => 2
-            ]
+            ['apiIdentifier', '(' . implode('|', $apiIdentifier) . ')', false, 2]
         );
     }
 
@@ -84,13 +75,9 @@ class RoutingFactory implements RoutingFactoryInterface
      */
     public function getResourceIdRouting()
     {
-        return $this->container->make(
+        return $this->container->get(
             RoutingParameterInterface::class,
-            [
-                'name' => 'resourceId',
-                'expression' => '.+',
-                'optional' => true
-            ]
+            ['resourceId', '.+', true]
         );
     }
 }

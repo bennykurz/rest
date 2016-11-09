@@ -18,6 +18,7 @@
 
 namespace N86io\Rest\DomainObject\EntityInfo;
 
+use N86io\Rest\Object\SingletonInterface;
 use N86io\Rest\Service\Configuration;
 use Symfony\Component\Yaml\Yaml;
 
@@ -26,10 +27,10 @@ use Symfony\Component\Yaml\Yaml;
  *
  * @author Viktor Firus <v@n86.io>
  */
-class EntityInfoConfLoader
+class EntityInfoConfLoader implements SingletonInterface
 {
     /**
-     * @Inject
+     * @inject
      * @var Configuration
      */
     protected $configuration;

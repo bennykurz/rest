@@ -18,7 +18,7 @@
 
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
-use DI\Container;
+use N86io\Rest\Object\Container;
 
 /**
  * Class AbstractPropertyInfo
@@ -28,7 +28,7 @@ use DI\Container;
 abstract class AbstractPropertyInfo implements PropertyInfoInterface
 {
     /**
-     * @Inject
+     * @inject
      * @var Container
      */
     protected $container;

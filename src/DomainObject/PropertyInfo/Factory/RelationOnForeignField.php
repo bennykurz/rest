@@ -28,7 +28,7 @@ use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoUtility;
 class RelationOnForeignField extends AbstractFactory
 {
     /**
-     * @Inject
+     * @inject
      * @var PropertyInfoUtility
      */
     protected $propertyInfoUtility;
@@ -40,12 +40,9 @@ class RelationOnForeignField extends AbstractFactory
      */
     public function build($name, array $attributes)
     {
-        return $this->container->make(
+        return $this->container->get(
             \N86io\Rest\DomainObject\PropertyInfo\RelationOnForeignField::class,
-            [
-                'name' => $name,
-                'attributes' => $attributes
-            ]
+            [$name, $attributes]
         );
     }
 

@@ -18,7 +18,6 @@
 
 namespace N86io\Rest\Tests\Unit\Http\Utility;
 
-use DI\Container;
 use N86io\Rest\DomainObject\AbstractEntity;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfo;
 use N86io\Rest\DomainObject\PropertyInfo\Common;

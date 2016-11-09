@@ -18,7 +18,7 @@
 
 namespace N86io\Rest\DomainObject\PropertyInfo\Factory;
 
-use DI\Container;
+use N86io\Rest\Object\Container;
 
 /**
  * Class AbstractFactory
@@ -28,7 +28,7 @@ use DI\Container;
 abstract class AbstractFactory implements FactoryInterface
 {
     /**
-     * @Inject
+     * @inject
      * @var Container
      */
     protected $container;

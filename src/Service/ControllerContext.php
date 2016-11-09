@@ -19,13 +19,14 @@
 namespace N86io\Rest\Service;
 
 use N86io\Rest\Http\RequestInterface;
+use N86io\Rest\Object\SingletonInterface;
 
 /**
  * Class ControllerContext
  *
  * @author Viktor Firus <v@n86.io>
  */
-class ControllerContext
+class ControllerContext implements SingletonInterface
 {
     /**
      * @var RequestInterface
