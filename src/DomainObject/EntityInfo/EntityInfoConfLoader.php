@@ -49,10 +49,24 @@ class EntityInfoConfLoader
         $this->loadAll();
         $result = [];
         foreach ($parentClassNames as $parentClassName) {
+            $this->addEmptyEntityInfoConf($parentClassName);
             $this->mergeModelConf($result, $this->loadedConf[$parentClassName]);
         }
+        $this->addEmptyEntityInfoConf($className);
         $this->mergeModelConf($result, $this->loadedConf[$className]);
         return $result;
+    }
+
+    /**
+     * @param string $className
+     */
+    protected function addEmptyEntityInfoConf($className)
+    {
+        if (!array_key_exists($className, $this->loadedConf)) {
+            $this->loadedConf[$className] = [
+                'properties' => []
+            ];
+        }
     }
 
     /**
