@@ -196,12 +196,9 @@ class EntityClassReflection
         $propertiesAttr = [];
         $properties = $this->reflectionClass->getProperties();
         foreach ($properties as $property) {
-            // @codeCoverageIgnoreStart
-            // Currently no properties in AbstractEntity defined, why this part would be ignored.
             if ($property->getDeclaringClass()->getName() === AbstractEntity::class) {
                 continue;
             }
-            // @codeCoverageIgnoreEnd
             $attr = &$propertiesAttr[$property->getName()];
             $attr['type'] = current($property->getParsedDocComment()->getTags()['var']);
             if (class_exists($attr['type']) && $attr['type'][0] === '\\') {

@@ -26,11 +26,31 @@ namespace N86io\Rest\DomainObject;
 abstract class AbstractEntity implements EntityInterface
 {
     /**
+     * @var int
+     */
+    protected $deleted;
+
+    /**
+     * @var int
+     */
+    protected $disabled;
+
+    /**
+     * @var int
+     */
+    protected $startTime;
+
+    /**
+     * @var int
+     */
+    protected $endTime;
+
+    /**
      * @param string $propertyName
      * @param mixed $propertyValue
      * @internal
      */
-    public function setProperty($propertyName, $propertyValue)
+    final public function setProperty($propertyName, $propertyValue)
     {
         $this->{$propertyName} = $propertyValue;
     }
@@ -40,7 +60,7 @@ abstract class AbstractEntity implements EntityInterface
      * @return mixed
      * @internal
      */
-    public function getProperty($propertyName)
+    final public function getProperty($propertyName)
     {
         return $this->{$propertyName};
     }
@@ -49,7 +69,7 @@ abstract class AbstractEntity implements EntityInterface
      * @return array
      * @internal
      */
-    public function getProperties()
+    final public function getProperties()
     {
         return get_object_vars($this);
     }
