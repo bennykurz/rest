@@ -90,7 +90,7 @@ class Bootstrap
     /**
      * @param Cache $cache
      * @param array $overrideDiObjects
-     * @return \DI\Container
+     * @return Container
      */
     public function createContainer(Cache $cache = null, array $overrideDiObjects = [])
     {
