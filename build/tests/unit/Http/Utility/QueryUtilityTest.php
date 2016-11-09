@@ -57,12 +57,12 @@ class QueryUtilityTest extends UnitTestCase
     public function test1()
     {
         $queryParams = $this->queryUtility->resolveQueryParams(
-            'integer.gt=123&sort=string.asc&limit=10&page=2&level=5',
+            'integer.gt=123&sort=string.asc&limit=10&offset=2&level=5',
             $this->entityInfo
         );
 
         $this->assertEquals(10, $queryParams['limit']);
-        $this->assertEquals(2, $queryParams['page']);
+        $this->assertEquals(2, $queryParams['offset']);
         $this->assertEquals(5, $queryParams['outputLevel']);
         $this->assertTrue($queryParams['ordering'] instanceof OrderingInterface);
         $this->assertTrue($queryParams['constraints'] instanceof ConstraintInterface);

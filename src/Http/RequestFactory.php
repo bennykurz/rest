@@ -98,7 +98,7 @@ class RequestFactory implements RequestFactoryInterface
             ->setApiIdentifier($route['apiIdentifier'])
             ->setResourceIds($resourceIds)
             ->setLimit($queryParams['limit'])
-            ->setPage($queryParams['page'])
+            ->setOffset($queryParams['offset'])
             ->setOutputLevel($queryParams['outputLevel'])
             ->setModelClassName($modelClassName)
             ->setControllerClassName($controllerClassName)

@@ -66,7 +66,7 @@ class Request implements RequestInterface
     /**
      * @var int
      */
-    protected $page;
+    protected $offset;
 
     /**
      * @var int
@@ -222,18 +222,18 @@ class Request implements RequestInterface
     /**
      * @return int
      */
-    public function getPage()
+    public function getOffset()
     {
-        return $this->page;
+        return $this->offset;
     }
 
     /**
-     * @param int $page
+     * @param int $offset
      * @return RequestInterface
      */
-    public function setPage($page)
+    public function setOffset($offset)
     {
-        $this->page = $page;
+        $this->offset = $offset;
         return $this;
     }
 

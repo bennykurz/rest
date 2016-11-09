@@ -58,7 +58,7 @@ class QueryUtility implements SingletonInterface
         $parsed = $parsed ?: [];
         $result = [
             'limit' => null,
-            'page' => null,
+            'offset' => null,
             'outputLevel' => null
         ];
         $constraints = [];
@@ -74,8 +74,8 @@ class QueryUtility implements SingletonInterface
                 case 'limit':
                     $result['limit'] = $this->parseNumericValue($value);
                     break;
-                case 'page':
-                    $result['page'] = $this->parseNumericValue($value);
+                case 'offset':
+                    $result['offset'] = $this->parseNumericValue($value);
                     break;
                 case 'level':
                     $result['outputLevel'] = $this->parseNumericValue($value);

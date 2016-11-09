@@ -130,7 +130,7 @@ class RequestFactoryTest extends UnitTestCase
         $requestMock->shouldReceive('setResourceIds')->withAnyArgs()->andReturn($requestMock);
         $requestMock->shouldReceive('setOrdering')->withAnyArgs()->andReturn($requestMock);
         $requestMock->shouldReceive('setLimit')->withAnyArgs()->andReturn($requestMock);
-        $requestMock->shouldReceive('setPage')->withAnyArgs()->andReturn($requestMock);
+        $requestMock->shouldReceive('setOffset')->withAnyArgs()->andReturn($requestMock);
         $requestMock->shouldReceive('setOutputLevel')->withAnyArgs()->andReturn($requestMock);
         $requestMock->shouldReceive('setModelClassName')->withAnyArgs()->andReturn($requestMock);
         $requestMock->shouldReceive('setControllerClassName')->withAnyArgs()->andReturn($requestMock);
@@ -165,7 +165,7 @@ class RequestFactoryTest extends UnitTestCase
                 'apiIdentifier' => 'api1',
                 'resourceId' => 'res1,res2'
             ],
-            'integer.gt=123&sort=string.asc&limit=10&page=2&level=5'
+            'integer.gt=123&sort=string.asc&limit=10&offset=2&level=5'
         );
     }
 
@@ -206,16 +206,16 @@ class RequestFactoryTest extends UnitTestCase
         $mock->shouldReceive('resolveQueryParams')->with('', $entityInfo)->andReturn([
             'ordering' => null,
             'limit' => null,
-            'page' => null,
+            'offset' => null,
             'outputLevel' => null
         ]);
         $mock->shouldReceive('resolveQueryParams')->with(
-            'integer.gt=123&sort=string.asc&limit=10&page=2&level=5',
+            'integer.gt=123&sort=string.asc&limit=10&offset=2&level=5',
             $entityInfo
         )->andReturn([
             'ordering' => \Mockery::mock(OrderingInterface::class),
             'limit' => 10,
-            'page' => 2,
+            'offset' => 2,
             'outputLevel' => 5,
             'constraints' => \Mockery::mock(LogicalInterface::class)
         ]);

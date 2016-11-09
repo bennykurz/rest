@@ -114,13 +114,13 @@ interface RequestInterface
     /**
      * @return int
      */
-    public function getPage();
+    public function getOffset();
 
     /**
-     * @param int $page
+     * @param int $offset
      * @return RequestInterface
      */
-    public function setPage($page);
+    public function setOffset($offset);
 
     /**
      * @return int

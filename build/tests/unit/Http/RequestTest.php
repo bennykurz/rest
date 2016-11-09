@@ -41,7 +41,7 @@ class RequestTest extends UnitTestCase
             ->setConstraints($constraint)
             ->setOrdering($ordering)
             ->setLimit(2)
-            ->setPage(3)
+            ->setOffset(3)
             ->setOutputLevel(4)
             ->setMode(5)
             ->setModelClassName('ClassName')
@@ -53,7 +53,7 @@ class RequestTest extends UnitTestCase
         $this->assertEquals($constraint, $request->getConstraints());
         $this->assertEquals($ordering, $request->getOrdering());
         $this->assertEquals(2, $request->getLimit());
-        $this->assertEquals(3, $request->getPage());
+        $this->assertEquals(3, $request->getOffset());
         $this->assertEquals(4, $request->getOutputLevel());
         $this->assertEquals(5, $request->getMode());
         $this->assertEquals('ClassName', $request->getModelClassName());
