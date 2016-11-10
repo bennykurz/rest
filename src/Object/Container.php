@@ -34,9 +34,9 @@ class Container implements SingletonInterface
     protected $singletonInstances = [];
 
     /**
-     * @var DefinitionResolver
+     * @var DefinitionFactory
      */
-    protected $definitionResolver;
+    protected $definitionFactory;
 
     /**
      * @var array
@@ -50,7 +50,7 @@ class Container implements SingletonInterface
      */
     public function __construct(Cache $cache, array $classMapping = [])
     {
-        $this->definitionResolver = new DefinitionResolver($cache);
+        $this->definitionFactory = new DefinitionFactory($cache);
         $this->classMapping = $classMapping;
         $this->singletonInstances[self::class] = $this;
     }
@@ -70,11 +70,11 @@ class Container implements SingletonInterface
         if (!class_exists($className)) {
             throw new \InvalidArgumentException('Class "' . $className . '" not found.');
         }
-        if ($className === Definition::class || $className === DefinitionResolver::class) {
+        if ($className === Definition::class || $className === DefinitionFactory::class) {
             throw new \InvalidArgumentException('Not allowed to instantiate "' . $className . '".');
         }
 
-        $definition = $this->definitionResolver->get($className);
+        $definition = $this->definitionFactory->get($className);
 
         $reflectionClass = new ReflectionClass($definition->getClassName());
         $instance = $reflectionClass->newInstanceArgs($parameters);

@@ -22,11 +22,11 @@ use Doctrine\Common\Cache\Cache;
 use N86io\Reflection\ReflectionClass;
 
 /**
- * Class DefinitionResolver
+ * Class DefinitionFactory
  *
  * @author Viktor Firus <v@n86.io>
  */
-class DefinitionResolver
+class DefinitionFactory
 {
     /**
      * @var Cache
@@ -34,7 +34,7 @@ class DefinitionResolver
     protected $cache;
 
     /**
-     * DefinitionResolver constructor.
+     * DefinitionFactory constructor.
      * @param Cache $cache
      */
     public function __construct(Cache $cache)
