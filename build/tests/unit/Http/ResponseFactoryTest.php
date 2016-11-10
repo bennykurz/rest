@@ -21,6 +21,7 @@ namespace N86io\Rest\Tests\Unit\Http;
 use N86io\Rest\ContentConverter\ConverterFactory;
 use N86io\Rest\ContentConverter\ConverterInterface;
 use N86io\Rest\Http\ResponseFactory;
+use N86io\Rest\Object\Container;
 use N86io\Rest\UnitTestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

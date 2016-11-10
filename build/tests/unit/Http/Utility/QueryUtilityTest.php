@@ -22,6 +22,7 @@ use N86io\Rest\DomainObject\AbstractEntity;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfo;
 use N86io\Rest\DomainObject\PropertyInfo\Common;
 use N86io\Rest\Http\Utility\QueryUtility;
+use N86io\Rest\Object\Container;
 use N86io\Rest\Persistence\Constraint\ConstraintFactory;
 use N86io\Rest\Persistence\Constraint\ConstraintInterface;
 use N86io\Rest\Persistence\Ordering\OrderingFactory;
