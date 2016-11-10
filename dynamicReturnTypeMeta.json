@@ -1,0 +1,9 @@
+{
+  "methodCalls": [
+    {
+      "class": "\\N86io\\Rest\\Object\\Container",
+      "method": "get",
+      "position": 0
+    }
+  ]
+}

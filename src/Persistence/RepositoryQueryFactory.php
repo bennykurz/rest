@@ -59,7 +59,6 @@ class RepositoryQueryFactory implements SingletonInterface
      */
     public function build(RequestInterface $request, array $settings)
     {
-        /** @var RepositoryQueryInterface $repositoryQuery */
         $repositoryQuery = $this->container->get(RepositoryQueryInterface::class);
         $entityInfo = $this->entityInfoStorage->get($request->getModelClassName());
         $repositoryQuery->setEntityInfo($entityInfo);

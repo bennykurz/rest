@@ -55,10 +55,8 @@ class Bootstrap
             throw new \Exception('Container is not initialized.');
         }
         $this->userAuthentication = $this->container->get(UserAuthenticationInterface::class);
-        /** @var RequestFactoryInterface $requestFactory */
         $requestFactory = $this->container->get(RequestFactoryInterface::class);
 
-        /** @var ResponseFactory $responseFactory */
         $responseFactory = $this->container->get(ResponseFactory::class);
         $responseFactory->setServerRequest($serverRequest);
 
@@ -85,9 +83,7 @@ class Bootstrap
      */
     protected function result(RequestInterface $request)
     {
-        /** @var ControllerInterface $controller */
-        $controller = $this->container->get(ControllerInterface::class);
-        return $controller->process($request);
+        return $this->container->get(ControllerInterface::class)->process($request);
     }
 
     /**

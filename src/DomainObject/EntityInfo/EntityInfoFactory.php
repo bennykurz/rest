@@ -68,7 +68,6 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
      */
     public function buildEntityInfoFromClassName($className)
     {
-        /** @var EntityClassReflection $entityClassRefl */
         $entityClassRefl = $this->container->get(EntityClassReflection::class, [$className]);
         $properties = $entityClassRefl->getProperties();
         $entityInfoConf = $this->loadEntityInfoConf($className, $entityClassRefl);

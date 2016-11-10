@@ -92,7 +92,6 @@ class RequestFactory implements RequestFactoryInterface
 
         $resourceIds = array_key_exists('resourceId', $route) ? explode(',', $route['resourceId']) : [];
 
-        /** @var RequestInterface $request */
         $request = $this->container->get(RequestInterface::class);
         $request->setVersion($version)
             ->setApiIdentifier($route['apiIdentifier'])
