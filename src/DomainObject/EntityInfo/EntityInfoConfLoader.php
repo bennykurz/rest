@@ -119,7 +119,7 @@ class EntityInfoConfLoader implements SingletonInterface
      */
     protected function mergeModelConf(array &$modelConf1, array $modelConf2)
     {
-        $this->mergeSingle($modelConf1, $modelConf2, ['table', 'mode']);
+        $this->mergeSingle($modelConf1, $modelConf2, ['table', 'mode', 'repository']);
         if (array_key_exists('enableFields', $modelConf2)) {
             if (!array_key_exists('enableFields', $modelConf1)) {
                 $modelConf1['enableFields'] = [];
