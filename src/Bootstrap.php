@@ -72,7 +72,11 @@ class Bootstrap
             return $responseFactory->unauthorized();
         }
 
-        return $this->result($request);
+        try {
+            return $this->result($request);
+        } catch (\Exception $e) {
+            return $responseFactory->errorRequest($e->getCode());
+        }
     }
 
     /**
