@@ -57,12 +57,7 @@ class RepositoryQuery implements RepositoryQueryInterface
     /**
      * @var int
      */
-    protected $target;
-
-    /**
-     * @var int
-     */
-    protected $defaultMaxItems = 10;
+    protected $defaultOffset = 10;
 
     /**
      * @return EntityInfoInterface
@@ -157,18 +152,18 @@ class RepositoryQuery implements RepositoryQueryInterface
     /**
      * @return int
      */
-    public function getDefaultMaxItems()
+    public function getDefaultOffset()
     {
-        return $this->defaultMaxItems;
+        return $this->defaultOffset;
     }
 
     /**
-     * @param int $defaultMaxItems
+     * @param int $defaultOffset
      * @return RepositoryQueryInterface
      */
-    public function setDefaultMaxItems($defaultMaxItems)
+    public function setDefaultOffset($defaultOffset)
     {
-        $this->defaultMaxItems = $defaultMaxItems;
+        $this->defaultOffset = $defaultOffset;
         return $this;
     }
 }

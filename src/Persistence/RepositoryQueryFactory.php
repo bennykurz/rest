@@ -25,7 +25,9 @@ use N86io\Rest\Http\RequestInterface;
 use N86io\Rest\Object\Container;
 use N86io\Rest\Object\SingletonInterface;
 use N86io\Rest\Persistence\Constraint\ConstraintFactory;
+use N86io\Rest\Persistence\Constraint\ConstraintInterface;
 use N86io\Rest\Persistence\Constraint\LogicalInterface;
+use N86io\Rest\Persistence\Ordering\OrderingInterface;
 
 /**
  * Class RepositoryQueryFactory
@@ -62,24 +64,29 @@ class RepositoryQueryFactory implements SingletonInterface
         $repositoryQuery = $this->container->get(RepositoryQueryInterface::class);
         $entityInfo = $this->entityInfoStorage->get($request->getModelClassName());
         $repositoryQuery->setEntityInfo($entityInfo);
-        if (array_key_exists('defaultMaxItems', $settings)) {
-            $repositoryQuery->setDefaultMaxItems($settings['defaultMaxItems']);
+        if (array_key_exists('defaultOffset', $settings)) {
+            $repositoryQuery->setDefaultOffset($settings['defaultOffset']);
         }
         $repositoryQuery->setLimit($request->getLimit());
         $repositoryQuery->setOffset($request->getOffset());
-        $repositoryQuery->setOrdering($request->getOrdering());
+        if ($request->getOrdering() instanceof OrderingInterface) {
+            $repositoryQuery->setOrdering($request->getOrdering());
+        }
 
-        $constraints = $request->getConstraints();
-        $resourceIds = $request->getResourceIds();
+        $constraints = [];
 
-        $constraints = $this->constraintFactory->logicalAnd([
-            $constraints,
-            $this->createResourceIdsConstraints(
+        if ($request->getConstraints() instanceof ConstraintInterface) {
+            $constraints[] = $request->getConstraints();
+        }
+        if (!empty($request->getResourceIds())) {
+            $constraints[] = $this->createResourceIdsConstraints(
                 $entityInfo->getResourceIdPropertyInfo(),
-                $resourceIds
-            ),
-            $this->createEnableFieldsConstraints($entityInfo)
-        ]);
+                $request->getResourceIds()
+            );
+        }
+        $constraints[] = $this->createEnableFieldsConstraints($entityInfo);
+
+        $constraints = $this->constraintFactory->logicalAnd($constraints);
 
         $repositoryQuery->setConstraints($constraints);
 

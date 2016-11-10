@@ -87,11 +87,11 @@ interface RepositoryQueryInterface
     /**
      * @return int
      */
-    public function getDefaultMaxItems();
+    public function getDefaultOffset();
 
     /**
-     * @param int $defaultMaxItems
+     * @param int $defaultOffset
      * @return RepositoryQueryInterface
      */
-    public function setDefaultMaxItems($defaultMaxItems);
+    public function setDefaultOffset($defaultOffset);
 }
