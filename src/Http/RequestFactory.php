@@ -27,9 +27,11 @@ use N86io\Rest\Http\Routing\RoutingFactoryInterface;
 use N86io\Rest\Http\Utility\QueryUtility;
 use N86io\Rest\Object\Container;
 use N86io\Rest\Persistence\Constraint\ConstraintInterface;
+use N86io\Rest\Persistence\LimitInterface;
 use N86io\Rest\Persistence\Ordering\OrderingInterface;
 use N86io\Rest\Service\Configuration;
 use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
  * Class RequestFactory
@@ -96,27 +98,55 @@ class RequestFactory implements RequestFactoryInterface
         $request->setVersion($version)
             ->setApiIdentifier($route['apiIdentifier'])
             ->setResourceIds($resourceIds)
-            ->setRowCount($queryParams['rowCount'])
-            ->setOffset($queryParams['offset'])
             ->setOutputLevel($queryParams['outputLevel'])
             ->setModelClassName($modelClassName)
             ->setControllerClassName($controllerClassName)
             ->setMode($this->getRequestMode($serverRequest))
             ->setRoute($route);
 
-        if (array_key_exists('constraints', $queryParams) &&
-            $queryParams['constraints'] instanceof ConstraintInterface
-        ) {
-            $request->setConstraints($queryParams['constraints']);
-        }
+        $this->setLimit($request, $queryParams);
+        $this->setConstraints($request, $queryParams);
+        $this->setOrdering($request, $queryParams);
 
+        return $request;
+    }
+
+    /**
+     * @param RequestInterface $request
+     * @param array $queryParams
+     */
+    protected function setOrdering(RequestInterface $request, array $queryParams)
+    {
         if (array_key_exists('ordering', $queryParams) &&
             $queryParams['ordering'] instanceof OrderingInterface
         ) {
             $request->setOrdering($queryParams['ordering']);
         }
+    }
 
-        return $request;
+    /**
+     * @param RequestInterface $request
+     * @param array $queryParams
+     */
+    protected function setConstraints(RequestInterface $request, array $queryParams)
+    {
+        if (array_key_exists('constraints', $queryParams) &&
+            $queryParams['constraints'] instanceof ConstraintInterface
+        ) {
+            $request->setConstraints($queryParams['constraints']);
+        }
+    }
+
+    /**
+     * @param RequestInterface $request
+     * @param array $queryParams
+     */
+    protected function setLimit(RequestInterface $request, array $queryParams)
+    {
+        if ($queryParams['rowCount'] && $queryParams['offset']) {
+            $limit = $this->container->get(LimitInterface::class, [$queryParams['offset'], $queryParams['rowCount']]);
+            $request->setLimit($limit);
+        }
     }
 
     /**

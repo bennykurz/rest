@@ -19,6 +19,7 @@
 namespace N86io\Rest\Http;
 
 use N86io\Rest\Persistence\Constraint\ConstraintInterface;
+use N86io\Rest\Persistence\LimitInterface;
 use N86io\Rest\Persistence\Ordering\OrderingInterface;
 
 /**
@@ -59,14 +60,9 @@ class Request implements RequestInterface
     protected $ordering;
 
     /**
-     * @var int
+     * @var LimitInterface
      */
-    protected $rowCount;
-
-    /**
-     * @var int
-     */
-    protected $offset;
+    protected $limit;
 
     /**
      * @var int
@@ -202,38 +198,20 @@ class Request implements RequestInterface
     }
 
     /**
-     * @return int
+     * @return LimitInterface
      */
-    public function getRowCount()
+    public function getLimit()
     {
-        return $this->rowCount;
+        return $this->limit;
     }
 
     /**
-     * @param int $rowCount
+     * @param LimitInterface $limit
      * @return RequestInterface
      */
-    public function setRowCount($rowCount)
+    public function setLimit(LimitInterface $limit)
     {
-        $this->rowCount = $rowCount;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getOffset()
-    {
-        return $this->offset;
-    }
-
-    /**
-     * @param int $offset
-     * @return RequestInterface
-     */
-    public function setOffset($offset)
-    {
-        $this->offset = $offset;
+        $this->limit = $limit;
         return $this;
     }
 

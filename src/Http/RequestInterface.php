@@ -19,6 +19,7 @@
 namespace N86io\Rest\Http;
 
 use N86io\Rest\Persistence\Constraint\ConstraintInterface;
+use N86io\Rest\Persistence\LimitInterface;
 use N86io\Rest\Persistence\Ordering\OrderingInterface;
 
 /**
@@ -101,26 +102,15 @@ interface RequestInterface
     public function setOrdering(OrderingInterface $ordering);
 
     /**
-     * @return int
+     * @return LimitInterface
      */
-    public function getRowCount();
+    public function getLimit();
 
     /**
-     * @param int $rowCount
+     * @param LimitInterface $limit
      * @return RequestInterface
      */
-    public function setRowCount($rowCount);
-
-    /**
-     * @return int
-     */
-    public function getOffset();
-
-    /**
-     * @param int $offset
-     * @return RequestInterface
-     */
-    public function setOffset($offset);
+    public function setLimit(LimitInterface $limit);
 
     /**
      * @return int
