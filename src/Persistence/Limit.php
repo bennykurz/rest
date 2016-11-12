@@ -19,25 +19,46 @@
 namespace N86io\Rest\Persistence;
 
 /**
- * Interface RepositoryResultInterface
+ * Class Limit
  *
  * @author Viktor Firus <v@n86.io>
  */
-interface RepositoryResultInterface
+class Limit implements LimitInterface
 {
     /**
-     * @param int $outputLevel
-     * @return array
+     * @var int
      */
-    public function parseResult($outputLevel = 0);
+    protected $offset;
 
     /**
-     * @return array
+     * @var int
      */
-    public function getRawResult();
+    protected $rowCount;
 
     /**
-     * @param array $databaseResult
+     * Limit constructor.
+     * @param int $offset
+     * @param int $rowCount
      */
-    public function setRawResult(array $databaseResult);
+    public function __construct($offset, $rowCount)
+    {
+        $this->offset = $offset;
+        $this->rowCount = $rowCount;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOffset()
+    {
+        return $this->offset;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRowCount()
+    {
+        return $this->rowCount;
+    }
 }

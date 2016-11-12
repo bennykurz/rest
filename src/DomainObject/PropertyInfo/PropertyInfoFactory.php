@@ -51,7 +51,7 @@ class PropertyInfoFactory implements SingletonInterface
      * @param array $attributes
      * @return PropertyInfoInterface
      */
-    public function buildPropertyInfo($name, array $attributes)
+    public function build($name, array $attributes)
     {
         foreach ($this->factories as $factoryClassName) {
             /** @var FactoryInterface $factory */
@@ -73,5 +73,27 @@ class PropertyInfoFactory implements SingletonInterface
                 FactoryInterface::class . '".');
         }
         $this->factories[] = $factory;
+    }
+
+    /**
+     * @param string $type
+     * @param string $resourcePropertyName
+     * @param string $entityClassName
+     * @return PropertyInfoInterface
+     */
+    public function buildEnableFields($type, $resourcePropertyName, $entityClassName)
+    {
+        if ($type !== 'deleted' && $type !== 'disabled' && $type !== 'startTime' && $type !== 'endTime') {
+            throw new \InvalidArgumentException('Undefined enable field type "' . $type . '".');
+        }
+        return $this->build(
+            $type,
+            [
+                'type' => 'int',
+                'hide' => true,
+                'resourcePropertyName' => $resourcePropertyName,
+                'entityClassName' => $entityClassName
+            ]
+        );
     }
 }

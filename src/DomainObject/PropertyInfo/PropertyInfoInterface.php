@@ -61,4 +61,10 @@ interface PropertyInfoInterface
      * @return boolean
      */
     public function shouldShow($outputLevel);
+
+    /**
+     * @param mixed $value
+     * @return mixed
+     */
+    public function castValue($value);
 }

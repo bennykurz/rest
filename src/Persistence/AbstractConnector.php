@@ -18,17 +18,24 @@
 
 namespace N86io\Rest\Persistence;
 
+use N86io\Rest\DomainObject\EntityFactory;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
 use N86io\Rest\Persistence\Constraint\ConstraintInterface;
 use N86io\Rest\Persistence\Ordering\OrderingInterface;
 
 /**
- * Class RepositoryQuery
+ * Class AbstractConnector
  *
  * @author Viktor Firus <v@n86.io>
  */
-class RepositoryQuery implements RepositoryQueryInterface
+abstract class AbstractConnector implements ConnectorInterface
 {
+    /**
+     * @inject
+     * @var EntityFactory
+     */
+    protected $entityFactory;
+
     /**
      * @var EntityInfoInterface
      */
@@ -45,31 +52,13 @@ class RepositoryQuery implements RepositoryQueryInterface
     protected $ordering;
 
     /**
-     * @var int
+     * @var LimitInterface
      */
     protected $limit;
 
     /**
-     * @var int
-     */
-    protected $offset;
-
-    /**
-     * @var int
-     */
-    protected $defaultOffset = 10;
-
-    /**
-     * @return EntityInfoInterface
-     */
-    public function getEntityInfo()
-    {
-        return $this->entityInfo;
-    }
-
-    /**
      * @param EntityInfoInterface $entityInfo
-     * @return RepositoryQueryInterface
+     * @return ConnectorInterface
      */
     public function setEntityInfo(EntityInfoInterface $entityInfo)
     {
@@ -78,16 +67,8 @@ class RepositoryQuery implements RepositoryQueryInterface
     }
 
     /**
-     * @return ConstraintInterface
-     */
-    public function getConstraints()
-    {
-        return $this->constraints;
-    }
-
-    /**
      * @param ConstraintInterface $constraints
-     * @return RepositoryQueryInterface
+     * @return ConnectorInterface
      */
     public function setConstraints(ConstraintInterface $constraints)
     {
@@ -96,16 +77,8 @@ class RepositoryQuery implements RepositoryQueryInterface
     }
 
     /**
-     * @return OrderingInterface
-     */
-    public function getOrdering()
-    {
-        return $this->ordering;
-    }
-
-    /**
      * @param OrderingInterface $ordering
-     * @return RepositoryQueryInterface
+     * @return ConnectorInterface
      */
     public function setOrdering(OrderingInterface $ordering)
     {
@@ -114,56 +87,12 @@ class RepositoryQuery implements RepositoryQueryInterface
     }
 
     /**
-     * @return int
+     * @param LimitInterface $limit
+     * @return ConnectorInterface
      */
-    public function getLimit()
-    {
-        return $this->limit;
-    }
-
-    /**
-     * @param int $limit
-     * @return RepositoryQueryInterface
-     */
-    public function setLimit($limit)
+    public function setLimit(LimitInterface $limit)
     {
         $this->limit = $limit;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getOffset()
-    {
-        return $this->offset;
-    }
-
-    /**
-     * @param int $offset
-     * @return RepositoryQueryInterface
-     */
-    public function setOffset($offset)
-    {
-        $this->offset = $offset;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getDefaultOffset()
-    {
-        return $this->defaultOffset;
-    }
-
-    /**
-     * @param int $defaultOffset
-     * @return RepositoryQueryInterface
-     */
-    public function setDefaultOffset($defaultOffset)
-    {
-        $this->defaultOffset = $defaultOffset;
         return $this;
     }
 }

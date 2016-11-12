@@ -19,33 +19,19 @@
 namespace N86io\Rest\Persistence;
 
 /**
- * Interface RepositoryInterface
+ * Interface LimitInterface
  *
  * @author Viktor Firus <v@n86.io>
  */
-interface RepositoryInterface
+interface LimitInterface
 {
     /**
-     * @param $repositoryQuery RepositoryQueryInterface
-     * @return RepositoryResultInterface
+     * @return int
      */
-    public function read(RepositoryQueryInterface $repositoryQuery);
+    public function getOffset();
 
     /**
-     * @param $repositoryQuery RepositoryQueryInterface
-     * @return RepositoryResultInterface
+     * @return int
      */
-    public function create(RepositoryQueryInterface $repositoryQuery);
-
-    /**
-     * @param $repositoryQuery RepositoryQueryInterface
-     * @return RepositoryResultInterface
-     */
-    public function update(RepositoryQueryInterface $repositoryQuery);
-
-    /**
-     * @param $repositoryQuery RepositoryQueryInterface
-     * @return RepositoryResultInterface
-     */
-    public function delete(RepositoryQueryInterface $repositoryQuery);
+    public function getRowCount();
 }

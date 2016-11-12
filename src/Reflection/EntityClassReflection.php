@@ -200,7 +200,7 @@ class EntityClassReflection
             }
             $attr = &$propertiesAttr[$property->getName()];
             $attr['type'] = current($property->getParsedDocComment()->getTags()['var']);
-            if (class_exists($attr['type']) && $attr['type'][0] === '\\') {
+            if ($this->classExists($attr['type']) && $attr['type'][0] === '\\') {
                 $attr['type'] = substr($attr['type'], 1);
             }
             unset($attr['var'], $attr['getter'], $attr['setter']);
@@ -212,5 +212,14 @@ class EntityClassReflection
             }
         }
         return $propertiesAttr;
+    }
+
+    /**
+     * @param string $className
+     * @return bool
+     */
+    protected function classExists($className)
+    {
+        return class_exists(substr($className, 0, strlen($className) - 2)) || class_exists($className);
     }
 }

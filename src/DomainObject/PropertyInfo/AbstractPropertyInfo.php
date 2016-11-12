@@ -18,6 +18,8 @@
 
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
+use N86io\Rest\DomainObject\EntityInfo\EntityInfo;
+use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
 use N86io\Rest\Object\Container;
 
 /**
@@ -32,6 +34,17 @@ abstract class AbstractPropertyInfo implements PropertyInfoInterface
      * @var Container
      */
     protected $container;
+
+    /**
+     * @inject
+     * @var EntityInfoStorage
+     */
+    protected $entityInfoStorage;
+
+    /**
+     * @var string
+     */
+    protected $entityClassName;
 
     /**
      * @var string
@@ -87,6 +100,16 @@ abstract class AbstractPropertyInfo implements PropertyInfoInterface
     }
 
     /**
+     * @return EntityInfo
+     */
+    public function getEntityInfo()
+    {
+        /** @var EntityInfo $entityInfo */
+        $entityInfo = $this->entityInfoStorage->get($this->entityClassName);
+        return $entityInfo;
+    }
+
+    /**
      * @return string
      */
     public function getName()
@@ -136,5 +159,43 @@ abstract class AbstractPropertyInfo implements PropertyInfoInterface
             return true;
         }
         return false;
+    }
+
+    /**
+     * @param mixed $value
+     * @return mixed
+     */
+    public function castValue($value)
+    {
+        switch ($this->type) {
+            case 'int':
+            case 'integer':
+                return intval($value, 10);
+            case 'float':
+                return floatval($value);
+            case 'double':
+                return doubleval($value);
+            case 'bool':
+            case 'boolean':
+                return boolval($value);
+            case 'DateTime':
+            case '\DateTime':
+                return $this->castDateTime($value);
+        }
+        return $value;
+    }
+
+    /**
+     * @param $value
+     * @return \DateTime
+     */
+    protected function castDateTime($value)
+    {
+        if (is_numeric($value)) {
+            return (new \DateTime())->setTimestamp($value);
+        }
+        $timezone = new \DateTimeZone(date_default_timezone_get());
+        $dateTime = \DateTime::createFromFormat('Y-m-d H:i:s e', $value . ' UTC')->setTimezone($timezone);
+        return $dateTime;
     }
 }

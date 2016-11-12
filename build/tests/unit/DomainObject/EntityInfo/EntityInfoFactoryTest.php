@@ -21,7 +21,6 @@ namespace N86io\Rest\Tests\Unit\DomainObject\EntityInfo;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfo;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoConfLoader;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoFactory;
-use N86io\Rest\DomainObject\PropertyInfo\EnableFieldPropertyInfoFactory;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoFactory;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoUtility;
@@ -48,7 +47,6 @@ class EntityInfoFactoryTest extends UnitTestCase
         $this->inject($this->factory, 'propertyInfoUtility', $this->createPropertyInfoUtilityMock());
         $this->inject($this->factory, 'propertyInfoFactory', $this->createPropertyInfoFactoryMock());
         $this->inject($this->factory, 'container', $this->createContainerMock());
-        $this->inject($this->factory, 'enablFieldPropInfFac', $this->createEnableFieldPropertyInfoFactoryMock());
     }
 
     public function test()
@@ -68,17 +66,6 @@ class EntityInfoFactoryTest extends UnitTestCase
     public function tearDown()
     {
         \Mockery::close();
-    }
-
-    /**
-     * @return EnableFieldPropertyInfoFactory
-     */
-    protected function createEnableFieldPropertyInfoFactoryMock()
-    {
-        $mock = \Mockery::mock(EnableFieldPropertyInfoFactory::class);
-        $mock->shouldReceive('build')->withAnyArgs()->andReturn(\Mockery::mock(PropertyInfoInterface::class));
-
-        return $mock;
     }
 
     /**

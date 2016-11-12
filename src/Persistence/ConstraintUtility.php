@@ -19,35 +19,18 @@
 namespace N86io\Rest\Persistence;
 
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
-use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
-use N86io\Rest\Http\RequestInterface;
-use N86io\Rest\Object\Container;
 use N86io\Rest\Object\SingletonInterface;
 use N86io\Rest\Persistence\Constraint\ConstraintFactory;
-use N86io\Rest\Persistence\Constraint\ConstraintInterface;
 use N86io\Rest\Persistence\Constraint\LogicalInterface;
-use N86io\Rest\Persistence\Ordering\OrderingInterface;
 
 /**
- * Class RepositoryQueryFactory
+ * Class ConstraintUtility
  *
  * @author Viktor Firus <v@n86.io>
  */
-class RepositoryQueryFactory implements SingletonInterface
+class ConstraintUtility implements SingletonInterface
 {
-    /**
-     * @inject
-     * @var Container
-     */
-    protected $container;
-
-    /**
-     * @inject
-     * @var EntityInfoStorage
-     */
-    protected $entityInfoStorage;
-
     /**
      * @inject
      * @var ConstraintFactory
@@ -55,50 +38,11 @@ class RepositoryQueryFactory implements SingletonInterface
     protected $constraintFactory;
 
     /**
-     * @param RequestInterface $request
-     * @param array $settings
-     * @return RepositoryQueryInterface
-     */
-    public function build(RequestInterface $request, array $settings)
-    {
-        $repositoryQuery = $this->container->get(RepositoryQueryInterface::class);
-        $entityInfo = $this->entityInfoStorage->get($request->getModelClassName());
-        $repositoryQuery->setEntityInfo($entityInfo);
-        if (array_key_exists('defaultOffset', $settings)) {
-            $repositoryQuery->setDefaultOffset($settings['defaultOffset']);
-        }
-        $repositoryQuery->setLimit($request->getLimit());
-        $repositoryQuery->setOffset($request->getOffset());
-        if ($request->getOrdering() instanceof OrderingInterface) {
-            $repositoryQuery->setOrdering($request->getOrdering());
-        }
-
-        $constraints = [];
-
-        if ($request->getConstraints() instanceof ConstraintInterface) {
-            $constraints[] = $request->getConstraints();
-        }
-        if (!empty($request->getResourceIds())) {
-            $constraints[] = $this->createResourceIdsConstraints(
-                $entityInfo->getResourceIdPropertyInfo(),
-                $request->getResourceIds()
-            );
-        }
-        $constraints[] = $this->createEnableFieldsConstraints($entityInfo);
-
-        $constraints = $this->constraintFactory->logicalAnd($constraints);
-
-        $repositoryQuery->setConstraints($constraints);
-
-        return $repositoryQuery;
-    }
-
-    /**
      * @param PropertyInfoInterface $propertyInfo
      * @param array $resourceIds
      * @return LogicalInterface
      */
-    protected function createResourceIdsConstraints(PropertyInfoInterface $propertyInfo, array $resourceIds)
+    public function createResourceIdsConstraints(PropertyInfoInterface $propertyInfo, array $resourceIds)
     {
         $constraints = [];
         foreach ($resourceIds as $resourceId) {
@@ -111,7 +55,7 @@ class RepositoryQueryFactory implements SingletonInterface
      * @param EntityInfoInterface $entityInfo
      * @return LogicalInterface
      */
-    protected function createEnableFieldsConstraints(EntityInfoInterface $entityInfo)
+    public function createEnableFieldsConstraints(EntityInfoInterface $entityInfo)
     {
         $constraints = [];
         $accessTime = time();

@@ -21,7 +21,7 @@ namespace N86io\Rest\Tests\Unit\Reflection;
 use N86io\Rest\Examples\Example1;
 use N86io\Rest\Examples\Example2;
 use N86io\Rest\Examples\Example3;
-use N86io\Rest\Object\ContainerFactory;
+use N86io\Rest\Object\Container;
 use N86io\Rest\Reflection\EntityClassReflection;
 use N86io\Rest\Reflection\MethodNameUtility;
 use N86io\Rest\UnitTestCase;
@@ -107,7 +107,7 @@ class EntityClassReflectionTest extends UnitTestCase
     public function testWrongEntityClass()
     {
         $this->setExpectedException(\InvalidArgumentException::class);
-        new EntityClassReflection(ContainerFactory::class);
+        new EntityClassReflection(Container::class);
     }
 
     /**

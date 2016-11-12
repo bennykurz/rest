@@ -18,7 +18,9 @@
 
 namespace N86io\Rest\DomainObject\EntityInfo;
 
+use N86io\Rest\DomainObject\PropertyInfo\AbstractStatic;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
+use N86io\Rest\Persistence\ConnectorInterface;
 
 /**
  * Interface EntityInfoInterface
@@ -27,11 +29,6 @@ use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
  */
 interface EntityInfoInterface
 {
-    /**
-     * @return string
-     */
-    public function getRepository();
-
     /**
      * @return string
      */
@@ -53,7 +50,7 @@ interface EntityInfoInterface
     public function getResourceIdPropertyInfo();
 
     /**
-     * @return PropertyInfoInterface
+     * @return AbstractStatic
      */
     public function getUidPropertyInfo();
 
@@ -107,4 +104,9 @@ interface EntityInfoInterface
      * @return bool
      */
     public function canHandleRequestMode($requestMode);
+
+    /**
+     * @return ConnectorInterface
+     */
+    public function createConnectorInstance();
 }

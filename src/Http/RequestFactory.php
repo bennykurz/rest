@@ -96,7 +96,7 @@ class RequestFactory implements RequestFactoryInterface
         $request->setVersion($version)
             ->setApiIdentifier($route['apiIdentifier'])
             ->setResourceIds($resourceIds)
-            ->setLimit($queryParams['limit'])
+            ->setRowCount($queryParams['rowCount'])
             ->setOffset($queryParams['offset'])
             ->setOutputLevel($queryParams['outputLevel'])
             ->setModelClassName($modelClassName)

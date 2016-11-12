@@ -61,7 +61,7 @@ class Request implements RequestInterface
     /**
      * @var int
      */
-    protected $limit;
+    protected $rowCount;
 
     /**
      * @var int
@@ -204,18 +204,18 @@ class Request implements RequestInterface
     /**
      * @return int
      */
-    public function getLimit()
+    public function getRowCount()
     {
-        return $this->limit;
+        return $this->rowCount;
     }
 
     /**
-     * @param int $limit
+     * @param int $rowCount
      * @return RequestInterface
      */
-    public function setLimit($limit)
+    public function setRowCount($rowCount)
     {
-        $this->limit = $limit;
+        $this->rowCount = $rowCount;
         return $this;
     }
 

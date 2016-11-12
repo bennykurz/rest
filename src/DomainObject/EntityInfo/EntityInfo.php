@@ -19,11 +19,14 @@
 namespace N86io\Rest\DomainObject\EntityInfo;
 
 use N86io\Rest\DomainObject\AbstractEntity;
+use N86io\Rest\DomainObject\PropertyInfo\AbstractStatic;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 use N86io\Rest\DomainObject\PropertyInfo\ResourceIdInterface;
 use N86io\Rest\DomainObject\PropertyInfo\StaticInterface;
 use N86io\Rest\DomainObject\PropertyInfo\UidInterface;
 use N86io\Rest\Http\RequestInterface;
+use N86io\Rest\Object\Container;
+use N86io\Rest\Persistence\ConnectorInterface;
 
 /**
  * Class EntityInfo
@@ -33,9 +36,15 @@ use N86io\Rest\Http\RequestInterface;
 class EntityInfo implements EntityInfoInterface
 {
     /**
+     * @inject
+     * @var Container
+     */
+    protected $container;
+
+    /**
      * @var string
      */
-    protected $repository;
+    protected $connector;
 
     /**
      * @var string
@@ -53,7 +62,7 @@ class EntityInfo implements EntityInfoInterface
     protected $resIdPropertyInfo;
 
     /**
-     * @var PropertyInfoInterface
+     * @var AbstractStatic
      */
     protected $uidPropertyInfo;
 
@@ -96,8 +105,8 @@ class EntityInfo implements EntityInfoInterface
         if (array_key_exists('className', $attributes)) {
             $this->className = $attributes['className'];
         }
-        if (array_key_exists('repository', $attributes)) {
-            $this->repository = $attributes['repository'];
+        if (array_key_exists('connector', $attributes)) {
+            $this->connector = $attributes['connector'];
         }
         if (array_key_exists('table', $attributes)) {
             $this->table = $attributes['table'];
@@ -109,14 +118,6 @@ class EntityInfo implements EntityInfoInterface
         if (array_key_exists('enableFields', $attributes)) {
             $this->enableFields = $attributes['enableFields'];
         }
-    }
-
-    /**
-     * @return string
-     */
-    public function getRepository()
-    {
-        return $this->repository;
     }
 
     /**
@@ -152,7 +153,7 @@ class EntityInfo implements EntityInfoInterface
     }
 
     /**
-     * @return PropertyInfoInterface
+     * @return AbstractStatic
      */
     public function getUidPropertyInfo()
     {
@@ -303,5 +304,15 @@ class EntityInfo implements EntityInfoInterface
             $requestMode === RequestInterface::REQUEST_MODE_PATCH && $isReadWriteMode ||
             $requestMode === RequestInterface::REQUEST_MODE_DELETE && $isReadWriteMode
         );
+    }
+
+    /**
+     * @return ConnectorInterface
+     */
+    public function createConnectorInstance()
+    {
+        /** @var ConnectorInterface $connector */
+        $connector = $this->container->get($this->connector);
+        return $connector;
     }
 }

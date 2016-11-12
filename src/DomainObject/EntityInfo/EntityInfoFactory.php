@@ -18,7 +18,6 @@
 
 namespace N86io\Rest\DomainObject\EntityInfo;
 
-use N86io\Rest\DomainObject\PropertyInfo\EnableFieldPropertyInfoFactory;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoFactory;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoUtility;
 use N86io\Rest\Object\Container;
@@ -56,12 +55,6 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
     protected $entityInfoConfLoader;
 
     /**
-     * @inject
-     * @var EnableFieldPropertyInfoFactory
-     */
-    protected $enablFieldPropInfFac;
-
-    /**
      * @param string $className
      * @return EntityInfoInterface
      * @throws \Exception
@@ -75,13 +68,18 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
         $properties = $this->setUndefinedPropertiesAttributes($properties);
         $entityInfo = $this->createEntityInfo($className, $entityInfoConf);
         foreach ($properties as $name => $attributes) {
-            $propertyInfo = $this->propertyInfoFactory->buildPropertyInfo($name, $attributes);
+            $attributes['entityClassName'] = $entityInfo->getClassName();
+            $propertyInfo = $this->propertyInfoFactory->build($name, $attributes);
             $entityInfo->addPropertyInfo($propertyInfo);
         }
 
         if (array_key_exists('enableFields', $entityInfoConf)) {
             foreach ($entityInfoConf['enableFields'] as $type => $enableField) {
-                $entityInfo->addPropertyInfo($this->enablFieldPropInfFac->build($type, $enableField));
+                $entityInfo->addPropertyInfo($this->propertyInfoFactory->buildEnableFields(
+                    $type,
+                    $enableField,
+                    $entityInfo->getClassName()
+                ));
             }
         }
 
@@ -125,7 +123,7 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
     protected function createEntityInfo($className, array $entityInfoConf)
     {
         $attributes = [];
-        $keys = ['repository', 'table', 'mode', 'enableFields'];
+        $keys = ['connector', 'table', 'mode', 'enableFields'];
         foreach ($keys as $key) {
             if (array_key_exists($key, $entityInfoConf)) {
                 $attributes[$key] = $entityInfoConf[$key];

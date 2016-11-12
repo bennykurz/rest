@@ -57,7 +57,6 @@ class EntityInfoTest extends UnitTestCase
         /** @var $entityInfo EntityInfo */
         list($entityClassName, $entityInfo) = $this->createEntityInfoReadOnly();
         $this->assertEquals($entityClassName, $entityInfo->getClassName());
-        $this->assertEquals('_repository_', $entityInfo->getRepository());
         $this->assertEquals('_table_', $entityInfo->getTable());
         $this->assertEquals(['deleted' => 'delete'], $entityInfo->getEnableFields());
         $this->assertTrue($entityInfo->canHandleRequestMode(RequestInterface::REQUEST_MODE_READ));
@@ -183,7 +182,7 @@ class EntityInfoTest extends UnitTestCase
         $entityClassName = get_class(\Mockery::mock(AbstractEntity::class));
         $entityInfo = new EntityInfo([
             'className' => $entityClassName,
-            'repository' => '_repository_',
+            'connector' => '_connector_',
             'table' => '_table_',
             'enableFields' => [
                 'deleted' => 'delete'

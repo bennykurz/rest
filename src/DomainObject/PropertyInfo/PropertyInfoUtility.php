@@ -29,45 +29,6 @@ use N86io\Rest\Object\SingletonInterface;
 class PropertyInfoUtility implements SingletonInterface
 {
     /**
-     * @param string $type
-     * @param mixed $value
-     * @return mixed
-     */
-    public function castValue($type, $value)
-    {
-        switch ($type) {
-            case 'int':
-            case 'integer':
-                return intval($value, 10);
-            case 'float':
-                return floatval($value);
-            case 'double':
-                return doubleval($value);
-            case 'bool':
-            case 'boolean':
-                return boolval($value);
-            case 'DateTime':
-            case '\DateTime':
-                return $this->castDateTime($value);
-        }
-        return $value;
-    }
-
-    /**
-     * @param $value
-     * @return \DateTime
-     */
-    protected function castDateTime($value)
-    {
-        if (is_numeric($value)) {
-            return (new \DateTime())->setTimestamp($value);
-        }
-        $timezone = new \DateTimeZone(date_default_timezone_get());
-        $dateTime = \DateTime::createFromFormat('Y-m-d H:i:s e', $value . ' UTC')->setTimezone($timezone);
-        return $dateTime;
-    }
-
-    /**
      * @param string $expression
      * @param string $tableAlias
      * @param string $aliasPlaceholder

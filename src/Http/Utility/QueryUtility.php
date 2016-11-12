@@ -57,7 +57,7 @@ class QueryUtility implements SingletonInterface
         parse_str($queryParams, $parsed);
         $parsed = $parsed ?: [];
         $result = [
-            'limit' => null,
+            'rowCount' => null,
             'offset' => null,
             'outputLevel' => null
         ];
@@ -71,8 +71,8 @@ class QueryUtility implements SingletonInterface
                         // Nothing to do, because no or invalid ordering.
                     }
                     break;
-                case 'limit':
-                    $result['limit'] = $this->parseNumericValue($value);
+                case 'rowCount':
+                    $result['rowCount'] = $this->parseNumericValue($value);
                     break;
                 case 'offset':
                     $result['offset'] = $this->parseNumericValue($value);

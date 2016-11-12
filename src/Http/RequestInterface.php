@@ -103,13 +103,13 @@ interface RequestInterface
     /**
      * @return int
      */
-    public function getLimit();
+    public function getRowCount();
 
     /**
-     * @param int $limit
+     * @param int $rowCount
      * @return RequestInterface
      */
-    public function setLimit($limit);
+    public function setRowCount($rowCount);
 
     /**
      * @return int

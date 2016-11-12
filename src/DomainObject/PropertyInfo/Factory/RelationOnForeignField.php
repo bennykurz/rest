@@ -55,6 +55,18 @@ class RelationOnForeignField extends AbstractFactory
         if (empty($attributes['foreignField'])) {
             return false;
         }
-        return $this->propertyInfoUtility->checkForAbstractEntitySubclass($attributes['type']);
+        return $this->checkForAbstractEntitySubclass($attributes['type']);
+    }
+
+    /**
+     * @param string $className
+     * @return bool
+     */
+    protected function checkForAbstractEntitySubclass($className)
+    {
+        return ($this->propertyInfoUtility->checkForAbstractEntitySubclass($className) ||
+            $this->propertyInfoUtility->checkForAbstractEntitySubclass(
+                substr($className, 0, strlen($className) - 2)
+            ));
     }
 }

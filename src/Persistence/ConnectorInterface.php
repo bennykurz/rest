@@ -23,75 +23,53 @@ use N86io\Rest\Persistence\Constraint\ConstraintInterface;
 use N86io\Rest\Persistence\Ordering\OrderingInterface;
 
 /**
- * Interface RepositoryQueryInterface
+ * Interface ConnectorInterface
  *
  * @author Viktor Firus <v@n86.io>
  */
-interface RepositoryQueryInterface
+interface ConnectorInterface
 {
     /**
-     * @return EntityInfoInterface
-     */
-    public function getEntityInfo();
-
-    /**
      * @param EntityInfoInterface $entityInfo
-     * @return RepositoryQueryInterface
+     * @return ConnectorInterface
      */
     public function setEntityInfo(EntityInfoInterface $entityInfo);
 
     /**
-     * @return ConstraintInterface
-     */
-    public function getConstraints();
-
-    /**
      * @param ConstraintInterface $constraint
-     * @return RepositoryQueryInterface
+     * @return ConnectorInterface
      */
     public function setConstraints(ConstraintInterface $constraint);
 
     /**
-     * @return OrderingInterface
-     */
-    public function getOrdering();
-
-    /**
      * @param OrderingInterface $ordering
-     * @return RepositoryQueryInterface
+     * @return ConnectorInterface
      */
     public function setOrdering(OrderingInterface $ordering);
 
     /**
-     * @return int
+     * @param LimitInterface $limit
+     * @return ConnectorInterface
      */
-    public function getLimit();
+    public function setLimit(LimitInterface $limit);
 
     /**
-     * @param int $limit
-     * @return RepositoryQueryInterface
+     * @return array
      */
-    public function setLimit($limit);
+    public function read();
 
     /**
-     * @return int
+     * @return array
      */
-    public function getOffset();
+    public function create();
 
     /**
-     * @param int $offset
-     * @return RepositoryQueryInterface
+     * @return array
      */
-    public function setOffset($offset);
+    public function update();
 
     /**
-     * @return int
+     * @return array
      */
-    public function getDefaultOffset();
-
-    /**
-     * @param int $defaultOffset
-     * @return RepositoryQueryInterface
-     */
-    public function setDefaultOffset($defaultOffset);
+    public function delete();
 }
