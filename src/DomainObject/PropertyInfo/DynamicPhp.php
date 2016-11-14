@@ -25,4 +25,12 @@ namespace N86io\Rest\DomainObject\PropertyInfo;
  */
 class DynamicPhp extends AbstractPropertyInfo
 {
+    /**
+     * @param array $attributes
+     * @return boolean
+     */
+    public static function verifyAttributes(array $attributes)
+    {
+        return $attributes['type'] === '__dynamic';
+    }
 }

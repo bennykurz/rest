@@ -69,4 +69,13 @@ class Join extends DynamicSql implements JoinInterface
     {
         return $this->joinCondition;
     }
+
+    /**
+     * @param array $attributes
+     * @return boolean
+     */
+    public static function verifyAttributes(array $attributes)
+    {
+        return !empty($attributes['joinTable']) && !empty($attributes['joinCondition']);
+    }
 }

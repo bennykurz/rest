@@ -18,6 +18,7 @@
 
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
+use N86io\Rest\DomainObject\AbstractEntity;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfo;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
 use N86io\Rest\Object\Container;
@@ -89,7 +90,7 @@ abstract class AbstractPropertyInfo implements PropertyInfoInterface
     public function __construct($name, array $attributes)
     {
         if (!array_key_exists('type', $attributes) || empty(trim($attributes['type']))) {
-            throw new \InvalidArgumentException('No type set to PropertyInfo.');
+            throw new \InvalidArgumentException('Missed type for PropertyInfo (' . $name . ').');
         }
         foreach ($attributes as $key => $attribute) {
             if (property_exists($this, $key)) {
@@ -162,27 +163,32 @@ abstract class AbstractPropertyInfo implements PropertyInfoInterface
     }
 
     /**
-     * @param mixed $value
-     * @return mixed
+     * @param AbstractEntity $entity
      */
-    public function castValue($value)
+    public function castValue(AbstractEntity $entity)
     {
+        $value = $entity->getProperty($this->getName());
         switch ($this->type) {
             case 'int':
             case 'integer':
-                return intval($value, 10);
+                $value = intval($value, 10);
+                break;
             case 'float':
-                return floatval($value);
+                $value = floatval($value);
+                break;
             case 'double':
-                return doubleval($value);
+                $value = doubleval($value);
+                break;
             case 'bool':
             case 'boolean':
-                return boolval($value);
+                $value = boolval($value);
+                break;
             case 'DateTime':
             case '\DateTime':
-                return $this->castDateTime($value);
+                $value = $this->castDateTime($value);
+                break;
         }
-        return $value;
+        $entity->setProperty($this->getName(), $value);
     }
 
     /**

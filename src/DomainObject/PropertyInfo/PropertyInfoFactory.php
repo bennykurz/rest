@@ -19,7 +19,6 @@
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
 use N86io\Rest\DomainObject\PropertyInfo;
-use N86io\Rest\DomainObject\PropertyInfo\Factory\FactoryInterface;
 use N86io\Rest\Object\Container;
 use N86io\Rest\Object\SingletonInterface;
 
@@ -37,13 +36,13 @@ class PropertyInfoFactory implements SingletonInterface
     protected $container;
 
     /**
-     * @var FactoryInterface[]
+     * @var string[]
      */
-    protected $factories = [
-        PropertyInfo\Factory\DynamicPhp::class,
-        PropertyInfo\Factory\DynamicSql::class,
-        PropertyInfo\Factory\Relation::class,
-        PropertyInfo\Factory\RelationOnForeignField::class
+    protected $propertyInfoClasses = [
+        PropertyInfo\DynamicPhp::class,
+        PropertyInfo\DynamicSql::class,
+        PropertyInfo\Relation::class,
+        PropertyInfo\RelationOnForeignField::class
     ];
 
     /**
@@ -53,26 +52,26 @@ class PropertyInfoFactory implements SingletonInterface
      */
     public function build($name, array $attributes)
     {
-        foreach ($this->factories as $factoryClassName) {
-            /** @var FactoryInterface $factory */
-            $factory = $this->container->get($factoryClassName);
-            if ($factory->check($attributes)) {
-                return $factory->build($name, $attributes);
+        foreach ($this->propertyInfoClasses as $propertyInfoClass) {
+            if (call_user_func([$propertyInfoClass, 'verifyAttributes'], $attributes, $this->container)) {
+                /** @var PropertyInfoInterface $propertyInfo */
+                $propertyInfo = $this->container->get($propertyInfoClass, [$name, $attributes]);
+                return $propertyInfo;
             }
         }
         return $this->container->get(PropertyInfo\Common::class, [$name, $attributes]);
     }
 
     /**
-     * @param string $factory
+     * @param string $propertyInfoClass
      */
-    public function registerPropertyInfoFactory($factory)
+    public function registerPropertyInfoClass($propertyInfoClass)
     {
-        if (!is_subclass_of($factory, FactoryInterface::class)) {
-            throw new \InvalidArgumentException('"' . $factory . '" must implemented "' .
-                FactoryInterface::class . '".');
+        if (!is_subclass_of($propertyInfoClass, PropertyInfoInterface::class)) {
+            throw new \InvalidArgumentException('"' . $propertyInfoClass . '" must implemented "' .
+                PropertyInfoInterface::class . '".');
         }
-        $this->factories[] = $factory;
+        $this->propertyInfoClasses[] = $propertyInfoClass;
     }
 
     /**

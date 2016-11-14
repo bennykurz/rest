@@ -84,4 +84,13 @@ class DynamicSql extends AbstractPropertyInfo implements
     {
         return $this->sql;
     }
+
+    /**
+     * @param array $attributes
+     * @return boolean
+     */
+    public static function verifyAttributes(array $attributes)
+    {
+        return !empty($attributes['sql']);
+    }
 }

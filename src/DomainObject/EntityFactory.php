@@ -73,11 +73,10 @@ class EntityFactory implements SingletonInterface
                 if ($propertyName === '') {
                     continue;
                 }
-                $propertyInfo = $entityInfo->getPropertyInfo($propertyName);
-                $memoryItem->setProperty(
-                    $propertyName,
-                    $propertyInfo->castValue($value)
-                );
+                $memoryItem->setProperty($propertyName, $value);
+            }
+            foreach ($entityInfo->getPropertyInfoList() as $propertyInfo) {
+                $propertyInfo->castValue($memoryItem);
             }
         }
         return $memoryItem;

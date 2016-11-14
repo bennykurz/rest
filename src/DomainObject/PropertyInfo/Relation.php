@@ -18,6 +18,8 @@
 
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
+use N86io\Rest\DomainObject\AbstractEntity;
+use N86io\Rest\Object\Container;
 use N86io\Rest\Persistence\Constraint\ConstraintFactory;
 use N86io\Rest\Persistence\ConstraintUtility;
 
@@ -54,16 +56,18 @@ class Relation extends AbstractStatic implements RestrictableInterface
     }
 
     /**
-     * @param mixed $value
-     * @return mixed
+     * @param AbstractEntity $entity
      */
-    public function castValue($value)
+    public function castValue(AbstractEntity $entity)
     {
+        $value = $entity->getProperty($this->getName());
         $isList = substr($this->type, -2) === '[]';
         if ($isList && empty(trim($value))) {
-            return [];
+            $entity->setProperty($this->getName(), []);
+            return;
         } elseif (empty(trim($value))) {
-            return '';
+            $entity->setProperty($this->getName(), '');
+            return;
         }
         $entityInfo = $this->getEntityInfo();
 
@@ -84,9 +88,35 @@ class Relation extends AbstractStatic implements RestrictableInterface
         $result = $connector->read();
 
         if ($isList) {
-            return $result;
+            $entity->setProperty($this->getName(), $result);
+            return;
         }
 
-        return current($result);
+        $entity->setProperty($this->getName(), current($result));
+    }
+
+    /**
+     * @param array $attributes
+     * @return boolean
+     */
+    public static function verifyAttributes(array $attributes)
+    {
+        if (!empty($attributes['foreignField'])) {
+            return false;
+        }
+        return self::checkForAbstractEntitySubclass($attributes['type']);
+    }
+
+    /**
+     * @param string $className
+     * @return boolean
+     */
+    protected static function checkForAbstractEntitySubclass($className)
+    {
+        $propertyInfoUtility = Container::makeInstance(PropertyInfoUtility::class);
+        return ($propertyInfoUtility->checkForAbstractEntitySubclass($className) ||
+            $propertyInfoUtility->checkForAbstractEntitySubclass(
+                substr($className, 0, strlen($className) - 2)
+            ));
     }
 }

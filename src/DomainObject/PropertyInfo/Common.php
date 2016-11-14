@@ -80,4 +80,13 @@ class Common extends AbstractStatic implements
     {
         return $this->uid === true;
     }
+
+    /**
+     * @param array $attributes
+     * @return bool
+     */
+    public static function verifyAttributes(array $attributes)
+    {
+        return array_key_exists('type', $attributes) && array_key_exists('resourcePropertyName', $attributes);
+    }
 }

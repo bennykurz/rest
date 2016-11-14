@@ -18,6 +18,8 @@
 
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
+use N86io\Rest\Object\Container;
+
 /**
  * Class RelationOnForeignField
  *
@@ -46,5 +48,30 @@ class RelationOnForeignField extends AbstractPropertyInfo implements RelationOnF
     public function getForeignField()
     {
         return $this->foreignField;
+    }
+
+    /**
+     * @param array $attributes
+     * @return boolean
+     */
+    public static function verifyAttributes(array $attributes)
+    {
+        if (empty($attributes['foreignField'])) {
+            return false;
+        }
+        return self::checkForAbstractEntitySubclass($attributes['type']);
+    }
+
+    /**
+     * @param string $className
+     * @return boolean
+     */
+    protected static function checkForAbstractEntitySubclass($className)
+    {
+        $propertyInfoUtility = Container::makeInstance(PropertyInfoUtility::class);
+        return ($propertyInfoUtility->checkForAbstractEntitySubclass($className) ||
+            $propertyInfoUtility->checkForAbstractEntitySubclass(
+                substr($className, 0, strlen($className) - 2)
+            ));
     }
 }
