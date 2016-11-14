@@ -19,37 +19,14 @@
 namespace N86io\Rest\ContentConverter;
 
 /**
- * Class JsonConverter
+ * Interface ParsableInterface
  *
  * @author Viktor Firus <v@n86.io>
  */
-class JsonConverter extends AbstractConverter
+interface ParsableInterface
 {
     /**
-     * @param array $connectorList
-     * @param int $outputLevel
-     * @return string
+     * @return mixed
      */
-    public function render(array $connectorList, $outputLevel)
-    {
-        $array = $this->parseRaw($connectorList, $outputLevel);
-        return json_encode($array);
-    }
-
-    /**
-     * @param string $string
-     * @return array
-     */
-    public function parse($string)
-    {
-        return json_decode($string, true);
-    }
-
-    /**
-     * @return string
-     */
-    public function getContentType()
-    {
-        return 'application/json';
-    }
+    public function getParsedValue();
 }

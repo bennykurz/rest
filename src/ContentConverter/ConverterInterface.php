@@ -28,10 +28,11 @@ use N86io\Rest\Object\SingletonInterface;
 interface ConverterInterface extends SingletonInterface
 {
     /**
-     * @param array $array
+     * @param array $connectorList
+     * @param int $outputLevel
      * @return string
      */
-    public function render(array $array);
+    public function render(array $connectorList, $outputLevel);
 
     /**
      * @param string $string
