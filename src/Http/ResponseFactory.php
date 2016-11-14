@@ -145,9 +145,10 @@ class ResponseFactory implements SingletonInterface
     /**
      * @param int $status
      * @param array $content
+     * @param int $outputLevel
      * @return ResponseInterface
      */
-    public function createResponse($status, array $content)
+    public function createResponse($status, array $content, $outputLevel = 0)
     {
         $response = $this->container->get(ResponseInterface::class);
         /** @var ResponseInterface $response */
@@ -156,7 +157,7 @@ class ResponseFactory implements SingletonInterface
             $this->contentConverter->getContentType() . '; charset=utf-8'
         );
         $response = $response->withStatus($status);
-        $body = $this->contentConverter->render($content);
+        $body = $this->contentConverter->render($content, $outputLevel);
         $response->getBody()->write($body);
         return $response;
     }
