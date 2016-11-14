@@ -87,7 +87,7 @@ class EntityInfo implements EntityInfoInterface
     protected $enableFields;
 
     /**
-     * @var array
+     * @var PropertyInfoInterface[]
      */
     protected $propertyInfoList = [];
 
@@ -170,7 +170,7 @@ class EntityInfo implements EntityInfoInterface
     }
 
     /**
-     * @return array
+     * @return PropertyInfoInterface[]
      */
     public function getPropertyInfoList()
     {

@@ -61,7 +61,7 @@ interface EntityInfoInterface
     public function getPropertyInfo($offset);
 
     /**
-     * @return array
+     * @return PropertyInfoInterface[]
      */
     public function getPropertyInfoList();
 
