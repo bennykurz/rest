@@ -18,7 +18,6 @@
 
 namespace N86io\Rest;
 
-use Doctrine\Common\Cache\Cache;
 use N86io\Rest\Authentication\UserAuthenticationInterface;
 use N86io\Rest\Http\RequestFactoryInterface;
 use N86io\Rest\Http\RequestInterface;
@@ -51,9 +50,7 @@ class Bootstrap
      */
     public function run(ServerRequestInterface $serverRequest)
     {
-        if (!$this->container) {
-            throw new \Exception('Container is not initialized.');
-        }
+        $this->container = Container::makeInstance(Container::class);
         $this->userAuthentication = $this->container->get(UserAuthenticationInterface::class);
         $requestFactory = $this->container->get(RequestFactoryInterface::class);
 
@@ -84,23 +81,5 @@ class Bootstrap
     protected function result(RequestInterface $request)
     {
         return $this->container->get(ControllerInterface::class)->process($request);
-    }
-
-    /**
-     * @param Cache $cache
-     * @param array $classMapping
-     * @return Container
-     */
-    public function createContainer(Cache $cache = null, array $classMapping = [])
-    {
-        if ($this->container) {
-            if ($cache !== null || $classMapping !== []) {
-                throw new \InvalidArgumentException('Container is already initialized. Can\'t set cache or ' .
-                    'classMapping.');
-            }
-            return $this->container;
-        }
-        $this->container = new Container($cache, $classMapping);
-        return $this->container;
     }
 }

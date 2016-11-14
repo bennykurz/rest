@@ -20,39 +20,48 @@ namespace N86io\Rest\Object;
 
 use Doctrine\Common\Cache\Cache;
 use N86io\Reflection\ReflectionClass;
+use Webmozart\Assert\Assert;
 
 /**
  * Class Container
  *
  * @author Viktor Firus <v@n86.io>
  */
-class Container implements SingletonInterface
+class Container
 {
     /**
      * @var array
      */
-    protected $singletonInstances = [];
+    protected static $singletonInstances = [];
 
     /**
      * @var DefinitionFactory
      */
-    protected $definitionFactory;
+    protected static $definitionFactory;
 
     /**
      * @var array
      */
-    protected $classMapping;
+    protected static $classMapping;
 
     /**
      * Container constructor.
-     * @param Cache $cache
-     * @param array $classMapping
      */
-    public function __construct(Cache $cache, array $classMapping = [])
+    public function __construct()
     {
-        $this->definitionFactory = new DefinitionFactory($cache);
-        $this->classMapping = $classMapping;
-        $this->singletonInstances[self::class] = $this;
+        static::$singletonInstances[self::class] = $this;
+    }
+
+    public static function initializeContainer(Cache $cache, array $classMapping = [])
+    {
+        if (static::$definitionFactory instanceof Cache) {
+            throw new \Exception('Cache for Container already exist.');
+        }
+        static::$definitionFactory = new DefinitionFactory($cache);
+        if (is_array(static::$classMapping)) {
+            throw new \Exception('Class mapping for Container already exist.');
+        }
+        static::$classMapping = $classMapping;
     }
 
     /**
@@ -62,10 +71,21 @@ class Container implements SingletonInterface
      */
     public function get($className, $parameters = [])
     {
-        $className = $this->mapClassName($className);
-        $className = $this->resolveInterface($className);
-        if (array_key_exists($className, $this->singletonInstances)) {
-            return $this->singletonInstances[$className];
+        return static::makeInstance($className, $parameters);
+    }
+
+    /**
+     * @param string $className
+     * @param array $parameters
+     * @return object
+     */
+    public static function makeInstance($className, $parameters = [])
+    {
+        Assert::isInstanceOf(static::$definitionFactory, DefinitionFactory::class, 'Container should be initialized.');
+        $className = static::mapClassName($className);
+        $className = static::resolveInterface($className);
+        if (array_key_exists($className, static::$singletonInstances)) {
+            return static::$singletonInstances[$className];
         }
         if (!class_exists($className)) {
             throw new \InvalidArgumentException('Class "' . $className . '" not found.');
@@ -74,7 +94,7 @@ class Container implements SingletonInterface
             throw new \InvalidArgumentException('Not allowed to instantiate "' . $className . '".');
         }
 
-        $definition = $this->definitionFactory->get($className);
+        $definition = static::$definitionFactory->get($className);
 
         $reflectionClass = new ReflectionClass($definition->getClassName());
         $instance = $reflectionClass->newInstanceArgs($parameters);
@@ -86,12 +106,12 @@ class Container implements SingletonInterface
             $reflectionProperty->setAccessible(true);
             $reflectionProperty->setValue(
                 $instance,
-                $this->get($injection['className'])
+                static::makeInstance($injection['className'])
             );
         }
 
         if ($definition->isSingleton()) {
-            $this->singletonInstances[$className] = $instance;
+            static::$singletonInstances[$className] = $instance;
         }
 
         return $instance;
@@ -101,10 +121,10 @@ class Container implements SingletonInterface
      * @param string $className
      * @return string
      */
-    protected function mapClassName($className)
+    protected static function mapClassName($className)
     {
-        if (array_key_exists($className, $this->classMapping)) {
-            return $this->classMapping[$className];
+        if (array_key_exists($className, static::$classMapping)) {
+            return static::$classMapping[$className];
         }
         return $className;
     }
@@ -113,7 +133,7 @@ class Container implements SingletonInterface
      * @param string $interfaceName
      * @return string
      */
-    protected function resolveInterface($interfaceName)
+    protected static function resolveInterface($interfaceName)
     {
         if (interface_exists($interfaceName)) {
             $className = substr($interfaceName, 0, strlen($interfaceName) - 9);

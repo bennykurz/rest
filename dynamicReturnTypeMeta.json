@@ -4,6 +4,11 @@
       "class": "\\N86io\\Rest\\Object\\Container",
       "method": "get",
       "position": 0
+    },
+    {
+      "class": "\\N86io\\Rest\\Object\\Container",
+      "method": "makeInstance",
+      "position": 0
     }
   ]
 }
