@@ -20,6 +20,7 @@ namespace N86io\Rest\ContentConverter;
 
 use N86io\Rest\Object\Container;
 use N86io\Rest\Object\SingletonInterface;
+use Webmozart\Assert\Assert;
 
 /**
  * Class ConverterFactory
@@ -45,6 +46,7 @@ class ConverterFactory implements SingletonInterface
      */
     public function createFromAccept($accept)
     {
+        Assert::string($accept);
         $defaultRenderer = null;
         foreach ($this->renderer as $item) {
             /** @var ConverterInterface $rendererInstance */

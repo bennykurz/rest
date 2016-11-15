@@ -78,7 +78,6 @@ class RequestFactory implements RequestFactoryInterface
         $routing = $this->routingFactory->build($this->configuration->getApiIdentifiers());
 
         $route = $routing->getRoute($serverRequest->getUri());
-
         $this->checkRoute($route);
 
         $version = array_key_exists('version', $route) ? $route['version'] : '';

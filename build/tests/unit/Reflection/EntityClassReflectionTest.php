@@ -18,6 +18,7 @@
 
 namespace N86io\Rest\Tests\Unit\Reflection;
 
+use Mockery\MockInterface;
 use N86io\Rest\Examples\Example1;
 use N86io\Rest\Examples\Example2;
 use N86io\Rest\Examples\Example3;
@@ -111,28 +112,22 @@ class EntityClassReflectionTest extends UnitTestCase
     }
 
     /**
-     * @return MethodNameUtility
+     * @return MockInterface|MethodNameUtility
      */
     protected function createMethodNameUtilityMock()
     {
-        $mock = \Mockery::mock(MethodNameUtility::class);
-        $mock->shouldReceive('isGetterOrSetter')->with('/^(is|get|set).*/')->andReturn(true);
-        $mock->shouldReceive('isGetterOrSetter')->withAnyArgs()->andReturn(false);
-
-        $mock->shouldReceive('isGetter')->with('/^(is|get).*/')->andReturn(true);
-        $mock->shouldReceive('isGetter')->withAnyArgs()->andReturn(false);
-
-        $mock->shouldReceive('isSetter')->with('/^set.*/')->andReturn(true);
-        $mock->shouldReceive('isSetter')->withAnyArgs()->andReturn(false);
-
-        $mock->shouldReceive('createPropertyNameFromMethod')->with('/(set|get)String/')->andReturn('string');
-        $mock->shouldReceive('createPropertyNameFromMethod')->with('/(set|get)Integer/')->andReturn('integer');
-
-        $mock->shouldReceive('createPropertyNameFromMethod')->with('/(set|get)DateTimeTimestamp/')
-            ->andReturn('dateTimeTimestamp');
-        $mock->shouldReceive('createPropertyNameFromMethod')->with('/(set|get)StatusPhpDetermination/')
-            ->andReturn('statusPhpDetermination');
-
-        return $mock;
+        return \Mockery::mock(MethodNameUtility::class)
+            ->shouldReceive('isGetterOrSetter')->with('/^(is|get|set).*/')->andReturn(true)->getMock()
+            ->shouldReceive('isGetterOrSetter')->withAnyArgs()->andReturn(false)->getMock()
+            ->shouldReceive('isGetter')->with('/^(is|get).*/')->andReturn(true)->getMock()
+            ->shouldReceive('isGetter')->withAnyArgs()->andReturn(false)->getMock()
+            ->shouldReceive('isSetter')->with('/^set.*/')->andReturn(true)->getMock()
+            ->shouldReceive('isSetter')->withAnyArgs()->andReturn(false)->getMock()
+            ->shouldReceive('createPropertyNameFromMethod')->with('/(set|get)String/')->andReturn('string')->getMock()
+            ->shouldReceive('createPropertyNameFromMethod')->with('/(set|get)Integer/')->andReturn('integer')->getMock()
+            ->shouldReceive('createPropertyNameFromMethod')->with('/(set|get)DateTimeTimestamp/')
+            ->andReturn('dateTimeTimestamp')->getMock()
+            ->shouldReceive('createPropertyNameFromMethod')->with('/(set|get)StatusPhpDetermination/')
+            ->andReturn('statusPhpDetermination')->getMock();
     }
 }

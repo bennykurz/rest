@@ -18,11 +18,14 @@
 
 namespace N86io\Rest\Tests\Unit\DomainObject\EntityInfo;
 
+use Mockery\MockInterface;
 use N86io\Rest\DomainObject\AbstractEntity;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfo;
 use N86io\Rest\DomainObject\PropertyInfo\AbstractPropertyInfo;
 use N86io\Rest\DomainObject\PropertyInfo\Common;
 use N86io\Rest\Http\RequestInterface;
+use N86io\Rest\Object\Container;
+use N86io\Rest\Persistence\ConnectorInterface;
 use N86io\Rest\UnitTestCase;
 
 /**
@@ -61,6 +64,7 @@ class EntityInfoTest extends UnitTestCase
         $this->assertEquals(['deleted' => 'delete'], $entityInfo->getEnableFields());
         $this->assertTrue($entityInfo->canHandleRequestMode(RequestInterface::REQUEST_MODE_READ));
         $this->assertFalse($entityInfo->canHandleRequestMode(RequestInterface::REQUEST_MODE_DELETE));
+        $this->assertTrue($entityInfo->createConnectorInstance() instanceof ConnectorInterface);
 
         $entityInfo = $this->createEntityInfoWriteOnly();
         $this->assertTrue($entityInfo->canHandleRequestMode(RequestInterface::REQUEST_MODE_CREATE));
@@ -93,10 +97,11 @@ class EntityInfoTest extends UnitTestCase
         $this->assertTrue($entityInfo->hasUidPropertyInfo());
         $this->assertEquals($propInfo, $entityInfo->getUidPropertyInfo());
 
-        $propInfo = \Mockery::mock(AbstractPropertyInfo::class);
-        $propInfo->shouldReceive('getName')->andReturn('name3');
-        $propInfo->shouldReceive('shouldShow')->withAnyArgs()->andReturn(true);
-        $propInfo->shouldReceive('getPosition')->andReturn(1);
+        /** @var MockInterface|AbstractPropertyInfo $propInfo */
+        $propInfo = \Mockery::mock(AbstractPropertyInfo::class)
+            ->shouldReceive('getName')->andReturn('name3')->getMock()
+            ->shouldReceive('shouldShow')->withAnyArgs()->andReturn(true)->getMock()
+            ->shouldReceive('getPosition')->andReturn(1)->getMock();
         $entityInfo->addPropertyInfo($propInfo);
 
         $this->assertEquals('name3', $entityInfo->getVisiblePropertiesOrdered(0)[0]->getName());
@@ -137,19 +142,18 @@ class EntityInfoTest extends UnitTestCase
      * @param string $resPropName
      * @param int $outputLevel
      * @param int $position
-     * @return Common
+     * @return MockInterface|Common
      */
     protected function createCommonPropertyInfoMock($isResourceId, $isUid, $name, $resPropName, $outputLevel, $position)
     {
-        $propInfo = \Mockery::mock(Common::class);
-        $propInfo->shouldReceive('isResourceId')->andReturn($isResourceId);
-        $propInfo->shouldReceive('isUid')->andReturn($isUid);
-        $propInfo->shouldReceive('getName')->andReturn($name);
-        $propInfo->shouldReceive('getResourcePropertyName')->andReturn($resPropName);
-        $propInfo->shouldReceive('getOutputLevel')->andReturn($outputLevel);
-        $propInfo->shouldReceive('shouldShow')->withAnyArgs()->andReturn(true);
-        $propInfo->shouldReceive('getPosition')->andReturn($position);
-        return $propInfo;
+        return \Mockery::mock(Common::class)
+            ->shouldReceive('isResourceId')->andReturn($isResourceId)->getMock()
+            ->shouldReceive('isUid')->andReturn($isUid)->getMock()
+            ->shouldReceive('getName')->andReturn($name)->getMock()
+            ->shouldReceive('getResourcePropertyName')->andReturn($resPropName)->getMock()
+            ->shouldReceive('getOutputLevel')->andReturn($outputLevel)->getMock()
+            ->shouldReceive('shouldShow')->withAnyArgs()->andReturn(true)->getMock()
+            ->shouldReceive('getPosition')->andReturn($position)->getMock();
     }
 
     /**
@@ -189,6 +193,16 @@ class EntityInfoTest extends UnitTestCase
             ],
             'mode' => ['read']
         ]);
+        $this->inject($entityInfo, 'container', $this->createContainerMock());
         return [$entityClassName, $entityInfo];
+    }
+
+    /**
+     * @return MockInterface|Container
+     */
+    protected function createContainerMock()
+    {
+        return \Mockery::mock(Container::class)
+            ->shouldReceive('get')->withAnyArgs()->andReturn(\Mockery::mock(ConnectorInterface::class))->getMock();
     }
 }

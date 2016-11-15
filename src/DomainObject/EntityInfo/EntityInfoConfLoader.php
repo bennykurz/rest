@@ -21,6 +21,7 @@ namespace N86io\Rest\DomainObject\EntityInfo;
 use N86io\Rest\Object\SingletonInterface;
 use N86io\Rest\Service\Configuration;
 use Symfony\Component\Yaml\Yaml;
+use Webmozart\Assert\Assert;
 
 /**
  * Class EntityInfoConfLoader
@@ -47,6 +48,7 @@ class EntityInfoConfLoader implements SingletonInterface
      */
     public function loadSingle($className, array $parentClassNames = [])
     {
+        Assert::string($className);
         $this->loadAll();
         $result = [];
         foreach ($parentClassNames as $parentClassName) {

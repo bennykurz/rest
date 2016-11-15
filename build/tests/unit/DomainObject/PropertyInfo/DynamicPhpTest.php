@@ -16,32 +16,23 @@
  * along with N86io/Rest or see <http://www.gnu.org/licenses/>.
  */
 
-namespace N86io\Rest\Tests\Unit\DomainObject\PropertyInfo\Factory;
+namespace N86io\Rest\Tests\Unit\DomainObject\PropertyInfo;
 
-use N86io\Rest\DomainObject\PropertyInfo\Factory\DynamicSql;
+use N86io\Rest\DomainObject\PropertyInfo\DynamicPhp;
+use N86io\Rest\UnitTestCase;
 
 /**
  * Class DynamicSqlTest
  *
  * @author Viktor Firus <v@n86.io>
  */
-class DynamicSqlTest extends AbstractFactoryTest
+class DynamicPhpTest extends UnitTestCase
 {
-    /**
-     * @var array
-     */
-    protected $attributes = [
-        'type' => 'int',
-        'sql' => 'some_sql_expression'
-    ];
-
-    /**
-     * @var string
-     */
-    protected $factoryClass = DynamicSql::class;
-
-    /**
-     * @var string
-     */
-    protected $propertyInfoClass = \N86io\Rest\DomainObject\PropertyInfo\DynamicSql::class;
+    public function test()
+    {
+        $attributes = [
+            'type' => '__dynamic'
+        ];
+        $this->assertTrue(DynamicPhp::verifyAttributes($attributes));
+    }
 }

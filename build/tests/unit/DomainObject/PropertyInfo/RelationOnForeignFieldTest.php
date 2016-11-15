@@ -18,6 +18,7 @@
 
 namespace N86io\Rest\Tests\Unit\DomainObject\PropertyInfo;
 
+use N86io\Rest\DomainObject\AbstractEntity;
 use N86io\Rest\DomainObject\PropertyInfo\RelationOnForeignField;
 use N86io\Rest\UnitTestCase;
 
@@ -31,11 +32,17 @@ class RelationOnForeignFieldTest extends UnitTestCase
     public function test()
     {
         $attributes = [
-            'type' => 'int',
+            'type' => get_class(\Mockery::mock(AbstractEntity::class)),
             'foreignField' => 'some_thing',
         ];
         $propertyInfo = new RelationOnForeignField('testSomething', $attributes);
         $this->assertEquals('some_thing', $propertyInfo->getForeignField());
+
+        $this->assertTrue(RelationOnForeignField::verifyAttributes($attributes));
+        $attributes['type'] .= '[]';
+        $this->assertTrue(RelationOnForeignField::verifyAttributes($attributes));
+        unset($attributes['foreignField']);
+        $this->assertFalse(RelationOnForeignField::verifyAttributes($attributes));
     }
 
     public function testConstructor()

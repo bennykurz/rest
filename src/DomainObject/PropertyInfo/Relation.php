@@ -18,8 +18,7 @@
 
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
-use N86io\Rest\DomainObject\AbstractEntity;
-use N86io\Rest\Object\Container;
+use N86io\Rest\DomainObject\EntityInterface;
 use N86io\Rest\Persistence\Constraint\ConstraintFactory;
 use N86io\Rest\Persistence\ConstraintUtility;
 
@@ -56,9 +55,9 @@ class Relation extends AbstractStatic implements RestrictableInterface
     }
 
     /**
-     * @param AbstractEntity $entity
+     * @param EntityInterface $entity
      */
-    public function castValue(AbstractEntity $entity)
+    public function castValue(EntityInterface $entity)
     {
         $value = $entity->getProperty($this->getName());
         $isList = substr($this->type, -2) === '[]';
@@ -113,7 +112,7 @@ class Relation extends AbstractStatic implements RestrictableInterface
      */
     protected static function checkForAbstractEntitySubclass($className)
     {
-        $propertyInfoUtility = Container::makeInstance(PropertyInfoUtility::class);
+        $propertyInfoUtility = new PropertyInfoUtility;
         return ($propertyInfoUtility->checkForAbstractEntitySubclass($className) ||
             $propertyInfoUtility->checkForAbstractEntitySubclass(
                 substr($className, 0, strlen($className) - 2)

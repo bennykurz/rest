@@ -21,6 +21,7 @@ namespace N86io\Rest\Http;
 use N86io\Rest\Persistence\Constraint\ConstraintInterface;
 use N86io\Rest\Persistence\LimitInterface;
 use N86io\Rest\Persistence\Ordering\OrderingInterface;
+use Webmozart\Assert\Assert;
 
 /**
  * Class Request
@@ -101,7 +102,7 @@ class Request implements RequestInterface
      * @param array $route
      * @return RequestInterface
      */
-    public function setRoute($route)
+    public function setRoute(array $route)
     {
         $this->route = $route;
         return $this;
@@ -121,6 +122,7 @@ class Request implements RequestInterface
      */
     public function setVersion($version)
     {
+        Assert::string($version);
         $this->version = $version;
         return $this;
     }
@@ -139,6 +141,7 @@ class Request implements RequestInterface
      */
     public function setApiIdentifier($apiIdentifier)
     {
+        Assert::string($apiIdentifier);
         $this->apiIdentifier = $apiIdentifier;
         return $this;
     }
@@ -229,6 +232,8 @@ class Request implements RequestInterface
      */
     public function setOutputLevel($outputLevel)
     {
+        Assert::integer($outputLevel);
+        Assert::greaterThanEq($outputLevel, 0);
         $this->outputLevel = $outputLevel;
         return $this;
     }
@@ -247,6 +252,7 @@ class Request implements RequestInterface
      */
     public function setMode($mode)
     {
+        Assert::integer($mode);
         $this->mode = $mode;
         return $this;
     }
@@ -265,6 +271,7 @@ class Request implements RequestInterface
      */
     public function setModelClassName($modelClassName)
     {
+        Assert::string($modelClassName);
         $this->modelClassName = $modelClassName;
         return $this;
     }
@@ -283,6 +290,7 @@ class Request implements RequestInterface
      */
     public function setControllerClassName($controllerClassName)
     {
+        Assert::string($controllerClassName);
         $this->controllerClassName = $controllerClassName;
         return $this;
     }

@@ -18,6 +18,7 @@
 
 namespace N86io\Rest\Tests\Unit\Http\Routing;
 
+use Mockery\MockInterface;
 use N86io\Rest\Http\Routing\Routing;
 use N86io\Rest\Http\Routing\RoutingFactory;
 use N86io\Rest\Http\Routing\RoutingInterface;
@@ -41,30 +42,25 @@ class RoutingFactoryTest extends UnitTestCase
     }
 
     /**
-     * @return Container
+     * @return MockInterface|Container
      */
     protected function createContainerMock()
     {
-        $mock = \Mockery::mock(Container::class);
-        $mock->shouldReceive('get')->with(RoutingInterface::class)->andReturn(
-            \Mockery::mock(Routing::class)->shouldReceive('addParameter')->withAnyArgs()->getMock()
-        );
-
-        $mock->shouldReceive('get')->with(
-            RoutingParameterInterface::class,
-            ['version', '[\w\d]+', true]
-        )->andReturn(\Mockery::mock(RoutingParameterInterface::class));
-
-        $mock->shouldReceive('get')->with(
-            RoutingParameterInterface::class,
-            ['apiIdentifier', '(api1|api2)', false, 2]
-        )->andReturn(\Mockery::mock(RoutingParameterInterface::class));
-
-        $mock->shouldReceive('get')->with(
-            RoutingParameterInterface::class,
-            ['resourceId', '.+', true]
-        )->andReturn(\Mockery::mock(RoutingParameterInterface::class));
-
-        return $mock;
+        return \Mockery::mock(Container::class)
+            ->shouldReceive('get')->with(RoutingInterface::class)->andReturn(
+                \Mockery::mock(Routing::class)->shouldReceive('addParameter')->withAnyArgs()->getMock()
+            )->getMock()
+            ->shouldReceive('get')->with(
+                RoutingParameterInterface::class,
+                ['version', '[\w\d]+', true]
+            )->andReturn(\Mockery::mock(RoutingParameterInterface::class))->getMock()
+            ->shouldReceive('get')->with(
+                RoutingParameterInterface::class,
+                ['apiIdentifier', '(api1|api2)', false, 2]
+            )->andReturn(\Mockery::mock(RoutingParameterInterface::class))->getMock()
+            ->shouldReceive('get')->with(
+                RoutingParameterInterface::class,
+                ['resourceId', '.+', true]
+            )->andReturn(\Mockery::mock(RoutingParameterInterface::class))->getMock();
     }
 }

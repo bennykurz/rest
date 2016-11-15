@@ -44,7 +44,7 @@ interface RequestInterface
      * @param array $route
      * @return RequestInterface
      */
-    public function setRoute($route);
+    public function setRoute(array $route);
 
     /**
      * @return string

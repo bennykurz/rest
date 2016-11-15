@@ -24,6 +24,7 @@ use N86io\Rest\Object\Container;
 use N86io\Rest\Object\SingletonInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Webmozart\Assert\Assert;
 
 /**
  * Class ResponseFactory
@@ -64,11 +65,12 @@ class ResponseFactory implements SingletonInterface
     }
 
     /**
-     * @param $status
+     * @param int $status
      * @return ResponseInterface
      */
     public function errorRequest($status)
     {
+        Assert::integer($status);
         switch ($status) {
             case 400:
                 return $this->badRequest();
@@ -150,6 +152,8 @@ class ResponseFactory implements SingletonInterface
      */
     public function createResponse($status, array $content, $outputLevel = 0)
     {
+        Assert::allInteger([$status, $outputLevel]);
+        Assert::greaterThanEq($outputLevel, 0);
         $response = $this->container->get(ResponseInterface::class);
         /** @var ResponseInterface $response */
         $response = $response->withAddedHeader(

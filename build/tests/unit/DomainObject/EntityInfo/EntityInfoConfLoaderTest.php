@@ -18,6 +18,7 @@
 
 namespace N86io\Rest\Tests\Unit\DomainObject\EntityInfo;
 
+use Mockery\MockInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoConfLoader;
 use N86io\Rest\Service\Configuration;
 use N86io\Rest\UnitTestCase;
@@ -83,8 +84,9 @@ class EntityInfoConfLoaderTest extends UnitTestCase
             ]
         ];
 
-        $configurationMock = \Mockery::mock(Configuration::class);
-        $configurationMock->shouldReceive('getEntityInfoConfiguration')->andReturn($entityInfoConfReturn);
+        /** @var MockInterface|Configuration $configurationMock */
+        $configurationMock = \Mockery::mock(Configuration::class)
+            ->shouldReceive('getEntityInfoConfiguration')->andReturn($entityInfoConfReturn)->getMock();
 
         $loader = new EntityInfoConfLoader;
         $this->inject($loader, 'configuration', $configurationMock);
@@ -143,8 +145,9 @@ return [
             'content' => $array->url()
         ];
 
-        $configurationMock = \Mockery::mock(Configuration::class);
-        $configurationMock->shouldReceive('getEntityInfoConfiguration')->andReturn($entityInfoConfReturn);
+        /** @var MockInterface|Configuration $configurationMock */
+        $configurationMock = \Mockery::mock(Configuration::class)
+            ->shouldReceive('getEntityInfoConfiguration')->andReturn($entityInfoConfReturn)->getMock();
 
         $loader = new EntityInfoConfLoader;
         $this->inject($loader, 'configuration', $configurationMock);
@@ -173,7 +176,7 @@ return [
                 'nothing' => ['ordering' => true]
             ]
         ];
-        $this->assertEquals($expected, $loader->loadSingle('Model3', ['Model1', 'Model2']));
+        $this->assertEquals($expected, $loader->loadSingle('Model3', ['Model1', 'Model2', 'NotConfiguredParent']));
     }
 
     public function testInvalidJsonException()
@@ -193,18 +196,14 @@ return [
     {
         $entityInfoConfReturn = [['type' => $type, 'content' => '']];
 
-        $configurationMock = \Mockery::mock(Configuration::class);
-        $configurationMock->shouldReceive('getEntityInfoConfiguration')->andReturn($entityInfoConfReturn);
+        /** @var MockInterface|Configuration $configurationMock */
+        $configurationMock = \Mockery::mock(Configuration::class)
+            ->shouldReceive('getEntityInfoConfiguration')->andReturn($entityInfoConfReturn)->getMock();
 
         $loader = new EntityInfoConfLoader;
         $this->inject($loader, 'configuration', $configurationMock);
 
         $this->setExpectedException(\Exception::class);
         $loader->loadAll();
-    }
-
-    public function tearDown()
-    {
-        \Mockery::close();
     }
 }

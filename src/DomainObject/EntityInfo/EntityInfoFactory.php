@@ -22,6 +22,7 @@ use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoFactory;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoUtility;
 use N86io\Rest\Object\Container;
 use N86io\Rest\Reflection\EntityClassReflection;
+use Webmozart\Assert\Assert;
 
 /**
  * Class EntityInfoFactory
@@ -61,6 +62,7 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
      */
     public function buildEntityInfoFromClassName($className)
     {
+        Assert::string($className);
         $entityClassRefl = $this->container->get(EntityClassReflection::class, [$className]);
         $properties = $entityClassRefl->getProperties();
         $entityInfoConf = $this->loadEntityInfoConf($className, $entityClassRefl);
@@ -75,7 +77,7 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
 
         if (array_key_exists('enableFields', $entityInfoConf)) {
             foreach ($entityInfoConf['enableFields'] as $type => $enableField) {
-                $entityInfo->addPropertyInfo($this->propertyInfoFactory->buildEnableFields(
+                $entityInfo->addPropertyInfo($this->propertyInfoFactory->buildEnableField(
                     $type,
                     $enableField,
                     $entityInfo->getClassName()

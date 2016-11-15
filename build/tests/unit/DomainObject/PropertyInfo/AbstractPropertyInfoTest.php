@@ -18,6 +18,10 @@
 
 namespace N86io\Rest\Tests\Unit\DomainObject\PropertyInfo;
 
+use Mockery\MockInterface;
+use N86io\Rest\DomainObject\EntityInfo\EntityInfo;
+use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
+use N86io\Rest\DomainObject\EntityInterface;
 use N86io\Rest\DomainObject\PropertyInfo\AbstractPropertyInfo;
 use N86io\Rest\UnitTestCase;
 
@@ -30,47 +34,128 @@ class AbstractPropertyInfoTest extends UnitTestCase
 {
     public function test()
     {
-        $attributes1 = [
-            'type' => 'int',
+        $attributes = [
             'hide' => false,
             'position' => 3,
             'outputLevel' => 2,
             'getter' => 'getTest'
         ];
-        $attributes2 = [
-            'type' => 'int',
-            'hide' => true,
-            'setter' => 'setTest'
-        ];
+        $attributesInt = array_merge($attributes, ['type' => 'int']);
 
-        /** @var AbstractPropertyInfo $abstrPropertyInfo1 */
-        $abstrPropertyInfo1 = $this->getMockForAbstractClass(AbstractPropertyInfo::class, ['test', $attributes1]);
-        /** @var AbstractPropertyInfo $abstrPropertyInfo2 */
-        $abstrPropertyInfo2 = $this->getMockForAbstractClass(AbstractPropertyInfo::class, ['test', $attributes2]);
+        /** @var \PHPUnit_Framework_MockObject_MockObject|AbstractPropertyInfo $abstrPropertyInfoInt */
+        $abstrPropertyInfoInt = $this->getMockForAbstractClass(AbstractPropertyInfo::class, ['test', $attributesInt]);
+        $this->inject($abstrPropertyInfoInt, 'entityInfoStorage', $this->createEntityInfoStorageMock());
 
-        $this->assertEquals('test', $abstrPropertyInfo1->getName());
 
-        $this->assertEquals('int', $abstrPropertyInfo1->getType());
+        $this->assertEquals('test', $abstrPropertyInfoInt->getName());
+        $this->assertEquals('int', $abstrPropertyInfoInt->getType());
+        $this->assertEquals(3, $abstrPropertyInfoInt->getPosition());
+        $this->assertEquals('getTest', $abstrPropertyInfoInt->getGetter());
+        $this->assertEquals('', $abstrPropertyInfoInt->getSetter());
+        $this->assertTrue($abstrPropertyInfoInt->shouldShow(2));
+        $this->assertTrue($abstrPropertyInfoInt->shouldShow(3));
+        $this->assertFalse($abstrPropertyInfoInt->shouldShow(1));
+        $this->assertFalse($abstrPropertyInfoInt->shouldShow(0));
+        $this->assertFalse($abstrPropertyInfoInt->shouldShow(1));
+        $this->assertTrue($abstrPropertyInfoInt->getEntityInfo() instanceof EntityInfo);
 
-        $this->assertEquals(3, $abstrPropertyInfo1->getPosition());
-        $this->assertEquals(0, $abstrPropertyInfo2->getPosition());
 
-        $this->assertEquals('getTest', $abstrPropertyInfo1->getGetter());
-        $this->assertEquals('', $abstrPropertyInfo2->getGetter());
+        $isInteger = false;
+        /** @var MockInterface|EntityInterface $entity */
+        $entity = \Mockery::mock(EntityInterface::class)
+            ->shouldReceive('getProperty')->with('test')->andReturn('10')->getMock()
+            ->shouldReceive('setProperty')->withAnyArgs()->andReturnUsing(
+                function ($_, $value) use (&$isInteger) {
+                    $isInteger = is_integer($value);
+                }
+            )->getMock();
+        $abstrPropertyInfoInt->castValue($entity);
+        $this->assertTrue($isInteger);
 
-        $this->assertEquals('', $abstrPropertyInfo1->getSetter());
-        $this->assertEquals('setTest', $abstrPropertyInfo2->getSetter());
 
-        $this->assertTrue($abstrPropertyInfo1->shouldShow(2));
-        $this->assertTrue($abstrPropertyInfo1->shouldShow(3));
-        $this->assertFalse($abstrPropertyInfo1->shouldShow(1));
-        $this->assertFalse($abstrPropertyInfo1->shouldShow(0));
-        $this->assertFalse($abstrPropertyInfo1->shouldShow(1));
+        $isFloat = false;
+        $attributesFloat = array_merge($attributes, ['type' => 'float']);
+        /** @var \PHPUnit_Framework_MockObject_MockObject|AbstractPropertyInfo $abstrPropertyInfoFloat */
+        $abstrPropertyInfoFloat = $this->getMockForAbstractClass(
+            AbstractPropertyInfo::class,
+            ['test', $attributesFloat]
+        );
+        /** @var MockInterface|EntityInterface $entity */
+        $entity = \Mockery::mock(EntityInterface::class)
+            ->shouldReceive('getProperty')->with('test')->andReturn('10')->getMock()
+            ->shouldReceive('setProperty')->withAnyArgs()->andReturnUsing(
+                function ($_, $value) use (&$isFloat) {
+                    $isFloat = is_float($value);
+                }
+            )->getMock();
+        $abstrPropertyInfoFloat->castValue($entity);
+        $this->assertTrue($isFloat);
+
+
+        $isBoolean = false;
+        $attributesBool = array_merge($attributes, ['type' => 'bool']);
+        /** @var \PHPUnit_Framework_MockObject_MockObject|AbstractPropertyInfo $abstrPropertyInfoBool */
+        $abstrPropertyInfoBool = $this->getMockForAbstractClass(
+            AbstractPropertyInfo::class,
+            ['test', $attributesBool]
+        );
+        /** @var MockInterface|EntityInterface $entity */
+        $entity = \Mockery::mock(EntityInterface::class)
+            ->shouldReceive('getProperty')->with('test')->andReturn('true')->getMock()
+            ->shouldReceive('setProperty')->withAnyArgs()->andReturnUsing(
+                function ($_, $value) use (&$isBoolean) {
+                    $isBoolean = is_bool($value);
+                }
+            )->getMock();
+        $abstrPropertyInfoBool->castValue($entity);
+        $this->assertTrue($isBoolean);
+
+
+        $isDateTime = false;
+        $attributesDate = array_merge($attributes, ['type' => 'DateTime']);
+        /** @var \PHPUnit_Framework_MockObject_MockObject|AbstractPropertyInfo $abstrPropertyInfoDate */
+        $abstrPropertyInfoDate = $this->getMockForAbstractClass(
+            AbstractPropertyInfo::class,
+            ['test', $attributesDate]
+        );
+        /** @var MockInterface|EntityInterface $entity */
+        $entity = \Mockery::mock(EntityInterface::class)
+            ->shouldReceive('getProperty')->with('test')->andReturn('2016-11-16 10:30:39')->getMock()
+            ->shouldReceive('setProperty')->withAnyArgs()->andReturnUsing(
+                function ($_, \DateTime $dateTime) use (&$isDateTime) {
+                    $isDateTime = $dateTime->format('Y-m-d H:i:s') === '2016-11-16 10:30:39';
+                }
+            )->getMock();
+        $abstrPropertyInfoDate->castValue($entity);
+        $this->assertTrue($isDateTime);
+
+        $isDateTime = false;
+        /** @var MockInterface|EntityInterface $entity */
+        $entity = \Mockery::mock(EntityInterface::class)
+            ->shouldReceive('getProperty')->with('test')->andReturn(123456)->getMock()
+            ->shouldReceive('setProperty')->withAnyArgs()->andReturnUsing(
+                function ($_, \DateTime $dateTime) use (&$isDateTime) {
+                    $isDateTime = $dateTime->getTimestamp() === 123456;
+                }
+            )->getMock();
+        $abstrPropertyInfoDate->castValue($entity);
+        $this->assertTrue($isDateTime);
     }
 
     public function testConstructor()
     {
         $this->setExpectedException(\InvalidArgumentException::class);
         $this->getMockForAbstractClass(AbstractPropertyInfo::class, ['test', []]);
+    }
+
+    /**
+     * @return MockInterface|EntityInfoStorage
+     */
+    protected function createEntityInfoStorageMock()
+    {
+        return \Mockery::mock(EntityInfoStorage::class)
+            ->shouldReceive('get')->withAnyArgs()->andReturn(
+                \Mockery::mock(EntityInfo::class)
+            )->getMock();
     }
 }

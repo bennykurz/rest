@@ -18,10 +18,11 @@
 
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
-use N86io\Rest\DomainObject\AbstractEntity;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfo;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
+use N86io\Rest\DomainObject\EntityInterface;
 use N86io\Rest\Object\Container;
+use Webmozart\Assert\Assert;
 
 /**
  * Class AbstractPropertyInfo
@@ -89,6 +90,7 @@ abstract class AbstractPropertyInfo implements PropertyInfoInterface
      */
     public function __construct($name, array $attributes)
     {
+        Assert::string($name);
         if (!array_key_exists('type', $attributes) || empty(trim($attributes['type']))) {
             throw new \InvalidArgumentException('Missed type for PropertyInfo (' . $name . ').');
         }
@@ -156,6 +158,8 @@ abstract class AbstractPropertyInfo implements PropertyInfoInterface
      */
     public function shouldShow($outputLevel)
     {
+        Assert::integer($outputLevel);
+        Assert::greaterThanEq($outputLevel, 0);
         if (!$this->hide && $outputLevel >= $this->outputLevel) {
             return true;
         }
@@ -163,9 +167,9 @@ abstract class AbstractPropertyInfo implements PropertyInfoInterface
     }
 
     /**
-     * @param AbstractEntity $entity
+     * @param EntityInterface $entity
      */
-    public function castValue(AbstractEntity $entity)
+    public function castValue(EntityInterface $entity)
     {
         $value = $entity->getProperty($this->getName());
         switch ($this->type) {
@@ -174,10 +178,8 @@ abstract class AbstractPropertyInfo implements PropertyInfoInterface
                 $value = intval($value, 10);
                 break;
             case 'float':
-                $value = floatval($value);
-                break;
             case 'double':
-                $value = doubleval($value);
+                $value = floatval($value);
                 break;
             case 'bool':
             case 'boolean':

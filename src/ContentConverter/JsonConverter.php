@@ -18,6 +18,8 @@
 
 namespace N86io\Rest\ContentConverter;
 
+use Webmozart\Assert\Assert;
+
 /**
  * Class JsonConverter
  *
@@ -32,7 +34,9 @@ class JsonConverter extends AbstractConverter
      */
     public function render(array $connectorList, $outputLevel)
     {
-        $array = $this->parseRaw($connectorList, $outputLevel);
+        Assert::integer($outputLevel);
+        Assert::greaterThanEq($outputLevel, 0);
+        $array = $this->renderRaw($connectorList, $outputLevel);
         return json_encode($array);
     }
 
@@ -42,6 +46,7 @@ class JsonConverter extends AbstractConverter
      */
     public function parse($string)
     {
+        Assert::string($string);
         return json_decode($string, true);
     }
 

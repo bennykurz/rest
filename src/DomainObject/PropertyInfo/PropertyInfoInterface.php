@@ -18,7 +18,8 @@
 
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
-use N86io\Rest\DomainObject\AbstractEntity;
+use N86io\Rest\DomainObject\EntityInfo\EntityInfo;
+use N86io\Rest\DomainObject\EntityInterface;
 
 /**
  * Interface PropertyInfoInterface
@@ -32,6 +33,11 @@ interface PropertyInfoInterface
      * @param array $attributes
      */
     public function __construct($name, array $attributes);
+
+    /**
+     * @return EntityInfo
+     */
+    public function getEntityInfo();
 
     /**
      * @return string
@@ -65,9 +71,9 @@ interface PropertyInfoInterface
     public function shouldShow($outputLevel);
 
     /**
-     * @param AbstractEntity $entity
+     * @param EntityInterface $entity
      */
-    public function castValue(AbstractEntity $entity);
+    public function castValue(EntityInterface $entity);
 
     /**
      * @param array $attributes

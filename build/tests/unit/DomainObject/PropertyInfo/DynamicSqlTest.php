@@ -41,6 +41,10 @@ class DynamicSqlTest extends UnitTestCase
         $this->assertTrue($propertyInfo->isOrdering());
         $this->assertFalse($propertyInfo->isConstraint());
         $this->assertEquals('thisIsNotRealSqlExpression', $propertyInfo->getSql());
+
+        $this->assertTrue(DynamicSql::verifyAttributes($attributes));
+        unset($attributes['sql']);
+        $this->assertFalse(DynamicSql::verifyAttributes($attributes));
     }
 
     public function testConstructor()

@@ -41,5 +41,9 @@ class CommonTest extends UnitTestCase
         $this->assertTrue($propertyInfo->isOrdering());
         $this->assertFalse($propertyInfo->isConstraint());
         $this->assertTrue($propertyInfo->isUid());
+
+        $this->assertFalse(Common::verifyAttributes($attributes));
+        $attributes['resourcePropertyName'] = 'prop_name';
+        $this->assertTrue(Common::verifyAttributes($attributes));
     }
 }

@@ -18,6 +18,8 @@
 
 namespace N86io\Rest\Http\Routing;
 
+use Webmozart\Assert\Assert;
+
 /**
  * Class RoutingParameter
  *
@@ -49,11 +51,14 @@ class RoutingParameter implements RoutingParameterInterface
      * RoutingParameter constructor.
      * @param string $name
      * @param string $expression
-     * @param int $takeResult
      * @param boolean $optional
+     * @param int $takeResult
      */
     public function __construct($name, $expression, $optional, $takeResult = 1)
     {
+        Assert::allString([$name, $expression]);
+        Assert::boolean($optional);
+        Assert::integer($takeResult);
         $this->name = $name;
         $this->expression = $expression;
         $this->optional = $optional === true;

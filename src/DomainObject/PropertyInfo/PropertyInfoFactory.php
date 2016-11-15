@@ -18,9 +18,9 @@
 
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
-use N86io\Rest\DomainObject\PropertyInfo;
 use N86io\Rest\Object\Container;
 use N86io\Rest\Object\SingletonInterface;
+use Webmozart\Assert\Assert;
 
 /**
  * Class PropertyInfoFactory
@@ -39,10 +39,10 @@ class PropertyInfoFactory implements SingletonInterface
      * @var string[]
      */
     protected $propertyInfoClasses = [
-        PropertyInfo\DynamicPhp::class,
-        PropertyInfo\DynamicSql::class,
-        PropertyInfo\Relation::class,
-        PropertyInfo\RelationOnForeignField::class
+        DynamicPhp::class,
+        DynamicSql::class,
+        Relation::class,
+        RelationOnForeignField::class
     ];
 
     /**
@@ -52,14 +52,15 @@ class PropertyInfoFactory implements SingletonInterface
      */
     public function build($name, array $attributes)
     {
+        Assert::string($name);
         foreach ($this->propertyInfoClasses as $propertyInfoClass) {
-            if (call_user_func([$propertyInfoClass, 'verifyAttributes'], $attributes, $this->container)) {
+            if (call_user_func([$propertyInfoClass, 'verifyAttributes'], $attributes)) {
                 /** @var PropertyInfoInterface $propertyInfo */
                 $propertyInfo = $this->container->get($propertyInfoClass, [$name, $attributes]);
                 return $propertyInfo;
             }
         }
-        return $this->container->get(PropertyInfo\Common::class, [$name, $attributes]);
+        return $this->container->get(Common::class, [$name, $attributes]);
     }
 
     /**
@@ -67,10 +68,7 @@ class PropertyInfoFactory implements SingletonInterface
      */
     public function registerPropertyInfoClass($propertyInfoClass)
     {
-        if (!is_subclass_of($propertyInfoClass, PropertyInfoInterface::class)) {
-            throw new \InvalidArgumentException('"' . $propertyInfoClass . '" must implemented "' .
-                PropertyInfoInterface::class . '".');
-        }
+        Assert::subclassOf($propertyInfoClass, PropertyInfoInterface::class);
         $this->propertyInfoClasses[] = $propertyInfoClass;
     }
 
@@ -80,11 +78,9 @@ class PropertyInfoFactory implements SingletonInterface
      * @param string $entityClassName
      * @return PropertyInfoInterface
      */
-    public function buildEnableFields($type, $resourcePropertyName, $entityClassName)
+    public function buildEnableField($type, $resourcePropertyName, $entityClassName)
     {
-        if ($type !== 'deleted' && $type !== 'disabled' && $type !== 'startTime' && $type !== 'endTime') {
-            throw new \InvalidArgumentException('Undefined enable field type "' . $type . '".');
-        }
+        Assert::oneOf($type, ['deleted', 'disabled', 'startTime', 'endTime']);
         return $this->build(
             $type,
             [

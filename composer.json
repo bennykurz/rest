@@ -35,6 +35,11 @@
       "N86io\\Rest\\Examples\\": "examples"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "N86io\\Rest\\Tests\\Unit\\": "build/tests/unit"
+    }
+  },
   "suggest": {
     "guzzlehttp/psr7": "If no implementation for psr/http-message available, this package or other require with implementation for psr/http-message.",
     "symfony/yaml": "Required, if EntityInfo configurations in yaml exist."

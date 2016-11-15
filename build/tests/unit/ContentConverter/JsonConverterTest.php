@@ -19,24 +19,28 @@
 namespace N86io\Rest\Tests\Unit\ContentConverter;
 
 use N86io\Rest\ContentConverter\JsonConverter;
-use N86io\Rest\UnitTestCase;
 
 /**
  * Class JsonConverterTest
  *
  * @author Viktor Firus <v@n86.io>
  */
-class JsonConverterTest extends UnitTestCase
+class JsonConverterTest extends AbstractConverterTest
 {
     public function test()
     {
         $converter = new JsonConverter;
+        $this->inject($converter, 'entityInfoStorage', $this->createEntityInfoStorageMock());
+
+        $expected = '{"key1":"value1","key2":{"key2_1":"value2"},"key3":{"nameOne":"_name_one_",' .
+            '"nameTwo":"_name_two_"},"key4":"2016-11-15_10:42:26","key5":"valueOf5"}';
+        $this->assertEquals($expected, $converter->render($this->createList(), 0));
         $this->assertEquals('application/json', $converter->getContentType());
+
         $jsonValue = '{"irgendwas":"wert"}';
         $arrayValue = [
             'irgendwas' => 'wert'
         ];
-        $this->assertEquals($jsonValue, $converter->render($arrayValue));
         $this->assertEquals($arrayValue, $converter->parse($jsonValue));
     }
 }

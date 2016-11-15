@@ -21,6 +21,7 @@ namespace N86io\Rest\DomainObject\EntityInfo;
 use N86io\Rest\Cache\EntityInfoStorageArrayCacheInterface;
 use N86io\Rest\Cache\EntityInfoStorageCacheInterface;
 use N86io\Rest\Object\SingletonInterface;
+use Webmozart\Assert\Assert;
 
 /**
  * Class EntityInfoStorage
@@ -53,6 +54,7 @@ class EntityInfoStorage implements SingletonInterface
      */
     public function get($modelClassName)
     {
+        Assert::string($modelClassName);
         $cacheId = $this->getCacheId($modelClassName);
         if (!$this->arrayCache->contains($cacheId)) {
             $entityInfo = $this->getFromCache($modelClassName);

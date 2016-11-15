@@ -34,7 +34,7 @@ class AbstractStaticTest extends UnitTestCase
             'type' => 'int',
             'resourcePropertyName' => 'test_something'
         ];
-        /** @var AbstractStatic $abstractStatic */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|AbstractStatic $abstractStatic */
         $abstractStatic = $this->getMockForAbstractClass(AbstractStatic::class, ['testSomething', $attributes]);
         $this->assertEquals('test_something', $abstractStatic->getResourcePropertyName());
     }

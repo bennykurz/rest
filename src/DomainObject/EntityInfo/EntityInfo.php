@@ -27,6 +27,7 @@ use N86io\Rest\DomainObject\PropertyInfo\UidInterface;
 use N86io\Rest\Http\RequestInterface;
 use N86io\Rest\Object\Container;
 use N86io\Rest\Persistence\ConnectorInterface;
+use Webmozart\Assert\Assert;
 
 /**
  * Class EntityInfo
@@ -103,19 +104,24 @@ class EntityInfo implements EntityInfoInterface
             );
         }
         if (array_key_exists('className', $attributes)) {
+            Assert::string($attributes['className']);
             $this->className = $attributes['className'];
         }
         if (array_key_exists('connector', $attributes)) {
+            Assert::string($attributes['connector']);
             $this->connector = $attributes['connector'];
         }
         if (array_key_exists('table', $attributes)) {
+            Assert::string($attributes['table']);
             $this->table = $attributes['table'];
         }
         if (array_key_exists('mode', $attributes)) {
+            Assert::isArray($attributes['mode']);
             $this->readMode = array_search('read', $attributes['mode']) !== false;
             $this->writeMode = array_search('write', $attributes['mode']) !== false;
         }
         if (array_key_exists('enableFields', $attributes)) {
+            Assert::isArray($attributes['enableFields']);
             $this->enableFields = $attributes['enableFields'];
         }
     }
@@ -161,12 +167,23 @@ class EntityInfo implements EntityInfoInterface
     }
 
     /**
-     * @param string $offset
+     * @param string $propertyName
      * @return PropertyInfoInterface
      */
-    public function getPropertyInfo($offset)
+    public function getPropertyInfo($propertyName)
     {
-        return $this->propertyInfoList[$offset];
+        Assert::string($propertyName);
+        return $this->propertyInfoList[$propertyName];
+    }
+
+    /**
+     * @param $propertyName
+     * @return bool
+     */
+    public function hasPropertyInfo($propertyName)
+    {
+        Assert::string($propertyName);
+        return !empty($this->propertyInfoList[$propertyName]);
     }
 
     /**
@@ -226,15 +243,6 @@ class EntityInfo implements EntityInfoInterface
     }
 
     /**
-     * @param $propertyName
-     * @return bool
-     */
-    public function hasPropertyInfo($propertyName)
-    {
-        return !empty($this->propertyInfoList[$propertyName]);
-    }
-
-    /**
      * @return bool
      */
     public function hasResourceIdPropertyInfo()
@@ -256,6 +264,7 @@ class EntityInfo implements EntityInfoInterface
      */
     public function mapResourcePropertyName($name)
     {
+        Assert::string($name);
         if (array_key_exists($name, $this->propertyInfoList)) {
             return $name;
         }
@@ -268,6 +277,8 @@ class EntityInfo implements EntityInfoInterface
      */
     public function getVisiblePropertiesOrdered($outputLevel)
     {
+        Assert::integer($outputLevel);
+        Assert::greaterThanEq($outputLevel, 0);
         $list = [];
         /** @var PropertyInfoInterface $item */
         foreach ($this->propertyInfoList as $item) {
@@ -285,6 +296,16 @@ class EntityInfo implements EntityInfoInterface
      */
     public function canHandleRequestMode($requestMode)
     {
+        Assert::oneOf(
+            $requestMode,
+            [
+                RequestInterface::REQUEST_MODE_READ,
+                RequestInterface::REQUEST_MODE_CREATE,
+                RequestInterface::REQUEST_MODE_UPDATE,
+                RequestInterface::REQUEST_MODE_PATCH,
+                RequestInterface::REQUEST_MODE_DELETE
+            ]
+        );
         return (
             $requestMode === RequestInterface::REQUEST_MODE_READ && $this->readMode ||
             $requestMode === RequestInterface::REQUEST_MODE_CREATE && $this->writeMode ||

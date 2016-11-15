@@ -18,6 +18,7 @@
 
 namespace N86io\Rest\Tests\Unit\DomainObject\PropertyInfo;
 
+use Mockery\MockInterface;
 use N86io\Rest\DomainObject\PropertyInfo\Join;
 use N86io\Rest\DomainObject\PropertyInfo\JoinAliasStorage;
 use N86io\Rest\UnitTestCase;
@@ -37,9 +38,9 @@ class JoinTest extends UnitTestCase
             'joinCondition' => 'prop = 123'
         ];
 
-        /** @var JoinAliasStorage $mock */
-        $mock = \Mockery::mock(JoinAliasStorage::class);
-        $mock->shouldReceive('get')->with('test_table')->andReturn('j1');
+        /** @var MockInterface|JoinAliasStorage $mock */
+        $mock = \Mockery::mock(JoinAliasStorage::class)
+            ->shouldReceive('get')->with('test_table')->andReturn('j1')->getMock();
 
         $propertyInfo = new Join('somename', $attributes);
         $this->inject($propertyInfo, 'aliasStorage', $mock);
@@ -47,5 +48,13 @@ class JoinTest extends UnitTestCase
         $this->assertEquals('test_table', $propertyInfo->getTable());
         $this->assertEquals('j1', $propertyInfo->getAlias());
         $this->assertEquals('prop = 123', $propertyInfo->getCondition());
+
+        $this->assertTrue(Join::verifyAttributes($attributes));
+        $attr1 = $attributes;
+        unset($attr1['joinTable']);
+        $this->assertFalse(Join::verifyAttributes($attr1));
+        $attr2 = $attributes;
+        unset($attr2['joinCondition']);
+        $this->assertFalse(Join::verifyAttributes($attr2));
     }
 }

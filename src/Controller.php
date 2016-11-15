@@ -18,7 +18,6 @@
 
 namespace N86io\Rest;
 
-use N86io\Rest\ContentConverter\JsonConverter;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
 use N86io\Rest\Exception\BadRequestException;
@@ -34,7 +33,6 @@ use N86io\Rest\Persistence\ConstraintUtility;
 use N86io\Rest\Persistence\LimitInterface;
 use N86io\Rest\Service\Configuration;
 use Psr\Http\Message\ResponseInterface;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
  * Class Controller

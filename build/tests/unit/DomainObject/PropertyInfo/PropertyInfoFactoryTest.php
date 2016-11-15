@@ -18,9 +18,11 @@
 
 namespace N86io\Rest\Tests\Unit\DomainObject\PropertyInfo;
 
+use Mockery\MockInterface;
+use N86io\Rest\DomainObject\AbstractEntity;
 use N86io\Rest\DomainObject\PropertyInfo\Common;
-use N86io\Rest\DomainObject\PropertyInfo\Factory\FactoryInterface;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoFactory;
+use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 use N86io\Rest\DomainObject\PropertyInfo\Relation;
 use N86io\Rest\Object\Container;
 use N86io\Rest\UnitTestCase;
@@ -44,21 +46,22 @@ class PropertyInfoFactoryTest extends UnitTestCase
         $this->inject($propertyInfoFactory, 'container', $containerMock);
 
         $this->assertTrue(
-            is_a($propertyInfoFactory->buildPropertyInfo($data['name'], $data['attributes']), $expectedClassName)
+            is_a($propertyInfoFactory->build($data['name'], $data['attributes']), $expectedClassName)
         );
     }
 
-    public function testRegister()
+    public function testRegisterPropertyInfoClass()
     {
         $factory = new PropertyInfoFactory;
-        $factory->registerPropertyInfoFactory(\Mockery::mock(FactoryInterface::class));
+        $factory->registerPropertyInfoClass(\Mockery::mock(PropertyInfoInterface::class));
     }
 
-    public function testRegisterException()
+    public function testBuildEnableField()
     {
-        $factory = new PropertyInfoFactory;
-        $this->setExpectedException(\InvalidArgumentException::class);
-        $factory->registerPropertyInfoFactory(PropertyInfoFactoryTest::class);
+        /** @var MockInterface|PropertyInfoFactory $propInfoFacMock */
+        $propInfoFacMock = \Mockery::mock(PropertyInfoFactory::class . '[build]')
+            ->shouldReceive('build')->withAnyArgs()->getMock();
+        $propInfoFacMock->buildEnableField('deleted', 'resPropName', 'entClassN');
     }
 
     /**
@@ -66,16 +69,18 @@ class PropertyInfoFactoryTest extends UnitTestCase
      */
     public function buildPropertyInfoDataProvider()
     {
+        $relationClassName = get_class(\Mockery::mock(AbstractEntity::class));
+        $containerMock = $this->createContainerMock($relationClassName);
         return [
             [
                 Relation::class,
                 [
                     'name' => 'somename',
                     'attributes' => [
-                        'type' => 'Entity1'
+                        'type' => get_class(\Mockery::mock(AbstractEntity::class))
                     ]
                 ],
-                $this->createContainerMock(\N86io\Rest\DomainObject\PropertyInfo\Factory\Relation::class)
+                $containerMock
             ],
             [
                 Common::class,
@@ -85,34 +90,35 @@ class PropertyInfoFactoryTest extends UnitTestCase
                         'type' => 'string'
                     ]
                 ],
-                $this->createContainerMock(FactoryInterface::class)
+                $containerMock
             ]
         ];
     }
 
     /**
-     * @param string $factoryClass
-     * @return Container
+     * @param string $relationClassName
+     * @return MockInterface|Container
      */
-    protected function createContainerMock($factoryClass)
+    protected function createContainerMock($relationClassName)
     {
-        $factoryMock = \Mockery::mock($factoryClass);
-        $factoryMock->shouldReceive('check')->withAnyArgs()->andReturn(true);
-        $factoryMock->shouldReceive('build')->withAnyArgs()->andReturn(\Mockery::mock(Relation::class));
-
-        $wrongFactoryMock = \Mockery::mock(FactoryInterface::class);
-        $wrongFactoryMock->shouldReceive('check')->withAnyArgs()->andReturn(false);
-
-        $containerMock = \Mockery::mock(Container::class);
-        $containerMock->shouldReceive('get')->with($factoryClass)->andReturn($factoryMock);
-        $containerMock->shouldReceive('get')->with(Common::class, [
-            'somename2',
-            [
-                'type' => 'string'
-            ]
-        ])->andReturn(\Mockery::mock(Common::class));
-        $containerMock->shouldReceive('get')->withAnyArgs()->andReturn($wrongFactoryMock);
-
-        return $containerMock;
+        return \Mockery::mock(Container::class)
+            ->shouldReceive('get')->with(
+                Relation::class,
+                [
+                    'somename',
+                    [
+                        'type' => $relationClassName
+                    ]
+                ]
+            )->andReturn(\Mockery::mock(Relation::class))->getMock()
+            ->shouldReceive('get')->with(
+                Common::class,
+                [
+                    'somename2',
+                    [
+                        'type' => 'string'
+                    ]
+                ]
+            )->andReturn(\Mockery::mock(Common::class))->getMock();
     }
 }

@@ -18,11 +18,10 @@
 
 namespace N86io\Rest\ContentConverter;
 
-use N86io\Rest\DomainObject\AbstractEntity;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
+use N86io\Rest\DomainObject\EntityInterface;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 use N86io\Rest\Exception\InternalServerErrorException;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use Webmozart\Assert\Assert;
 
 /**
@@ -44,20 +43,20 @@ abstract class AbstractConverter implements ConverterInterface
      * @return array
      * @throws InternalServerErrorException
      */
-    protected function parseRaw(array &$connectorList, $outputLevel)
+    protected function renderRaw(array &$connectorList, $outputLevel)
     {
         foreach ($connectorList as &$item) {
             if (is_array($item)) {
-                $this->parseRaw($item, $outputLevel);
+                $this->renderRaw($item, $outputLevel);
                 continue;
             }
-            if ($item instanceof AbstractEntity) {
-                $item = $this->parseEntity($item, $outputLevel);
-                $this->parseRaw($item, $outputLevel);
+            if ($item instanceof EntityInterface) {
+                $item = $this->renderEntity($item, $outputLevel);
+                $this->renderRaw($item, $outputLevel);
                 continue;
             }
             if ($item instanceof \DateTime) {
-                $item = $this->parseDateTime($item);
+                $item = $this->renderDateTime($item);
                 continue;
             }
             if (is_object($item)) {
@@ -74,17 +73,17 @@ abstract class AbstractConverter implements ConverterInterface
      * @param \DateTime $dateTime
      * @return string
      */
-    protected function parseDateTime(\DateTime $dateTime)
+    protected function renderDateTime(\DateTime $dateTime)
     {
         return $dateTime->format('Y-m-d_H:i:s');
     }
 
     /**
-     * @param AbstractEntity $entity
+     * @param EntityInterface $entity
      * @param $outputLevel
      * @return array
      */
-    protected function parseEntity(AbstractEntity $entity, $outputLevel)
+    protected function renderEntity(EntityInterface $entity, $outputLevel)
     {
         $result = [];
         $entityInfo = $this->entityInfoStorage->get(get_class($entity));

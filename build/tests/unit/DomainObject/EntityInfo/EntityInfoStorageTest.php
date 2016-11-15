@@ -19,6 +19,7 @@
 namespace N86io\Rest\Tests\Unit\DomainObject\EntityInfo;
 
 use Doctrine\Common\Cache\ArrayCache;
+use Mockery\MockInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoFactory;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
@@ -54,24 +55,14 @@ class EntityInfoStorageTest extends UnitTestCase
     }
 
     /**
-     * @return EntityInfoFactory
+     * @return MockInterface|EntityInfoFactory
      */
     protected function getEntityInfoFactoryMock()
     {
-        $mock = \Mockery::mock(EntityInfoFactory::class);
-        $mock->shouldReceive('buildEntityInfoFromClassName')
-            ->with('Entity1')
-            ->andReturn(\Mockery::mock(EntityInfoInterface::class));
-
-        $mock->shouldReceive('buildEntityInfoFromClassName')
-            ->with('Entity2')
-            ->andReturn(\Mockery::mock(EntityInfoInterface::class));
-
-        return $mock;
-    }
-
-    public function tearDown()
-    {
-        \Mockery::close();
+        return \Mockery::mock(EntityInfoFactory::class)
+            ->shouldReceive('buildEntityInfoFromClassName')->with('Entity1')
+            ->andReturn(\Mockery::mock(EntityInfoInterface::class))->getMock()
+            ->shouldReceive('buildEntityInfoFromClassName')->with('Entity2')
+            ->andReturn(\Mockery::mock(EntityInfoInterface::class))->getMock();
     }
 }

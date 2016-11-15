@@ -27,6 +27,7 @@ use N86io\Rest\Object\SingletonInterface;
 use N86io\Rest\Persistence\Constraint\ConstraintFactory;
 use N86io\Rest\Persistence\Ordering\OrderingFactory;
 use N86io\Rest\Persistence\Ordering\OrderingInterface;
+use Webmozart\Assert\Assert;
 
 /**
  * Class QueryUtility
@@ -54,6 +55,7 @@ class QueryUtility implements SingletonInterface
      */
     public function resolveQueryParams($queryParams, EntityInfoInterface $entityInfo)
     {
+        Assert::string($queryParams);
         parse_str($queryParams, $parsed);
         $parsed = $parsed ?: [];
         $result = [

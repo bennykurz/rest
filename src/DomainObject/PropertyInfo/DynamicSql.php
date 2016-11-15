@@ -18,6 +18,8 @@
 
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
+use Webmozart\Assert\Assert;
+
 /**
  * Class DynamicSql
  *
@@ -55,6 +57,7 @@ class DynamicSql extends AbstractPropertyInfo implements
      */
     public function __construct($name, array $attributes)
     {
+        Assert::string($name);
         if (!$this->isSqlOptional && (!array_key_exists('sql', $attributes) || empty(trim($attributes['sql'])))) {
             throw new \InvalidArgumentException('Sql should not empty string.');
         }
@@ -91,6 +94,6 @@ class DynamicSql extends AbstractPropertyInfo implements
      */
     public static function verifyAttributes(array $attributes)
     {
-        return !empty($attributes['sql']);
+        return array_key_exists('sql', $attributes);
     }
 }

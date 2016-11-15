@@ -25,6 +25,11 @@ namespace N86io\Rest;
  */
 abstract class UnitTestCase extends \PHPUnit_Framework_TestCase
 {
+    public function tearDown()
+    {
+        \Mockery::close();
+    }
+
     /**
      * @param object $object
      * @param string $propertyName

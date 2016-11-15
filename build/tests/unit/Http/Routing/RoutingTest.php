@@ -18,6 +18,7 @@
 
 namespace N86io\Rest\Tests\Unit\Http\Routing;
 
+use Mockery\MockInterface;
 use N86io\Rest\Http\Routing\Routing;
 use N86io\Rest\Http\Routing\RoutingParameterInterface;
 use N86io\Rest\Service\Configuration;
@@ -33,8 +34,9 @@ class RoutingTest extends UnitTestCase
 {
     public function test()
     {
-        $confMock = \Mockery::mock(Configuration::class);
-        $confMock->shouldReceive('getApiBaseUrl')->andReturn('http://example.com/api');
+        /** @var MockInterface|Configuration $confMock */
+        $confMock = \Mockery::mock(Configuration::class)
+            ->shouldReceive('getApiBaseUrl')->andReturn('http://example.com/api')->getMock();
 
         $routing = new Routing;
 
@@ -81,15 +83,14 @@ class RoutingTest extends UnitTestCase
 
     /**
      * @param string $path
-     * @return UriInterface
+     * @return MockInterface|UriInterface
      */
     protected function createUriMock($path)
     {
-        $mock = \Mockery::mock(UriInterface::class);
-        $mock->shouldReceive('getScheme')->andReturn('http');
-        $mock->shouldReceive('getHost')->andReturn('example.com');
-        $mock->shouldReceive('getPath')->andReturn($path);
-        return $mock;
+        return \Mockery::mock(UriInterface::class)
+            ->shouldReceive('getScheme')->andReturn('http')->getMock()
+            ->shouldReceive('getHost')->andReturn('example.com')->getMock()
+            ->shouldReceive('getPath')->andReturn($path)->getMock();
     }
 
     /**
@@ -97,15 +98,14 @@ class RoutingTest extends UnitTestCase
      * @param string $getExpression
      * @param int $getTakeResult
      * @param string $getName
-     * @return RoutingParameterInterface
+     * @return MockInterface|RoutingParameterInterface
      */
     protected function createRoutingParamMock($isOptional, $getExpression, $getTakeResult, $getName)
     {
-        $routingParamMock = \Mockery::mock(RoutingParameterInterface::class);
-        $routingParamMock->shouldReceive('isOptional')->andReturn($isOptional);
-        $routingParamMock->shouldReceive('getExpression')->andReturn($getExpression);
-        $routingParamMock->shouldReceive('getTakeResult')->andReturn($getTakeResult);
-        $routingParamMock->shouldReceive('getName')->andReturn($getName);
-        return $routingParamMock;
+        return \Mockery::mock(RoutingParameterInterface::class)
+            ->shouldReceive('isOptional')->andReturn($isOptional)->getMock()
+            ->shouldReceive('getExpression')->andReturn($getExpression)->getMock()
+            ->shouldReceive('getTakeResult')->andReturn($getTakeResult)->getMock()
+            ->shouldReceive('getName')->andReturn($getName)->getMock();
     }
 }

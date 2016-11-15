@@ -18,6 +18,7 @@
 
 namespace N86io\Rest\Tests\Unit\Http;
 
+use Mockery\MockInterface;
 use N86io\Rest\ContentConverter\ConverterFactory;
 use N86io\Rest\ContentConverter\ConverterInterface;
 use N86io\Rest\Http\ResponseFactory;
@@ -36,10 +37,10 @@ class ResponseFactoryTest extends UnitTestCase
 {
     public function test()
     {
-        /** @var ServerRequestInterface $serverRequest */
-        $serverRequest = \Mockery::mock(ServerRequestInterface::class);
-        $serverRequest->shouldReceive('getUri')->andReturn('RequestUrl');
-        $serverRequest->shouldReceive('getHeader')->with('accept')->andReturn('application/json');
+        /** @var MockInterface|ServerRequestInterface $serverRequest */
+        $serverRequest = \Mockery::mock(ServerRequestInterface::class)
+            ->shouldReceive('getUri')->andReturn('RequestUrl')->getMock()
+            ->shouldReceive('getHeader')->with('accept')->andReturn('application/json')->getMock();
 
         $responseFactory = new ResponseFactory;
         $this->inject($responseFactory, 'container', $this->createContainerMock());
@@ -61,49 +62,45 @@ class ResponseFactoryTest extends UnitTestCase
     }
 
     /**
-     * @return ConverterFactory
+     * @return MockInterface|ConverterFactory
      */
     protected function createConverterFactory()
     {
-        $mock = \Mockery::mock(ConverterFactory::class);
-        $mock->shouldReceive('createFromAccept')->withAnyArgs()->andReturn($this->createContentConverterMock());
-        return $mock;
+        return \Mockery::mock(ConverterFactory::class)
+            ->shouldReceive('createFromAccept')->withAnyArgs()->andReturn($this->createContentConverterMock())
+            ->getMock();
     }
 
     /**
-     * @return ConverterInterface
+     * @return MockInterface|ConverterInterface
      */
     protected function createContentConverterMock()
     {
-        $mock = \Mockery::mock(ConverterInterface::class);
-        $mock->shouldReceive('getContentType')->andReturn('');
-        $mock->shouldReceive('render')->withAnyArgs()->andReturn('');
-        return $mock;
+        return \Mockery::mock(ConverterInterface::class)
+            ->shouldReceive('getContentType')->andReturn('')->getMock()
+            ->shouldReceive('render')->withAnyArgs()->andReturn('')->getMock();
     }
 
     /**
-     * @return Container
+     * @return MockInterface|Container
      */
     protected function createContainerMock()
     {
-        $mock = \Mockery::mock(Container::class);
-        $mock->shouldReceive('get')->with(ResponseInterface::class)->andReturn($this->createResponseMock());
-        return $mock;
+        return \Mockery::mock(Container::class)
+            ->shouldReceive('get')->with(ResponseInterface::class)->andReturn($this->createResponseMock())->getMock();
     }
 
     /**
-     * @return ResponseInterface
+     * @return MockInterface|ResponseInterface
      */
     protected function createResponseMock()
     {
-        $stream = \Mockery::mock(StreamInterface::class);
-        $stream->shouldReceive('write')->withAnyArgs();
-
-        $mock = \Mockery::mock(ResponseInterface::class);
-        $mock->shouldReceive('withAddedHeader')->withAnyArgs()->andReturn($mock);
-        $mock->shouldReceive('withStatus')->withAnyArgs()->andReturn($mock);
-        $mock->shouldReceive('getBody')->withAnyArgs()->andReturn($stream);
-
-        return $mock;
+        return \Mockery::mock(ResponseInterface::class)
+            ->shouldReceive('withAddedHeader')->withAnyArgs()->andReturnSelf()->getMock()
+            ->shouldReceive('withStatus')->withAnyArgs()->andReturnSelf()->getMock()
+            ->shouldReceive('getBody')->withAnyArgs()->andReturn(
+                \Mockery::mock(StreamInterface::class)
+                    ->shouldReceive('write')->withAnyArgs()->getMock()
+            )->getMock();
     }
 }
