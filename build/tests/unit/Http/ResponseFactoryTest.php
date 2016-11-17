@@ -40,7 +40,7 @@ class ResponseFactoryTest extends UnitTestCase
         /** @var MockInterface|ServerRequestInterface $serverRequest */
         $serverRequest = \Mockery::mock(ServerRequestInterface::class)
             ->shouldReceive('getUri')->andReturn('RequestUrl')->getMock()
-            ->shouldReceive('getHeader')->with('accept')->andReturn('application/json')->getMock();
+            ->shouldReceive('getHeader')->with('accept')->andReturn(['application/json'])->getMock();
 
         $responseFactory = new ResponseFactory;
         $this->inject($responseFactory, 'container', $this->createContainerMock());

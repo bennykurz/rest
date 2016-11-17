@@ -61,7 +61,9 @@ class ResponseFactory implements SingletonInterface
     public function setServerRequest(ServerRequestInterface $serverRequest)
     {
         $this->serverRequest = $serverRequest;
-        $this->contentConverter = $this->converterFactory->createFromAccept($serverRequest->getHeader('accept'));
+        $this->contentConverter = $this->converterFactory->createFromAccept(
+            current($serverRequest->getHeader('accept'))
+        );
     }
 
     /**
