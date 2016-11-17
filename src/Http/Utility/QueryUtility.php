@@ -61,7 +61,7 @@ class QueryUtility implements SingletonInterface
         $result = [
             'rowCount' => null,
             'offset' => null,
-            'outputLevel' => null
+            'outputLevel' => 0
         ];
         $constraints = [];
         foreach ($parsed as $name => $value) {
@@ -80,7 +80,7 @@ class QueryUtility implements SingletonInterface
                     $result['offset'] = $this->parseNumericValue($value);
                     break;
                 case 'level':
-                    $result['outputLevel'] = $this->parseNumericValue($value);
+                    $result['outputLevel'] = $this->parseOutputLevel($value);
                     break;
                 default:
                     list($propertyName, $operator) = explode('_', $name);
@@ -91,6 +91,12 @@ class QueryUtility implements SingletonInterface
             $result['constraints'] = $this->constraintFactory->logicalAnd($constraints);
         }
         return $result;
+    }
+
+    protected function parseOutputLevel($outputLevel)
+    {
+        $outputLevel = $this->parseNumericValue($outputLevel) ?: 0;
+        return $outputLevel >= 0 ? $outputLevel : 0;
     }
 
     /**
