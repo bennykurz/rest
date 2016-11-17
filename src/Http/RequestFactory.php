@@ -88,7 +88,8 @@ class RequestFactory implements RequestFactoryInterface
         $entityInfo = $this->entityInfoStorage->get($modelClassName);
         $this->checkEntityInfo($entityInfo, $serverRequest);
 
-        $queryParams = $this->queryUtility->resolveQueryParams($serverRequest->getUri()->getQuery(), $entityInfo);
+        $query = $serverRequest->getUri()->getQuery() ?: '';
+        $queryParams = $this->queryUtility->resolveQueryParams($query, $entityInfo);
 
         $resourceIds = array_key_exists('resourceId', $route) ? explode(',', $route['resourceId']) : [];
 
