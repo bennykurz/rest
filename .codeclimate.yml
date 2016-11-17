@@ -21,4 +21,5 @@ ratings:
   - "src/**"
   - "**.php"
 exclude_paths:
-- "tests/"
+- "build/"
+- "examples/"
