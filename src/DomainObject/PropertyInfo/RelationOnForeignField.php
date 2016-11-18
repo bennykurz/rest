@@ -18,6 +18,13 @@
 
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
+use N86io\Rest\DomainObject\EntityInterface;
+use N86io\Rest\Persistence\Constraint\Comparison;
+use N86io\Rest\Persistence\Constraint\ComparisonInterface;
+use N86io\Rest\Persistence\Constraint\ConstraintFactory;
+use N86io\Rest\Persistence\ConstraintUtility;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
+
 /**
  * Class RelationOnForeignField
  *
@@ -25,6 +32,21 @@ namespace N86io\Rest\DomainObject\PropertyInfo;
  */
 class RelationOnForeignField extends AbstractPropertyInfo implements RelationOnForeignFieldInterface
 {
+    /**
+     * @inject
+     * @var ConstraintFactory
+     */
+    protected $constraintFactory;
+
+    /**
+     * @inject
+     * @var ConstraintUtility
+     */
+    protected $constraintUtility;
+
+    /**
+     * @var string
+     */
     protected $foreignField;
 
     /**
@@ -46,6 +68,44 @@ class RelationOnForeignField extends AbstractPropertyInfo implements RelationOnF
     public function getForeignField()
     {
         return $this->foreignField;
+    }
+
+    /**
+     * @param EntityInterface $entity
+     */
+    public function castValue(EntityInterface $entity)
+    {
+        $entityInfo = $this->getEntityInfo();
+        $uid = $entity->getProperty($entityInfo->getUidPropertyInfo()->getName());
+        $isList = substr($this->type, -2) === '[]';
+        $type = $isList ? substr($this->type, 0, strlen($this->type) - 2) : $this->type;
+
+        $foreignEntityInfo = $this->entityInfoStorage->get($type);
+        $foreignPropertyInfo = $foreignEntityInfo->getPropertyInfo($this->getForeignField());
+
+        $constraints = [
+            $this->container->get(Comparison::class, [
+                $foreignPropertyInfo,
+                ComparisonInterface::INTERNAL_FIND_IN_SET,
+                $uid,
+                true
+            ])
+        ];
+        $constraints[] = $this->constraintUtility->createEnableFieldsConstraints($foreignEntityInfo);
+        $constraints = $this->constraintFactory->logicalAnd($constraints);
+
+        $connector = $foreignEntityInfo->createConnectorInstance();
+        $connector->setEntityInfo($entityInfo);
+        $connector->setConstraints($constraints);
+
+        $result = $connector->read();
+
+        if ($isList) {
+            $entity->setProperty($this->getName(), $result);
+            return;
+        }
+
+        $entity->setProperty($this->getName(), current($result));
     }
 
     /**

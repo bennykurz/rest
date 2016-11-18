@@ -35,7 +35,7 @@ interface ComparisonInterface extends ConstraintInterface
     const NOT_EQUAL_TO = 6;
     const CONTAINS = 7;
 
-    const INTERNAL_REGULAR_EXPRESSION = 8;
+    const INTERNAL_FIND_IN_SET = 8;
 
     /**
      * @return PropertyInfoInterface
