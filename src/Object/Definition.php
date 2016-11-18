@@ -44,6 +44,11 @@ class Definition
     protected $injections = [];
 
     /**
+     * @var bool
+     */
+    protected $initializeMethod = false;
+
+    /**
      * Definition constructor.
      * @param string $className
      * @param int $type
@@ -88,5 +93,21 @@ class Definition
             'propertyName' => $propertyName,
             'className' => $className
         ];
+    }
+
+    /**
+     * @return boolean
+     */
+    public function hasInitializeMethod()
+    {
+        return $this->initializeMethod;
+    }
+
+    /**
+     * @param boolean $initializeMethod
+     */
+    public function setInitializeMethod($initializeMethod)
+    {
+        $this->initializeMethod = $initializeMethod;
     }
 }

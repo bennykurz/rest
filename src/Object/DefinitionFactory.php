@@ -68,6 +68,9 @@ class DefinitionFactory
                     );
                 }
             }
+
+            $definition->setInitializeMethod($reflectionClass->hasMethod('initializeObject'));
+
             $this->cache->save($className, $definition);
         }
         return $this->cache->fetch($className);

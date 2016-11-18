@@ -110,6 +110,10 @@ class Container
             );
         }
 
+        if ($definition->hasInitializeMethod()) {
+            $instance->initializeObject();
+        }
+
         if ($definition->isSingleton()) {
             static::$singletonInstances[$className] = $instance;
         }
