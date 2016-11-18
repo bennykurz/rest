@@ -21,9 +21,6 @@ namespace N86io\Rest\DomainObject\PropertyInfo;
 use N86io\Rest\DomainObject\EntityInterface;
 use N86io\Rest\Persistence\Constraint\Comparison;
 use N86io\Rest\Persistence\Constraint\ComparisonInterface;
-use N86io\Rest\Persistence\Constraint\ConstraintFactory;
-use N86io\Rest\Persistence\ConstraintUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
  * Class RelationOnForeignField
@@ -32,18 +29,6 @@ use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
  */
 class RelationOnForeignField extends AbstractPropertyInfo implements RelationOnForeignFieldInterface
 {
-    /**
-     * @inject
-     * @var ConstraintFactory
-     */
-    protected $constraintFactory;
-
-    /**
-     * @inject
-     * @var ConstraintUtility
-     */
-    protected $constraintUtility;
-
     /**
      * @var string
      */
@@ -83,22 +68,17 @@ class RelationOnForeignField extends AbstractPropertyInfo implements RelationOnF
         $foreignEntityInfo = $this->entityInfoStorage->get($type);
         $foreignPropertyInfo = $foreignEntityInfo->getPropertyInfo($this->getForeignField());
 
-        $constraints = [
-            $this->container->get(Comparison::class, [
-                $foreignPropertyInfo,
-                ComparisonInterface::INTERNAL_FIND_IN_SET,
-                $uid,
-                true
-            ])
-        ];
-        $constraints[] = $this->constraintUtility->createEnableFieldsConstraints($foreignEntityInfo);
-        $constraints = $this->constraintFactory->logicalAnd($constraints);
+        $constraints = $this->container->get(Comparison::class, [
+            $foreignPropertyInfo,
+            ComparisonInterface::INTERNAL_FIND_IN_SET,
+            $uid,
+            true
+        ]);
 
-        $connector = $foreignEntityInfo->createConnectorInstance();
-        $connector->setEntityInfo($entityInfo);
-        $connector->setConstraints($constraints);
+        $repository = $foreignEntityInfo->createRepositoryInstance();
+        $repository->setConstraints($constraints);
 
-        $result = $connector->read();
+        $result = $repository->read();
 
         if ($isList) {
             $entity->setProperty($this->getName(), $result);

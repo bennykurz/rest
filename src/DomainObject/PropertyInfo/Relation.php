@@ -19,7 +19,7 @@
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
 use N86io\Rest\DomainObject\EntityInterface;
-use N86io\Rest\Persistence\Constraint\ConstraintFactory;
+use N86io\Rest\Persistence\Constraint\ConstraintInterface;
 use N86io\Rest\Persistence\ConstraintUtility;
 
 /**
@@ -29,12 +29,6 @@ use N86io\Rest\Persistence\ConstraintUtility;
  */
 class Relation extends AbstractStatic implements RestrictableInterface
 {
-    /**
-     * @inject
-     * @var ConstraintFactory
-     */
-    protected $constraintFactory;
-
     /**
      * @inject
      * @var ConstraintUtility
@@ -70,21 +64,17 @@ class Relation extends AbstractStatic implements RestrictableInterface
         }
         $entityInfo = $this->getEntityInfo();
 
-        $resourceIds = explode(',', $value);
-        $constraints = [
-            $this->constraintUtility->createResourceIdsConstraints(
-                $entityInfo->getUidPropertyInfo(),
-                $resourceIds
-            )
-        ];
-        $constraints[] = $this->constraintUtility->createEnableFieldsConstraints($entityInfo);
-        $constraints = $this->constraintFactory->logicalAnd($constraints);
+        $constraints = $this->constraintUtility->createResourceIdsConstraints(
+            $entityInfo->getUidPropertyInfo(),
+            explode(',', $value)
+        );
 
-        $connector = $entityInfo->createConnectorInstance();
-        $connector->setEntityInfo($entityInfo);
-        $connector->setConstraints($constraints);
+        $repository = $entityInfo->createRepositoryInstance();
+        if ($constraints instanceof ConstraintInterface) {
+            $repository->setConstraints($constraints);
+        }
 
-        $result = $connector->read();
+        $result = $repository->read();
 
         if ($isList) {
             $entity->setProperty($this->getName(), $result);

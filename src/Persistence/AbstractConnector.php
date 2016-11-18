@@ -56,14 +56,9 @@ abstract class AbstractConnector implements ConnectorInterface
      */
     protected $limit;
 
-    /**
-     * @param EntityInfoInterface $entityInfo
-     * @return ConnectorInterface
-     */
-    public function setEntityInfo(EntityInfoInterface $entityInfo)
+    public function __construct(EntityInfoInterface $entityInfo)
     {
         $this->entityInfo = $entityInfo;
-        return $this;
     }
 
     /**

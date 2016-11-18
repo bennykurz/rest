@@ -26,7 +26,7 @@ use N86io\Rest\DomainObject\PropertyInfo\StaticInterface;
 use N86io\Rest\DomainObject\PropertyInfo\UidInterface;
 use N86io\Rest\Http\RequestInterface;
 use N86io\Rest\Object\Container;
-use N86io\Rest\Persistence\ConnectorInterface;
+use N86io\Rest\Persistence\RepositoryInterface;
 use Webmozart\Assert\Assert;
 
 /**
@@ -124,6 +124,14 @@ class EntityInfo implements EntityInfoInterface
             Assert::isArray($attributes['enableFields']);
             $this->enableFields = $attributes['enableFields'];
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getConnectorClassName()
+    {
+        return $this->connector;
     }
 
     /**
@@ -328,12 +336,11 @@ class EntityInfo implements EntityInfoInterface
     }
 
     /**
-     * @return ConnectorInterface
+     * @return RepositoryInterface
      */
-    public function createConnectorInstance()
+    public function createRepositoryInstance()
     {
-        /** @var ConnectorInterface $connector */
-        $connector = $this->container->get($this->connector);
+        $connector = $this->container->get(RepositoryInterface::class, [$this]);
         return $connector;
     }
 }

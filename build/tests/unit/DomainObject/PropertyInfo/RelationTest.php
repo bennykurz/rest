@@ -25,8 +25,6 @@ use N86io\Rest\DomainObject\EntityInterface;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 use N86io\Rest\DomainObject\PropertyInfo\Relation;
 use N86io\Rest\Persistence\ConnectorInterface;
-use N86io\Rest\Persistence\Constraint\ConstraintFactory;
-use N86io\Rest\Persistence\Constraint\ConstraintInterface;
 use N86io\Rest\Persistence\ConstraintUtility;
 use N86io\Rest\UnitTestCase;
 
@@ -72,7 +70,6 @@ class RelationTest extends UnitTestCase
         $propertyInfo = \Mockery::mock(Relation::class . '[getEntityInfo]', ['testSomething', $attributes]);
         $propertyInfo->shouldReceive('getEntityInfo')->andReturn($this->createEntityInfoMock());
         $this->inject($propertyInfo, 'constraintUtility', $this->createConstraintUtilityMock());
-        $this->inject($propertyInfo, 'constraintFactory', $this->createConstraintFactoryMock());
         return $propertyInfo;
     }
 
@@ -93,7 +90,7 @@ class RelationTest extends UnitTestCase
     {
         $mock = \Mockery::mock(EntityInfo::class);
         $mock->shouldReceive('getUidPropertyInfo')->andReturn(\Mockery::mock(PropertyInfoInterface::class));
-        $mock->shouldReceive('createConnectorInstance')->andReturn(
+        $mock->shouldReceive('createRepositoryInstance')->andReturn(
             \Mockery::mock(ConnectorInterface::class)
                 ->shouldReceive('setEntityInfo')->withAnyArgs()->getMock()
                 ->shouldReceive('setConstraints')->withAnyArgs()->getMock()
@@ -108,14 +105,6 @@ class RelationTest extends UnitTestCase
         $mock = \Mockery::mock(ConstraintUtility::class);
         $mock->shouldReceive('createResourceIdsConstraints')->withAnyArgs();
         $mock->shouldReceive('createEnableFieldsConstraints')->withAnyArgs();
-
-        return $mock;
-    }
-
-    protected function createConstraintFactoryMock()
-    {
-        $mock = \Mockery::mock(ConstraintFactory::class);
-        $mock->shouldReceive('logicalAnd')->withAnyArgs()->andReturn(\Mockery::mock(ConstraintInterface::class));
 
         return $mock;
     }

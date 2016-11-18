@@ -23,33 +23,33 @@ use N86io\Rest\Persistence\Constraint\ConstraintInterface;
 use N86io\Rest\Persistence\Ordering\OrderingInterface;
 
 /**
- * Interface ConnectorInterface
+ * Interface RepositoryInterface
  *
  * @author Viktor Firus <v@n86.io>
  */
-interface ConnectorInterface
+interface RepositoryInterface
 {
     /**
-     * ConnectorInterface constructor.
+     * RepositoryInterface constructor.
      * @param EntityInfoInterface $entityInfo
      */
     public function __construct(EntityInfoInterface $entityInfo);
 
     /**
      * @param ConstraintInterface $constraint
-     * @return ConnectorInterface
+     * @return RepositoryInterface
      */
     public function setConstraints(ConstraintInterface $constraint);
 
     /**
      * @param OrderingInterface $ordering
-     * @return ConnectorInterface
+     * @return RepositoryInterface
      */
     public function setOrdering(OrderingInterface $ordering);
 
     /**
      * @param LimitInterface $limit
-     * @return ConnectorInterface
+     * @return RepositoryInterface
      */
     public function setLimit(LimitInterface $limit);
 

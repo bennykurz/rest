@@ -18,6 +18,7 @@
 
 namespace N86io\Rest\Tests\Unit\Http;
 
+use Mockery\MockInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfo;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
 use N86io\Rest\Exception\MethodNotAllowedException;
@@ -198,21 +199,18 @@ class RequestFactoryTest extends UnitTestCase
      */
     protected function createServerRequestAndRoutingFactoryMocks($method, array $route, $query = '')
     {
-        /** @var MockInterface|UriInterface $uriMock */
-        $uriMock = \Mockery::mock(UriInterface::class)
-            ->shouldReceive('getQuery')->andReturn($query)->getMock();
+        $uriMock = \Mockery::mock(UriInterface::class);
+        $uriMock->shouldReceive('getQuery')->andReturn($query);
 
-        /** @var MockInterface|ServerRequestInterface $serverRequestMock */
-        $serverRequestMock = \Mockery::mock(ServerRequestInterface::class)
-            ->shouldReceive('getUri')->andReturn($uriMock)->getMock()
-            ->shouldReceive('getMethod')->andReturn($method)->getMock();
+        $serverRequestMock = \Mockery::mock(ServerRequestInterface::class);
+        $serverRequestMock->shouldReceive('getUri')->andReturn($uriMock);
+        $serverRequestMock->shouldReceive('getMethod')->andReturn($method);
 
-        /** @var MockInterface|RoutingFactory $routingFactoryMock */
-        $routingFactoryMock = \Mockery::mock(RoutingFactory::class)
-            ->shouldReceive('build')->with(['api1'])->andReturn(
-                \Mockery::mock(Routing::class)
-                    ->shouldReceive('getRoute')->with($uriMock)->andReturn($route)->getMock()
-            )->getMock();
+        $routingFactoryMock = \Mockery::mock(RoutingFactory::class);
+        $routingFactoryMock->shouldReceive('build')->with(['api1'])->andReturn(
+            \Mockery::mock(Routing::class)
+                ->shouldReceive('getRoute')->with($uriMock)->andReturn($route)->getMock()
+        );
 
         return [
             'serverRequest' => $serverRequestMock,
@@ -226,74 +224,72 @@ class RequestFactoryTest extends UnitTestCase
      */
     protected function createQueryUtilityMock(EntityInfo $entityInfo)
     {
-        return \Mockery::mock(QueryUtility::class)
-            ->shouldReceive('resolveQueryParams')->with('', $entityInfo)->andReturn([
-                'ordering' => null,
-                'rowCount' => null,
-                'offset' => null,
-                'outputLevel' => null
-            ])->getMock()
-            ->shouldReceive('resolveQueryParams')->with(
-                'integer.gt=123&sort=string.asc&limit=10&offset=2&level=5',
-                $entityInfo
-            )->andReturn([
-                'ordering' => \Mockery::mock(OrderingInterface::class),
-                'rowCount' => 10,
-                'offset' => 2,
-                'outputLevel' => 5,
-                'constraints' => \Mockery::mock(LogicalInterface::class)
-            ])->getMock();
+        $mock = \Mockery::mock(QueryUtility::class);
+        $mock->shouldReceive('resolveQueryParams')->with('', $entityInfo)->andReturn([
+            'ordering' => null,
+            'rowCount' => null,
+            'offset' => null,
+            'outputLevel' => null
+        ]);
+        $mock->shouldReceive('resolveQueryParams')->with(
+            'integer.gt=123&sort=string.asc&limit=10&offset=2&level=5',
+            $entityInfo
+        )->andReturn([
+            'ordering' => \Mockery::mock(OrderingInterface::class),
+            'rowCount' => 10,
+            'offset' => 2,
+            'outputLevel' => 5,
+            'constraints' => \Mockery::mock(LogicalInterface::class)
+        ]);
+
+        return $mock;
     }
 
-    /**
-     * @return MockInterface|EntityInfoStorage
-     */
     protected function createEntityInfoStorageMock1()
     {
-        return \Mockery::mock(EntityInfoStorage::class)
-            ->shouldReceive('get')->with('Entity1')->andReturn(
-                \Mockery::mock(EntityInfo::class)
-                    ->shouldReceive('canHandleRequestMode')->withAnyArgs()->andReturn(true)->getMock()
-            )->getMock();
+        $mock = \Mockery::mock(EntityInfoStorage::class);
+        $mock->shouldReceive('get')->with('Entity1')->andReturn(
+            \Mockery::mock(EntityInfo::class)
+                ->shouldReceive('canHandleRequestMode')->withAnyArgs()->andReturn(true)->getMock()
+        );
+
+        return $mock;
     }
 
-    /**
-     * @return MockInterface|EntityInfoStorage
-     */
     protected function createEntityInfoStorageMock2()
     {
-        return \Mockery::mock(EntityInfoStorage::class)
-            ->shouldReceive('get')->with('Entity1')->andReturn(
-                \Mockery::mock(EntityInfo::class)
-                    ->shouldReceive('canHandleRequestMode')->withAnyArgs()->andReturn(false)->getMock()
-            )->getMock();
+        $mock = \Mockery::mock(EntityInfoStorage::class);
+        $mock->shouldReceive('get')->with('Entity1')->andReturn(
+            \Mockery::mock(EntityInfo::class)
+                ->shouldReceive('canHandleRequestMode')->withAnyArgs()->andReturn(false)->getMock()
+        );
+
+        return $mock;
     }
 
-    /**
-     * @return MockInterface|Configuration
-     */
     protected function createConfigurationMock()
     {
-        return \Mockery::mock(Configuration::class)
-            ->shouldReceive('getApiIdentifiers')->andReturn(['api1'])->getMock()
+        $mock = \Mockery::mock(Configuration::class);
+        $mock->shouldReceive('getApiIdentifiers')->andReturn(['api1'])->getMock()
             ->shouldReceive('getApiConfiguration')->with('api1')->andReturn([
                 '1' => [
                     'model' => 'Entity1'
                 ]
-            ])->getMock();
+            ]);
+
+        return $mock;
     }
 
-    /**
-     * @return MockInterface|Configuration
-     */
     protected function createConfigurationMock2()
     {
-        return \Mockery::mock(Configuration::class)
-            ->shouldReceive('getApiIdentifiers')->andReturn(['api1'])->getMock()
-            ->shouldReceive('getApiConfiguration')->with('api1')->andReturn([
-                '2' => [
-                    'model' => 'Entity1'
-                ]
-            ])->getMock();
+        $mock = \Mockery::mock(Configuration::class);
+        $mock->shouldReceive('getApiIdentifiers')->andReturn(['api1']);
+        $mock->shouldReceive('getApiConfiguration')->with('api1')->andReturn([
+            '2' => [
+                'model' => 'Entity1'
+            ]
+        ]);
+
+        return $mock;
     }
 }

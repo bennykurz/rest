@@ -127,7 +127,10 @@ class EntityClassReflection
         $this->classDescription = $this->reflectionClass->getParsedDocComment()->getDescription();
 
         $class = $this->reflectionClass;
-        while (($class = $class->getParentClass()) instanceof ReflectionClass) {
+        while (($class = $class->getParentClass())) {
+            if (!$class instanceof ReflectionClass) {
+                break;
+            }
             if ($class->getName() === AbstractEntity::class) {
                 break;
             }

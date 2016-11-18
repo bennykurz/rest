@@ -27,10 +27,10 @@ use N86io\Rest\Exception\RequestNotFoundException;
 use N86io\Rest\Http\RequestInterface;
 use N86io\Rest\Http\ResponseFactory;
 use N86io\Rest\Object\Container;
-use N86io\Rest\Persistence\ConnectorInterface;
 use N86io\Rest\Persistence\Constraint\ConstraintFactory;
 use N86io\Rest\Persistence\ConstraintUtility;
 use N86io\Rest\Persistence\LimitInterface;
+use N86io\Rest\Persistence\RepositoryInterface;
 use N86io\Rest\Service\Configuration;
 use Psr\Http\Message\ResponseInterface;
 
@@ -90,7 +90,7 @@ class Controller implements ControllerInterface
     /**
      * @var array
      */
-    protected $connectorResult;
+    protected $repositoryResult;
 
     /**
      * @var array
@@ -148,9 +148,9 @@ class Controller implements ControllerInterface
     private function read()
     {
         $this->call('preRead');
-        $this->connectorResult = $this->readFromConnector();
+        $this->repositoryResult = $this->readFromConnector();
         $this->call('afterRead');
-        return $this->connectorResult;
+        return $this->repositoryResult;
     }
 
     /**
@@ -177,43 +177,42 @@ class Controller implements ControllerInterface
     private function readFromConnector()
     {
         $entityInfo = $this->entityInfoStorage->get($this->request->getModelClassName());
-        $connector = $entityInfo->createConnectorInstance();
-        $connector->setEntityInfo($entityInfo);
-        $this->addConstraints($connector, $entityInfo);
-        $this->setOrdering($connector);
-        $this->setLimit($connector);
-        return $connector->read();
+        $repository = $entityInfo->createRepositoryInstance();
+        $this->addConstraints($repository, $entityInfo);
+        $this->setOrdering($repository);
+        $this->setLimit($repository);
+        return $repository->read();
     }
 
     /**
-     * @param ConnectorInterface $connector
+     * @param RepositoryInterface $repository
      */
-    private function setLimit(ConnectorInterface $connector)
+    private function setLimit(RepositoryInterface $repository)
     {
         if (($limit = $this->request->getLimit()) !== null) {
-            $connector->setLimit($limit);
+            $repository->setLimit($limit);
             return;
         }
         $rowCount = $this->settings['defaultRowCount'] ? $this->settings['defaultRowCount'] : 10;
         $limit = $this->container->get(LimitInterface::class, [0, $rowCount]);
-        $connector->setLimit($limit);
+        $repository->setLimit($limit);
     }
 
     /**
-     * @param ConnectorInterface $connector
+     * @param RepositoryInterface $repository
      */
-    private function setOrdering(ConnectorInterface $connector)
+    private function setOrdering(RepositoryInterface $repository)
     {
         if ($this->request->getOrdering()) {
-            $connector->setOrdering($this->request->getOrdering());
+            $repository->setOrdering($this->request->getOrdering());
         }
     }
 
     /**
-     * @param ConnectorInterface $connector
+     * @param RepositoryInterface $repository
      * @param EntityInfoInterface $entityInfo
      */
-    private function addConstraints(ConnectorInterface $connector, EntityInfoInterface $entityInfo)
+    private function addConstraints(RepositoryInterface $repository, EntityInfoInterface $entityInfo)
     {
         $constraints = [];
         if (($requestConstraints = $this->request->getConstraints()) !== null) {
@@ -225,7 +224,9 @@ class Controller implements ControllerInterface
                 $this->request->getResourceIds()
             );
         }
-        $constraints[] = $this->constraintUtility->createEnableFieldsConstraints($entityInfo);
-        $connector->setConstraints($this->constraintFactory->logicalAnd($constraints));
+        if (!empty($constraints)) {
+            $constraints = $this->constraintFactory->logicalAnd($constraints);
+            $repository->setConstraints($constraints);
+        }
     }
 }

@@ -25,7 +25,7 @@ use N86io\Rest\DomainObject\PropertyInfo\AbstractPropertyInfo;
 use N86io\Rest\DomainObject\PropertyInfo\Common;
 use N86io\Rest\Http\RequestInterface;
 use N86io\Rest\Object\Container;
-use N86io\Rest\Persistence\ConnectorInterface;
+use N86io\Rest\Persistence\RepositoryInterface;
 use N86io\Rest\UnitTestCase;
 
 /**
@@ -64,7 +64,7 @@ class EntityInfoTest extends UnitTestCase
         $this->assertEquals(['deleted' => 'delete'], $entityInfo->getEnableFields());
         $this->assertTrue($entityInfo->canHandleRequestMode(RequestInterface::REQUEST_MODE_READ));
         $this->assertFalse($entityInfo->canHandleRequestMode(RequestInterface::REQUEST_MODE_DELETE));
-        $this->assertTrue($entityInfo->createConnectorInstance() instanceof ConnectorInterface);
+        $this->assertTrue($entityInfo->createRepositoryInstance() instanceof RepositoryInterface);
 
         $entityInfo = $this->createEntityInfoWriteOnly();
         $this->assertTrue($entityInfo->canHandleRequestMode(RequestInterface::REQUEST_MODE_CREATE));
@@ -201,7 +201,7 @@ class EntityInfoTest extends UnitTestCase
     protected function createContainerMock()
     {
         $mock = \Mockery::mock(Container::class);
-        $mock->shouldReceive('get')->withAnyArgs()->andReturn(\Mockery::mock(ConnectorInterface::class));
+        $mock->shouldReceive('get')->withAnyArgs()->andReturn(\Mockery::mock(RepositoryInterface::class));
 
         return $mock;
     }
