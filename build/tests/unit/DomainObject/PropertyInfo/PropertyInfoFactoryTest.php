@@ -58,9 +58,8 @@ class PropertyInfoFactoryTest extends UnitTestCase
 
     public function testBuildEnableField()
     {
-        /** @var MockInterface|PropertyInfoFactory $propInfoFacMock */
-        $propInfoFacMock = \Mockery::mock(PropertyInfoFactory::class . '[build]')
-            ->shouldReceive('build')->withAnyArgs()->getMock();
+        $propInfoFacMock = \Mockery::mock(PropertyInfoFactory::class . '[build]');
+        $propInfoFacMock->shouldReceive('build')->withAnyArgs();
         $propInfoFacMock->buildEnableField('deleted', 'resPropName', 'entClassN');
     }
 
@@ -101,24 +100,26 @@ class PropertyInfoFactoryTest extends UnitTestCase
      */
     protected function createContainerMock($relationClassName)
     {
-        return \Mockery::mock(Container::class)
-            ->shouldReceive('get')->with(
-                Relation::class,
+        $mock = \Mockery::mock(Container::class);
+        $mock->shouldReceive('get')->with(
+            Relation::class,
+            [
+                'somename',
                 [
-                    'somename',
-                    [
-                        'type' => $relationClassName
-                    ]
+                    'type' => $relationClassName
                 ]
-            )->andReturn(\Mockery::mock(Relation::class))->getMock()
-            ->shouldReceive('get')->with(
-                Common::class,
+            ]
+        )->andReturn(\Mockery::mock(Relation::class));
+        $mock->shouldReceive('get')->with(
+            Common::class,
+            [
+                'somename2',
                 [
-                    'somename2',
-                    [
-                        'type' => 'string'
-                    ]
+                    'type' => 'string'
                 ]
-            )->andReturn(\Mockery::mock(Common::class))->getMock();
+            ]
+        )->andReturn(\Mockery::mock(Common::class));
+
+        return $mock;
     }
 }

@@ -18,7 +18,6 @@
 
 namespace N86io\Rest\Tests\Unit\Http;
 
-use Mockery\MockInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfo;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
 use N86io\Rest\Exception\MethodNotAllowedException;
@@ -141,30 +140,28 @@ class RequestFactoryTest extends UnitTestCase
         $this->requestFactory->fromServerRequest($mocks['serverRequest']);
     }
 
-    /**
-     * @return MockInterface|Container
-     */
     protected function createContainerMock()
     {
+        $mock = \Mockery::mock(Container::class);
+        $mock->shouldReceive('get')->with(RequestInterface::class)->andReturn(
+            \Mockery::mock(RequestInterface::class)
+                ->shouldReceive('setVersion')->withAnyArgs()->andReturnSelf()->getMock()
+                ->shouldReceive('setApiIdentifier')->withAnyArgs()->andReturnSelf()->getMock()
+                ->shouldReceive('setResourceIds')->withAnyArgs()->andReturnSelf()->getMock()
+                ->shouldReceive('setOrdering')->withAnyArgs()->andReturnSelf()->getMock()
+                ->shouldReceive('setLimit')->withAnyArgs()->andReturnSelf()->getMock()
+                ->shouldReceive('setOutputLevel')->withAnyArgs()->andReturnSelf()->getMock()
+                ->shouldReceive('setModelClassName')->withAnyArgs()->andReturnSelf()->getMock()
+                ->shouldReceive('setControllerClassName')->withAnyArgs()->andReturnSelf()->getMock()
+                ->shouldReceive('setMode')->withAnyArgs()->andReturnSelf()->getMock()
+                ->shouldReceive('setConstraints')->withAnyArgs()->andReturnSelf()->getMock()
+                ->shouldReceive('setRoute')->withAnyArgs()->andReturnSelf()->getMock()
+        );
+        $mock->shouldReceive('get')->with(LimitInterface::class, [2, 10])->andReturn(
+            \Mockery::mock(LimitInterface::class)
+        );
 
-        return \Mockery::mock(Container::class)
-            ->shouldReceive('get')->with(RequestInterface::class)->andReturn(
-                \Mockery::mock(RequestInterface::class)
-                    ->shouldReceive('setVersion')->withAnyArgs()->andReturnSelf()->getMock()
-                    ->shouldReceive('setApiIdentifier')->withAnyArgs()->andReturnSelf()->getMock()
-                    ->shouldReceive('setResourceIds')->withAnyArgs()->andReturnSelf()->getMock()
-                    ->shouldReceive('setOrdering')->withAnyArgs()->andReturnSelf()->getMock()
-                    ->shouldReceive('setLimit')->withAnyArgs()->andReturnSelf()->getMock()
-                    ->shouldReceive('setOutputLevel')->withAnyArgs()->andReturnSelf()->getMock()
-                    ->shouldReceive('setModelClassName')->withAnyArgs()->andReturnSelf()->getMock()
-                    ->shouldReceive('setControllerClassName')->withAnyArgs()->andReturnSelf()->getMock()
-                    ->shouldReceive('setMode')->withAnyArgs()->andReturnSelf()->getMock()
-                    ->shouldReceive('setConstraints')->withAnyArgs()->andReturnSelf()->getMock()
-                    ->shouldReceive('setRoute')->withAnyArgs()->andReturnSelf()->getMock()
-            )->getMock()
-            ->shouldReceive('get')->with(LimitInterface::class, [2, 10])->andReturn(
-                \Mockery::mock(LimitInterface::class)
-            )->getMock();
+        return $mock;
     }
 
     /**

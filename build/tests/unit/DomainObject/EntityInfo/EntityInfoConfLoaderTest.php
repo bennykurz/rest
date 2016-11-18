@@ -18,7 +18,6 @@
 
 namespace N86io\Rest\Tests\Unit\DomainObject\EntityInfo;
 
-use Mockery\MockInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoConfLoader;
 use N86io\Rest\Service\Configuration;
 use N86io\Rest\UnitTestCase;
@@ -84,9 +83,8 @@ class EntityInfoConfLoaderTest extends UnitTestCase
             ]
         ];
 
-        /** @var MockInterface|Configuration $configurationMock */
-        $configurationMock = \Mockery::mock(Configuration::class)
-            ->shouldReceive('getEntityInfoConfiguration')->andReturn($entityInfoConfReturn)->getMock();
+        $configurationMock = \Mockery::mock(Configuration::class);
+        $configurationMock->shouldReceive('getEntityInfoConfiguration')->andReturn($entityInfoConfReturn);
 
         $loader = new EntityInfoConfLoader;
         $this->inject($loader, 'configuration', $configurationMock);
@@ -145,9 +143,8 @@ return [
             'content' => $array->url()
         ];
 
-        /** @var MockInterface|Configuration $configurationMock */
-        $configurationMock = \Mockery::mock(Configuration::class)
-            ->shouldReceive('getEntityInfoConfiguration')->andReturn($entityInfoConfReturn)->getMock();
+        $configurationMock = \Mockery::mock(Configuration::class);
+        $configurationMock->shouldReceive('getEntityInfoConfiguration')->andReturn($entityInfoConfReturn);
 
         $loader = new EntityInfoConfLoader;
         $this->inject($loader, 'configuration', $configurationMock);
@@ -196,9 +193,8 @@ return [
     {
         $entityInfoConfReturn = [['type' => $type, 'content' => '']];
 
-        /** @var MockInterface|Configuration $configurationMock */
-        $configurationMock = \Mockery::mock(Configuration::class)
-            ->shouldReceive('getEntityInfoConfiguration')->andReturn($entityInfoConfReturn)->getMock();
+        $configurationMock = \Mockery::mock(Configuration::class);
+        $configurationMock->shouldReceive('getEntityInfoConfiguration')->andReturn($entityInfoConfReturn);
 
         $loader = new EntityInfoConfLoader;
         $this->inject($loader, 'configuration', $configurationMock);

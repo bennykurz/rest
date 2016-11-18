@@ -18,7 +18,6 @@
 
 namespace N86io\Rest\Tests\Unit\DomainObject\PropertyInfo;
 
-use Mockery\MockInterface;
 use N86io\Rest\DomainObject\PropertyInfo\Join;
 use N86io\Rest\DomainObject\PropertyInfo\JoinAliasStorage;
 use N86io\Rest\UnitTestCase;
@@ -38,9 +37,8 @@ class JoinTest extends UnitTestCase
             'joinCondition' => 'prop = 123'
         ];
 
-        /** @var MockInterface|JoinAliasStorage $mock */
-        $mock = \Mockery::mock(JoinAliasStorage::class)
-            ->shouldReceive('get')->with('test_table')->andReturn('j1')->getMock();
+        $mock = \Mockery::mock(JoinAliasStorage::class);
+        $mock->shouldReceive('get')->with('test_table')->andReturn('j1');
 
         $propertyInfo = new Join('somename', $attributes);
         $this->inject($propertyInfo, 'aliasStorage', $mock);

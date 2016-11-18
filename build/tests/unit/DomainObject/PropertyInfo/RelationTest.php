@@ -69,8 +69,8 @@ class RelationTest extends UnitTestCase
      */
     protected function createPropertyInfoMock(array $attributes)
     {
-        $propertyInfo = \Mockery::mock(Relation::class . '[getEntityInfo]', ['testSomething', $attributes])
-            ->shouldReceive('getEntityInfo')->andReturn($this->createEntityInfoMock())->getMock();
+        $propertyInfo = \Mockery::mock(Relation::class . '[getEntityInfo]', ['testSomething', $attributes]);
+        $propertyInfo->shouldReceive('getEntityInfo')->andReturn($this->createEntityInfoMock());
         $this->inject($propertyInfo, 'constraintUtility', $this->createConstraintUtilityMock());
         $this->inject($propertyInfo, 'constraintFactory', $this->createConstraintFactoryMock());
         return $propertyInfo;
@@ -82,43 +82,41 @@ class RelationTest extends UnitTestCase
      */
     protected function createEntityMock($value)
     {
-        return \Mockery::mock(EntityInterface::class)
-            ->shouldReceive('getProperty')->with('testSomething')->andReturn($value)->getMock()
-            ->shouldReceive('setProperty')->withAnyArgs()->getMock();
+        $mock = \Mockery::mock(EntityInterface::class);
+        $mock->shouldReceive('getProperty')->with('testSomething')->andReturn($value);
+        $mock->shouldReceive('setProperty')->withAnyArgs();
+
+        return $mock;
     }
 
-    /**
-     * @return MockInterface|EntityInfo
-     */
     protected function createEntityInfoMock()
     {
-        return \Mockery::mock(EntityInfo::class)
-            ->shouldReceive('getUidPropertyInfo')->andReturn(\Mockery::mock(PropertyInfoInterface::class))->getMock()
-            ->shouldReceive('createConnectorInstance')->andReturn(
-                \Mockery::mock(ConnectorInterface::class)
-                    ->shouldReceive('setEntityInfo')->withAnyArgs()->getMock()
-                    ->shouldReceive('setConstraints')->withAnyArgs()->getMock()
-                    ->shouldReceive('read')->andReturn([1 => 'One', 2 => 'Two'])->getMock()
-            )->getMock();
+        $mock = \Mockery::mock(EntityInfo::class);
+        $mock->shouldReceive('getUidPropertyInfo')->andReturn(\Mockery::mock(PropertyInfoInterface::class));
+        $mock->shouldReceive('createConnectorInstance')->andReturn(
+            \Mockery::mock(ConnectorInterface::class)
+                ->shouldReceive('setEntityInfo')->withAnyArgs()->getMock()
+                ->shouldReceive('setConstraints')->withAnyArgs()->getMock()
+                ->shouldReceive('read')->andReturn([1 => 'One', 2 => 'Two'])->getMock()
+        );
+
+        return $mock;
     }
 
-    /**
-     * @return MockInterface|ConstraintUtility
-     */
     protected function createConstraintUtilityMock()
     {
-        return \Mockery::mock(ConstraintUtility::class)
-            ->shouldReceive('createResourceIdsConstraints')->withAnyArgs()->getMock()
-            ->shouldReceive('createEnableFieldsConstraints')->withAnyArgs()->getMock();
+        $mock = \Mockery::mock(ConstraintUtility::class);
+        $mock->shouldReceive('createResourceIdsConstraints')->withAnyArgs();
+        $mock->shouldReceive('createEnableFieldsConstraints')->withAnyArgs();
+
+        return $mock;
     }
 
-    /**
-     * @return MockInterface|ConstraintFactory
-     */
     protected function createConstraintFactoryMock()
     {
-        return \Mockery::mock(ConstraintFactory::class)
-            ->shouldReceive('logicalAnd')->withAnyArgs()->andReturn(\Mockery::mock(ConstraintInterface::class))
-            ->getMock();
+        $mock = \Mockery::mock(ConstraintFactory::class);
+        $mock->shouldReceive('logicalAnd')->withAnyArgs()->andReturn(\Mockery::mock(ConstraintInterface::class));
+
+        return $mock;
     }
 }

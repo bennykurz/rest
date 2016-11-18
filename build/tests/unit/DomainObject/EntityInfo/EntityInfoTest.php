@@ -97,11 +97,10 @@ class EntityInfoTest extends UnitTestCase
         $this->assertTrue($entityInfo->hasUidPropertyInfo());
         $this->assertEquals($propInfo, $entityInfo->getUidPropertyInfo());
 
-        /** @var MockInterface|AbstractPropertyInfo $propInfo */
-        $propInfo = \Mockery::mock(AbstractPropertyInfo::class)
-            ->shouldReceive('getName')->andReturn('name3')->getMock()
-            ->shouldReceive('shouldShow')->withAnyArgs()->andReturn(true)->getMock()
-            ->shouldReceive('getPosition')->andReturn(1)->getMock();
+        $propInfo = \Mockery::mock(AbstractPropertyInfo::class);
+        $propInfo->shouldReceive('getName')->andReturn('name3');
+        $propInfo->shouldReceive('shouldShow')->withAnyArgs()->andReturn(true);
+        $propInfo->shouldReceive('getPosition')->andReturn(1);
         $entityInfo->addPropertyInfo($propInfo);
 
         $this->assertEquals('name3', $entityInfo->getVisiblePropertiesOrdered(0)[0]->getName());
@@ -146,14 +145,16 @@ class EntityInfoTest extends UnitTestCase
      */
     protected function createCommonPropertyInfoMock($isResourceId, $isUid, $name, $resPropName, $outputLevel, $position)
     {
-        return \Mockery::mock(Common::class)
-            ->shouldReceive('isResourceId')->andReturn($isResourceId)->getMock()
-            ->shouldReceive('isUid')->andReturn($isUid)->getMock()
-            ->shouldReceive('getName')->andReturn($name)->getMock()
-            ->shouldReceive('getResourcePropertyName')->andReturn($resPropName)->getMock()
-            ->shouldReceive('getOutputLevel')->andReturn($outputLevel)->getMock()
-            ->shouldReceive('shouldShow')->withAnyArgs()->andReturn(true)->getMock()
-            ->shouldReceive('getPosition')->andReturn($position)->getMock();
+        $mock = \Mockery::mock(Common::class);
+        $mock->shouldReceive('isResourceId')->andReturn($isResourceId);
+        $mock->shouldReceive('isUid')->andReturn($isUid);
+        $mock->shouldReceive('getName')->andReturn($name);
+        $mock->shouldReceive('getResourcePropertyName')->andReturn($resPropName);
+        $mock->shouldReceive('getOutputLevel')->andReturn($outputLevel);
+        $mock->shouldReceive('shouldShow')->withAnyArgs()->andReturn(true);
+        $mock->shouldReceive('getPosition')->andReturn($position);
+
+        return $mock;
     }
 
     /**
@@ -197,12 +198,11 @@ class EntityInfoTest extends UnitTestCase
         return [$entityClassName, $entityInfo];
     }
 
-    /**
-     * @return MockInterface|Container
-     */
     protected function createContainerMock()
     {
-        return \Mockery::mock(Container::class)
-            ->shouldReceive('get')->withAnyArgs()->andReturn(\Mockery::mock(ConnectorInterface::class))->getMock();
+        $mock = \Mockery::mock(Container::class);
+        $mock->shouldReceive('get')->withAnyArgs()->andReturn(\Mockery::mock(ConnectorInterface::class));
+
+        return $mock;
     }
 }

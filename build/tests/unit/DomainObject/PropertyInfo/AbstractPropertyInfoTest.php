@@ -18,7 +18,6 @@
 
 namespace N86io\Rest\Tests\Unit\DomainObject\PropertyInfo;
 
-use Mockery\MockInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfo;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
 use N86io\Rest\DomainObject\EntityInterface;
@@ -61,14 +60,13 @@ class AbstractPropertyInfoTest extends UnitTestCase
 
 
         $isInteger = false;
-        /** @var MockInterface|EntityInterface $entity */
-        $entity = \Mockery::mock(EntityInterface::class)
-            ->shouldReceive('getProperty')->with('test')->andReturn('10')->getMock()
-            ->shouldReceive('setProperty')->withAnyArgs()->andReturnUsing(
-                function ($_, $value) use (&$isInteger) {
-                    $isInteger = is_integer($value);
-                }
-            )->getMock();
+        $entity = \Mockery::mock(EntityInterface::class);
+        $entity->shouldReceive('getProperty')->with('test')->andReturn('10');
+        $entity->shouldReceive('setProperty')->withAnyArgs()->andReturnUsing(
+            function ($_, $value) use (&$isInteger) {
+                $isInteger = is_integer($value);
+            }
+        );
         $abstrPropertyInfoInt->castValue($entity);
         $this->assertTrue($isInteger);
 
@@ -80,14 +78,13 @@ class AbstractPropertyInfoTest extends UnitTestCase
             AbstractPropertyInfo::class,
             ['test', $attributesFloat]
         );
-        /** @var MockInterface|EntityInterface $entity */
-        $entity = \Mockery::mock(EntityInterface::class)
-            ->shouldReceive('getProperty')->with('test')->andReturn('10')->getMock()
-            ->shouldReceive('setProperty')->withAnyArgs()->andReturnUsing(
-                function ($_, $value) use (&$isFloat) {
-                    $isFloat = is_float($value);
-                }
-            )->getMock();
+        $entity = \Mockery::mock(EntityInterface::class);
+        $entity->shouldReceive('getProperty')->with('test')->andReturn('10');
+        $entity->shouldReceive('setProperty')->withAnyArgs()->andReturnUsing(
+            function ($_, $value) use (&$isFloat) {
+                $isFloat = is_float($value);
+            }
+        );
         $abstrPropertyInfoFloat->castValue($entity);
         $this->assertTrue($isFloat);
 
@@ -99,14 +96,13 @@ class AbstractPropertyInfoTest extends UnitTestCase
             AbstractPropertyInfo::class,
             ['test', $attributesBool]
         );
-        /** @var MockInterface|EntityInterface $entity */
-        $entity = \Mockery::mock(EntityInterface::class)
-            ->shouldReceive('getProperty')->with('test')->andReturn('true')->getMock()
-            ->shouldReceive('setProperty')->withAnyArgs()->andReturnUsing(
-                function ($_, $value) use (&$isBoolean) {
-                    $isBoolean = is_bool($value);
-                }
-            )->getMock();
+        $entity = \Mockery::mock(EntityInterface::class);
+        $entity->shouldReceive('getProperty')->with('test')->andReturn('true');
+        $entity->shouldReceive('setProperty')->withAnyArgs()->andReturnUsing(
+            function ($_, $value) use (&$isBoolean) {
+                $isBoolean = is_bool($value);
+            }
+        );
         $abstrPropertyInfoBool->castValue($entity);
         $this->assertTrue($isBoolean);
 
@@ -118,26 +114,24 @@ class AbstractPropertyInfoTest extends UnitTestCase
             AbstractPropertyInfo::class,
             ['test', $attributesDate]
         );
-        /** @var MockInterface|EntityInterface $entity */
-        $entity = \Mockery::mock(EntityInterface::class)
-            ->shouldReceive('getProperty')->with('test')->andReturn('2016-11-16 10:30:39')->getMock()
-            ->shouldReceive('setProperty')->withAnyArgs()->andReturnUsing(
-                function ($_, \DateTime $dateTime) use (&$isDateTime) {
-                    $isDateTime = $dateTime->format('Y-m-d H:i:s') === '2016-11-16 10:30:39';
-                }
-            )->getMock();
+        $entity = \Mockery::mock(EntityInterface::class);
+        $entity->shouldReceive('getProperty')->with('test')->andReturn('2016-11-16 10:30:39');
+        $entity->shouldReceive('setProperty')->withAnyArgs()->andReturnUsing(
+            function ($_, \DateTime $dateTime) use (&$isDateTime) {
+                $isDateTime = $dateTime->format('Y-m-d H:i:s') === '2016-11-16 10:30:39';
+            }
+        );
         $abstrPropertyInfoDate->castValue($entity);
         $this->assertTrue($isDateTime);
 
         $isDateTime = false;
-        /** @var MockInterface|EntityInterface $entity */
-        $entity = \Mockery::mock(EntityInterface::class)
-            ->shouldReceive('getProperty')->with('test')->andReturn(123456)->getMock()
-            ->shouldReceive('setProperty')->withAnyArgs()->andReturnUsing(
-                function ($_, \DateTime $dateTime) use (&$isDateTime) {
-                    $isDateTime = $dateTime->getTimestamp() === 123456;
-                }
-            )->getMock();
+        $entity = \Mockery::mock(EntityInterface::class);
+        $entity->shouldReceive('getProperty')->with('test')->andReturn(123456);
+        $entity->shouldReceive('setProperty')->withAnyArgs()->andReturnUsing(
+            function ($_, \DateTime $dateTime) use (&$isDateTime) {
+                $isDateTime = $dateTime->getTimestamp() === 123456;
+            }
+        );
         $abstrPropertyInfoDate->castValue($entity);
         $this->assertTrue($isDateTime);
     }
@@ -148,14 +142,13 @@ class AbstractPropertyInfoTest extends UnitTestCase
         $this->getMockForAbstractClass(AbstractPropertyInfo::class, ['test', []]);
     }
 
-    /**
-     * @return MockInterface|EntityInfoStorage
-     */
     protected function createEntityInfoStorageMock()
     {
-        return \Mockery::mock(EntityInfoStorage::class)
-            ->shouldReceive('get')->withAnyArgs()->andReturn(
-                \Mockery::mock(EntityInfo::class)
-            )->getMock();
+        $mock = \Mockery::mock(EntityInfoStorage::class);
+        $mock->shouldReceive('get')->withAnyArgs()->andReturn(
+            \Mockery::mock(EntityInfo::class)
+        );
+
+        return $mock;
     }
 }

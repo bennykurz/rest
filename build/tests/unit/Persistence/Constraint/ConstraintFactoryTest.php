@@ -18,8 +18,6 @@
 
 namespace N86io\Rest\Tests\Unit\Persistence\Constraint;
 
-use Mockery\Mock;
-use Mockery\MockInterface;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 use N86io\Rest\Object\Container;
 use N86io\Rest\Persistence\Constraint\ComparisonInterface;
@@ -36,11 +34,10 @@ class ConstraintFactoryTest extends UnitTestCase
 {
     public function testSingle()
     {
-        /** @var MockInterface|Container $containerMock */
-        $containerMock = \Mockery::mock(Container::class)
-            ->shouldReceive('get')->withAnyArgs()->andReturn(
-                \Mockery::mock(LogicalInterface::class)
-            )->getMock();
+        $containerMock = \Mockery::mock(Container::class);
+        $containerMock->shouldReceive('get')->withAnyArgs()->andReturn(
+            \Mockery::mock(LogicalInterface::class)
+        );
         $factory = new ConstraintFactory;
         $this->inject($factory, 'container', $containerMock);
 
@@ -48,15 +45,13 @@ class ConstraintFactoryTest extends UnitTestCase
         $this->assertTrue($factory->logicalOr([]) instanceof LogicalInterface);
 
 
-        /** @var MockInterface|Container $containerMock */
-        $containerMock = \Mockery::mock(Container::class)
-            ->shouldReceive('get')->withAnyArgs()->andReturn(
-                \Mockery::mock(ComparisonInterface::class)
-            )->getMock();
+        $containerMock = \Mockery::mock(Container::class);
+        $containerMock->shouldReceive('get')->withAnyArgs()->andReturn(
+            \Mockery::mock(ComparisonInterface::class)
+        );
         $factory = new ConstraintFactory;
         $this->inject($factory, 'container', $containerMock);
 
-        /** @var MockInterface|PropertyInfoInterface $propInfoMock */
         $propInfoMock = \Mockery::mock(PropertyInfoInterface::class);
 
         $this->assertTrue($factory->lessThan($propInfoMock, '') instanceof ComparisonInterface);
@@ -70,33 +65,25 @@ class ConstraintFactoryTest extends UnitTestCase
 
     public function testStringDetector()
     {
-        /** @var MockInterface|PropertyInfoInterface $propInfoMock */
         $propInfoMock = \Mockery::mock(PropertyInfoInterface::class);
 
-        /** @var MockInterface|ComparisonInterface $ltMock */
         $ltMock = \Mockery::mock(ComparisonInterface::class);
-        /** @var MockInterface|ComparisonInterface $lteMock */
         $lteMock = \Mockery::mock(ComparisonInterface::class);
-        /** @var MockInterface|ComparisonInterface $gtMock */
         $gtMock = \Mockery::mock(ComparisonInterface::class);
-        /** @var MockInterface|ComparisonInterface $gteMock */
         $gteMock = \Mockery::mock(ComparisonInterface::class);
-        /** @var MockInterface|ComparisonInterface $eMock */
         $eMock = \Mockery::mock(ComparisonInterface::class);
-        /** @var MockInterface|ComparisonInterface $neMock */
         $neMock = \Mockery::mock(ComparisonInterface::class);
-        /** @var MockInterface|ComparisonInterface $cMock */
         $cMock = \Mockery::mock(ComparisonInterface::class);
 
-        /** @var MockInterface|ConstraintFactory $factoryMock */
-        $factoryMock = \Mockery::mock(ConstraintFactory::class)->makePartial()
-            ->shouldReceive('lessThan')->withAnyArgs()->andReturn($ltMock)->getMock()
-            ->shouldReceive('lessThanOrEqualTo')->withAnyArgs()->andReturn($lteMock)->getMock()
-            ->shouldReceive('greaterThan')->withAnyArgs()->andReturn($gtMock)->getMock()
-            ->shouldReceive('greaterThanOrEqualTo')->withAnyArgs()->andReturn($gteMock)->getMock()
-            ->shouldReceive('equalTo')->withAnyArgs()->andReturn($eMock)->getMock()
-            ->shouldReceive('notEqualTo')->withAnyArgs()->andReturn($neMock)->getMock()
-            ->shouldReceive('contains')->withAnyArgs()->andReturn($cMock)->getMock();
+        $factoryMock = \Mockery::mock(ConstraintFactory::class);
+        $factoryMock->makePartial();
+        $factoryMock->shouldReceive('lessThan')->withAnyArgs()->andReturn($ltMock);
+        $factoryMock->shouldReceive('lessThanOrEqualTo')->withAnyArgs()->andReturn($lteMock);
+        $factoryMock->shouldReceive('greaterThan')->withAnyArgs()->andReturn($gtMock);
+        $factoryMock->shouldReceive('greaterThanOrEqualTo')->withAnyArgs()->andReturn($gteMock);
+        $factoryMock->shouldReceive('equalTo')->withAnyArgs()->andReturn($eMock);
+        $factoryMock->shouldReceive('notEqualTo')->withAnyArgs()->andReturn($neMock);
+        $factoryMock->shouldReceive('contains')->withAnyArgs()->andReturn($cMock);
 
         $this->assertTrue($factoryMock->createComparisonFromStringDetection($propInfoMock, 'lt', '') === $ltMock);
         $this->assertTrue($factoryMock->createComparisonFromStringDetection($propInfoMock, 'lte', '') === $lteMock);

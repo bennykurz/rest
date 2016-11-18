@@ -18,7 +18,6 @@
 
 namespace N86io\Rest\Tests\Unit\Http;
 
-use Mockery\MockInterface;
 use N86io\Rest\Http\Request;
 use N86io\Rest\Persistence\Constraint\ConstraintInterface;
 use N86io\Rest\Persistence\LimitInterface;
@@ -34,11 +33,8 @@ class RequestTest extends UnitTestCase
 {
     public function test()
     {
-        /** @var MockInterface|ConstraintInterface $constraint */
         $constraint = \Mockery::mock(ConstraintInterface::class);
-        /** @var MockInterface|OrderingInterface $ordering */
         $ordering = \Mockery::mock(OrderingInterface::class);
-        /** @var MockInterface|LimitInterface $limit */
         $limit = \Mockery::mock(LimitInterface::class);
         $request = (new Request)
             ->setVersion('1')

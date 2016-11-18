@@ -34,9 +34,8 @@ class RoutingTest extends UnitTestCase
 {
     public function test()
     {
-        /** @var MockInterface|Configuration $confMock */
-        $confMock = \Mockery::mock(Configuration::class)
-            ->shouldReceive('getApiBaseUrl')->andReturn('http://example.com/api')->getMock();
+        $confMock = \Mockery::mock(Configuration::class);
+        $confMock->shouldReceive('getApiBaseUrl')->andReturn('http://example.com/api');
 
         $routing = new Routing;
 
@@ -87,10 +86,12 @@ class RoutingTest extends UnitTestCase
      */
     protected function createUriMock($path)
     {
-        return \Mockery::mock(UriInterface::class)
-            ->shouldReceive('getScheme')->andReturn('http')->getMock()
-            ->shouldReceive('getHost')->andReturn('example.com')->getMock()
-            ->shouldReceive('getPath')->andReturn($path)->getMock();
+        $mock = \Mockery::mock(UriInterface::class);
+        $mock->shouldReceive('getScheme')->andReturn('http');
+        $mock->shouldReceive('getHost')->andReturn('example.com');
+        $mock->shouldReceive('getPath')->andReturn($path);
+
+        return $mock;
     }
 
     /**
@@ -102,10 +103,12 @@ class RoutingTest extends UnitTestCase
      */
     protected function createRoutingParamMock($isOptional, $getExpression, $getTakeResult, $getName)
     {
-        return \Mockery::mock(RoutingParameterInterface::class)
-            ->shouldReceive('isOptional')->andReturn($isOptional)->getMock()
-            ->shouldReceive('getExpression')->andReturn($getExpression)->getMock()
-            ->shouldReceive('getTakeResult')->andReturn($getTakeResult)->getMock()
-            ->shouldReceive('getName')->andReturn($getName)->getMock();
+        $mock = \Mockery::mock(RoutingParameterInterface::class);
+        $mock->shouldReceive('isOptional')->andReturn($isOptional);
+        $mock->shouldReceive('getExpression')->andReturn($getExpression);
+        $mock->shouldReceive('getTakeResult')->andReturn($getTakeResult);
+        $mock->shouldReceive('getName')->andReturn($getName);
+
+        return $mock;
     }
 }

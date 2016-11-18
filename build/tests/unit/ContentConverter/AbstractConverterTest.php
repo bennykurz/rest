@@ -18,7 +18,6 @@
 
 namespace N86io\Rest\Tests\Unit\ContentConverter;
 
-use Mockery\MockInterface;
 use N86io\Rest\ContentConverter\ParsableInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
@@ -49,23 +48,21 @@ abstract class AbstractConverterTest extends UnitTestCase
         ];
     }
 
-    /**
-     * @return \Mockery\MockInterface|EntityInfoStorage
-     */
     protected function createEntityInfoStorageMock()
     {
-        /** @var MockInterface|EntityInfoInterface $entityInfoMock */
-        $entityInfoMock = \Mockery::mock(EntityInfoInterface::class)
-            ->shouldReceive('getVisiblePropertiesOrdered')->withAnyArgs()->andReturn([
-                \Mockery::mock(PropertyInfoInterface::class)
-                    ->shouldReceive('getGetter')->andReturn('')->getMock()
-                    ->shouldReceive('getName')->andReturn('nameOne')->getMock(),
-                \Mockery::mock(PropertyInfoInterface::class)
-                    ->shouldReceive('getGetter')->andReturn('getNameTwo')->getMock()
-                    ->shouldReceive('getName')->andReturn('nameTwo')->getMock()
-            ])->getMock();
+        $entityInfoMock = \Mockery::mock(EntityInfoInterface::class);
+        $entityInfoMock->shouldReceive('getVisiblePropertiesOrdered')->withAnyArgs()->andReturn([
+            \Mockery::mock(PropertyInfoInterface::class)
+                ->shouldReceive('getGetter')->andReturn('')->getMock()
+                ->shouldReceive('getName')->andReturn('nameOne')->getMock(),
+            \Mockery::mock(PropertyInfoInterface::class)
+                ->shouldReceive('getGetter')->andReturn('getNameTwo')->getMock()
+                ->shouldReceive('getName')->andReturn('nameTwo')->getMock()
+        ]);
 
-        return \Mockery::mock(EntityInfoStorage::class)
-            ->shouldReceive('get')->withAnyArgs()->andReturn($entityInfoMock)->getMock();
+        $mock = \Mockery::mock(EntityInfoStorage::class);
+        $mock->shouldReceive('get')->withAnyArgs()->andReturn($entityInfoMock);
+
+        return $mock;
     }
 }

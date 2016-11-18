@@ -18,7 +18,6 @@
 
 namespace N86io\Rest\Tests\Unit\Http\Utility;
 
-use Mockery\MockInterface;
 use N86io\Rest\DomainObject\AbstractEntity;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfo;
 use N86io\Rest\DomainObject\PropertyInfo\Common;
@@ -92,53 +91,51 @@ class QueryUtilityTest extends UnitTestCase
         $this->assertFalse(array_key_exists('constraints', $queryParams));
     }
 
-    /**
-     * @return MockInterface|Container
-     */
     protected function createContainerMock()
     {
-        $orderingFactory = \Mockery::mock(OrderingFactory::class)
-            ->shouldReceive('descending')->withAnyArgs()->andReturn(\Mockery::mock(OrderingInterface::class))->getMock()
-            ->shouldReceive('ascending')->withAnyArgs()->andReturn(\Mockery::mock(OrderingInterface::class))->getMock();
+        $orderingFactory = \Mockery::mock(OrderingFactory::class);
+        $orderingFactory->shouldReceive('descending')->withAnyArgs()
+            ->andReturn(\Mockery::mock(OrderingInterface::class));
+        $orderingFactory->shouldReceive('ascending')->withAnyArgs()
+            ->andReturn(\Mockery::mock(OrderingInterface::class));
 
-        return \Mockery::mock(Container::class)
-            ->shouldReceive('get')->with(OrderingFactory::class)->andReturn($orderingFactory)->getMock();
+        $mock = \Mockery::mock(Container::class);
+        $mock->shouldReceive('get')->with(OrderingFactory::class)->andReturn($orderingFactory);
+
+        return $mock;
     }
 
-    /**
-     * @return MockInterface|ConstraintFactory
-     */
     protected function createConstraintFactoryMock()
     {
-        return \Mockery::mock(ConstraintFactory::class)
-            ->shouldReceive('createComparisonFromStringDetection')->withAnyArgs()
-            ->andReturn(\Mockery::mock(ConstraintInterface::class))->getMock()
-            ->shouldReceive('logicalAnd')->withAnyArgs()->andReturn(\Mockery::mock(ConstraintInterface::class))
-            ->getMock();
+        $mock = \Mockery::mock(ConstraintFactory::class);
+        $mock->shouldReceive('createComparisonFromStringDetection')->withAnyArgs()
+            ->andReturn(\Mockery::mock(ConstraintInterface::class));
+        $mock->shouldReceive('logicalAnd')->withAnyArgs()->andReturn(\Mockery::mock(ConstraintInterface::class));
+
+        return $mock;
     }
 
-    /**
-     * @return MockInterface|AbstractEntity
-     */
     protected function createEntityInfoMock()
     {
-        return \Mockery::mock(EntityInfo::class)
-            ->shouldReceive('hasPropertyInfo')->with('integer')->andReturn(true)->getMock()
-            ->shouldReceive('hasPropertyInfo')->with('string')->andReturn(true)->getMock()
-            ->shouldReceive('hasPropertyInfo')->with('invalidPropertyName')->andReturn(false)->getMock()
-            ->shouldReceive('getPropertyInfo')->with('integer')->andReturn(
-                \Mockery::mock(Common::class)
-                    ->shouldReceive('isConstraint')->andReturn(true)
-                    ->getMock()
-                    ->shouldReceive('isOrdering')->andReturn(false)
-                    ->getMock()
-            )->getMock()
-            ->shouldReceive('getPropertyInfo')->with('string')->andReturn(
-                \Mockery::mock(Common::class)
-                    ->shouldReceive('isConstraint')->andReturn(false)
-                    ->getMock()
-                    ->shouldReceive('isOrdering')->andReturn(true)
-                    ->getMock()
-            )->getMock();
+        $mock = \Mockery::mock(EntityInfo::class);
+        $mock->shouldReceive('hasPropertyInfo')->with('integer')->andReturn(true);
+        $mock->shouldReceive('hasPropertyInfo')->with('string')->andReturn(true);
+        $mock->shouldReceive('hasPropertyInfo')->with('invalidPropertyName')->andReturn(false);
+        $mock->shouldReceive('getPropertyInfo')->with('integer')->andReturn(
+            \Mockery::mock(Common::class)
+                ->shouldReceive('isConstraint')->andReturn(true)
+                ->getMock()
+                ->shouldReceive('isOrdering')->andReturn(false)
+                ->getMock()
+        );
+        $mock->shouldReceive('getPropertyInfo')->with('string')->andReturn(
+            \Mockery::mock(Common::class)
+                ->shouldReceive('isConstraint')->andReturn(false)
+                ->getMock()
+                ->shouldReceive('isOrdering')->andReturn(true)
+                ->getMock()
+        );
+
+        return $mock;
     }
 }
