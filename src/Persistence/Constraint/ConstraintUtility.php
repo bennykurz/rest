@@ -16,13 +16,11 @@
  * along with N86io/Rest or see <http://www.gnu.org/licenses/>.
  */
 
-namespace N86io\Rest\Persistence;
+namespace N86io\Rest\Persistence\Constraint;
 
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 use N86io\Rest\Object\SingletonInterface;
-use N86io\Rest\Persistence\Constraint\ConstraintFactory;
-use N86io\Rest\Persistence\Constraint\LogicalInterface;
 
 /**
  * Class ConstraintUtility

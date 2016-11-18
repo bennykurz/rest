@@ -25,7 +25,7 @@ use N86io\Rest\DomainObject\EntityInterface;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 use N86io\Rest\DomainObject\PropertyInfo\Relation;
 use N86io\Rest\Persistence\ConnectorInterface;
-use N86io\Rest\Persistence\ConstraintUtility;
+use N86io\Rest\Persistence\Constraint\ConstraintUtility;
 use N86io\Rest\UnitTestCase;
 
 /**

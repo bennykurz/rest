@@ -22,6 +22,7 @@ use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
 use N86io\Rest\Object\Container;
 use N86io\Rest\Persistence\Constraint\ConstraintFactory;
 use N86io\Rest\Persistence\Constraint\ConstraintInterface;
+use N86io\Rest\Persistence\Constraint\ConstraintUtility;
 use N86io\Rest\Persistence\Ordering\OrderingInterface;
 
 /**

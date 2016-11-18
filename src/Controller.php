@@ -28,7 +28,7 @@ use N86io\Rest\Http\RequestInterface;
 use N86io\Rest\Http\ResponseFactory;
 use N86io\Rest\Object\Container;
 use N86io\Rest\Persistence\Constraint\ConstraintFactory;
-use N86io\Rest\Persistence\ConstraintUtility;
+use N86io\Rest\Persistence\Constraint\ConstraintUtility;
 use N86io\Rest\Persistence\LimitInterface;
 use N86io\Rest\Persistence\RepositoryInterface;
 use N86io\Rest\Service\Configuration;

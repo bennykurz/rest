@@ -20,7 +20,7 @@ namespace N86io\Rest\DomainObject\PropertyInfo;
 
 use N86io\Rest\DomainObject\EntityInterface;
 use N86io\Rest\Persistence\Constraint\ConstraintInterface;
-use N86io\Rest\Persistence\ConstraintUtility;
+use N86io\Rest\Persistence\Constraint\ConstraintUtility;
 
 /**
  * Class Relation
