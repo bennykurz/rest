@@ -118,6 +118,14 @@ class Repository implements RepositoryInterface
     /**
      * @return array
      */
+    public function readRaw()
+    {
+        return $this->connector->readRaw();
+    }
+
+    /**
+     * @return array
+     */
     public function create()
     {
         return $this->connector->create();

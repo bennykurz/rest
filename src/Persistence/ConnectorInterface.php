@@ -61,6 +61,11 @@ interface ConnectorInterface
     /**
      * @return array
      */
+    public function readRaw();
+
+    /**
+     * @return array
+     */
     public function create();
 
     /**
