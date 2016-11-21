@@ -20,14 +20,14 @@ namespace N86io\Rest\Persistence\Constraint;
 
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 use N86io\Rest\Object\Container;
-use N86io\Rest\Object\SingletonInterface;
+use N86io\Rest\Object\Singleton;
 
 /**
  * Class ConstraintFactory
  *
  * @author Viktor Firus <v@n86.io>
  */
-class ConstraintFactory implements SingletonInterface
+class ConstraintFactory implements Singleton
 {
     /**
      * @inject

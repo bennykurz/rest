@@ -19,10 +19,10 @@
 namespace N86io\Rest\Object;
 
 /**
- * Interface SingletonInterface
+ * Interface Singleton
  *
  * @author Viktor Firus <v@n86.io>
  */
-interface SingletonInterface
+interface Singleton
 {
 }

@@ -20,14 +20,14 @@ namespace N86io\Rest\Persistence\Ordering;
 
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 use N86io\Rest\Object\Container;
-use N86io\Rest\Object\SingletonInterface;
+use N86io\Rest\Object\Singleton;
 
 /**
  * Class OrderingFactory
  *
  * @author Viktor Firus <v@n86.io>
  */
-class OrderingFactory implements SingletonInterface
+class OrderingFactory implements Singleton
 {
     /**
      * @inject

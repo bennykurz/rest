@@ -52,7 +52,7 @@ class DefinitionFactory
             $reflectionClass = new ReflectionClass($className);
 
             $interfaces = $reflectionClass->getInterfaceNames();
-            $isSingleton = array_search(SingletonInterface::class, $interfaces) !== false;
+            $isSingleton = array_search(Singleton::class, $interfaces) !== false;
             $type = $isSingleton ? Definition::SINGLETON : Definition::PROTOTYPE;
             $definition = new Definition($className, $type);
 

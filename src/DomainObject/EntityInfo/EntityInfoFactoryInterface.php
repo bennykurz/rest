@@ -18,14 +18,14 @@
 
 namespace N86io\Rest\DomainObject\EntityInfo;
 
-use N86io\Rest\Object\SingletonInterface;
+use N86io\Rest\Object\Singleton;
 
 /**
  * Interface EntityInfoFactoryInterface
  *
  * @author Viktor Firus <v@n86.io>
  */
-interface EntityInfoFactoryInterface extends SingletonInterface
+interface EntityInfoFactoryInterface extends Singleton
 {
     /**
      * @param $className

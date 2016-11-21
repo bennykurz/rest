@@ -18,14 +18,14 @@
 
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
-use N86io\Rest\Object\SingletonInterface;
+use N86io\Rest\Object\Singleton;
 
 /**
  * Class JoinAliasStorage
  *
  * @author Viktor Firus <v@n86.io>
  */
-class JoinAliasStorage implements SingletonInterface
+class JoinAliasStorage implements Singleton
 {
     /**
      * @var int

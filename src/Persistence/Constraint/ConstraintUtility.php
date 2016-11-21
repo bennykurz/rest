@@ -20,14 +20,14 @@ namespace N86io\Rest\Persistence\Constraint;
 
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
-use N86io\Rest\Object\SingletonInterface;
+use N86io\Rest\Object\Singleton;
 
 /**
  * Class ConstraintUtility
  *
  * @author Viktor Firus <v@n86.io>
  */
-class ConstraintUtility implements SingletonInterface
+class ConstraintUtility implements Singleton
 {
     /**
      * @inject

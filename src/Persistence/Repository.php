@@ -19,6 +19,7 @@
 namespace N86io\Rest\Persistence;
 
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
+use N86io\Rest\DomainObject\EntityInterface;
 use N86io\Rest\Object\Container;
 use N86io\Rest\Persistence\Constraint\ConstraintFactory;
 use N86io\Rest\Persistence\Constraint\ConstraintInterface;
@@ -108,7 +109,7 @@ class Repository implements RepositoryInterface
     }
 
     /**
-     * @return array
+     * @return EntityInterface[]
      */
     public function read()
     {

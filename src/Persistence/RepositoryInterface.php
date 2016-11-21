@@ -19,6 +19,7 @@
 namespace N86io\Rest\Persistence;
 
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
+use N86io\Rest\DomainObject\EntityInterface;
 use N86io\Rest\Persistence\Constraint\ConstraintInterface;
 use N86io\Rest\Persistence\Ordering\OrderingInterface;
 
@@ -54,7 +55,7 @@ interface RepositoryInterface
     public function setLimit(LimitInterface $limit);
 
     /**
-     * @return array
+     * @return EntityInterface[]
      */
     public function read();
 

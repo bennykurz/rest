@@ -20,14 +20,14 @@ namespace N86io\Rest\DomainObject;
 
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
 use N86io\Rest\Object\Container;
-use N86io\Rest\Object\SingletonInterface;
+use N86io\Rest\Object\Singleton;
 
 /**
  * Class EntityFactory
  *
  * @author Viktor Firus <v@n86.io>
  */
-class EntityFactory implements SingletonInterface
+class EntityFactory implements Singleton
 {
     /**
      * @inject
@@ -43,7 +43,7 @@ class EntityFactory implements SingletonInterface
     /**
      * @param EntityInfoInterface $entityInfo
      * @param array $dbRows
-     * @return array
+     * @return EntityInterface[]
      */
     public function buildList(EntityInfoInterface $entityInfo, array $dbRows)
     {
@@ -63,22 +63,22 @@ class EntityFactory implements SingletonInterface
     {
         $entityClassName = $entityInfo->getClassName();
         $entityUid = $dbRow[$entityInfo->getUidPropertyInfo()->getResourcePropertyName()];
-        $memoryItem = &$this->entityMemory[$entityClassName][$entityUid];
+        $entity = &$this->entityMemory[$entityClassName][$entityUid];
 
-        if (!$memoryItem instanceof EntityInterface) {
-            /** @var AbstractEntity $memoryItem */
-            $memoryItem = $this->container->get($entityInfo->getClassName());
+        if (!$entity instanceof EntityInterface) {
+            /** @var AbstractEntity $entity */
+            $entity = $this->container->get($entityInfo->getClassName());
             foreach ($dbRow as $resourcePropertyName => $value) {
                 $propertyName = $entityInfo->mapResourcePropertyName($resourcePropertyName);
                 if ($propertyName === '') {
                     continue;
                 }
-                $memoryItem->setProperty($propertyName, $value);
+                $entity->setProperty($propertyName, $value);
             }
             foreach ($entityInfo->getPropertyInfoList() as $propertyInfo) {
-                $propertyInfo->castValue($memoryItem);
+                $propertyInfo->castValue($entity);
             }
         }
-        return $memoryItem;
+        return $entity;
     }
 }

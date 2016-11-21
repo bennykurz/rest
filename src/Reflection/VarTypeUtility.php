@@ -18,14 +18,14 @@
 
 namespace N86io\Rest\Reflection;
 
-use N86io\Rest\Object\SingletonInterface;
+use N86io\Rest\Object\Singleton;
 
 /**
  * Class VarTypeUtility
  *
  * @author Viktor Firus <v@n86.io>
  */
-class VarTypeUtility implements SingletonInterface
+class VarTypeUtility implements Singleton
 {
     /**
      * @param string $type

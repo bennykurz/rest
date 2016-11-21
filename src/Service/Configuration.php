@@ -20,14 +20,14 @@ namespace N86io\Rest\Service;
 
 use N86io\Rest\ControllerInterface;
 use N86io\Rest\DomainObject\EntityInterface;
-use N86io\Rest\Object\SingletonInterface;
+use N86io\Rest\Object\Singleton;
 
 /**
  * Class Configuration
  *
  * @author Viktor Firus <v@n86.io>
  */
-class Configuration implements SingletonInterface
+class Configuration implements Singleton
 {
     const ENTITY_INFO_CONF_ARRAY = 1;
     const ENTITY_INFO_CONF_JSON = 2;

@@ -18,7 +18,7 @@
 
 namespace N86io\Rest\Http;
 
-use N86io\Rest\Object\SingletonInterface;
+use N86io\Rest\Object\Singleton;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -26,7 +26,7 @@ use Psr\Http\Message\ServerRequestInterface;
  *
  * @author Viktor Firus <v@n86.io>
  */
-interface RequestFactoryInterface extends SingletonInterface
+interface RequestFactoryInterface extends Singleton
 {
     /**
      * @param ServerRequestInterface $serverRequest

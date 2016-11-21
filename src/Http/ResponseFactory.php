@@ -21,7 +21,7 @@ namespace N86io\Rest\Http;
 use N86io\Rest\ContentConverter\ConverterFactory;
 use N86io\Rest\ContentConverter\ConverterInterface;
 use N86io\Rest\Object\Container;
-use N86io\Rest\Object\SingletonInterface;
+use N86io\Rest\Object\Singleton;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Webmozart\Assert\Assert;
@@ -31,7 +31,7 @@ use Webmozart\Assert\Assert;
  *
  * @author Viktor Firus <v@n86.io>
  */
-class ResponseFactory implements SingletonInterface
+class ResponseFactory implements Singleton
 {
     /**
      * @inject

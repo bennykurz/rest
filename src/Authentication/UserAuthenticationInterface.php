@@ -18,14 +18,14 @@
 
 namespace N86io\Rest\Authentication;
 
-use N86io\Rest\Object\SingletonInterface;
+use N86io\Rest\Object\Singleton;
 
 /**
  * Interface UserAuthenticationInterface
  *
  * @author Viktor Firus <v@n86.io>
  */
-interface UserAuthenticationInterface extends SingletonInterface
+interface UserAuthenticationInterface extends Singleton
 {
     /**
      * @return bool

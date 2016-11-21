@@ -23,7 +23,7 @@ use N86io\Rest\DomainObject\PropertyInfo\RestrictableInterface;
 use N86io\Rest\DomainObject\PropertyInfo\SortableInterface;
 use N86io\Rest\Exception\InvalidOrderingException;
 use N86io\Rest\Object\Container;
-use N86io\Rest\Object\SingletonInterface;
+use N86io\Rest\Object\Singleton;
 use N86io\Rest\Persistence\Constraint\ConstraintFactory;
 use N86io\Rest\Persistence\Ordering\OrderingFactory;
 use N86io\Rest\Persistence\Ordering\OrderingInterface;
@@ -34,7 +34,7 @@ use Webmozart\Assert\Assert;
  *
  * @author Viktor Firus <v@n86.io>
  */
-class QueryUtility implements SingletonInterface
+class QueryUtility implements Singleton
 {
     /**
      * @inject

@@ -18,7 +18,7 @@
 
 namespace N86io\Rest\DomainObject\EntityInfo;
 
-use N86io\Rest\Object\SingletonInterface;
+use N86io\Rest\Object\Singleton;
 use N86io\Rest\Service\Configuration;
 use Symfony\Component\Yaml\Yaml;
 use Webmozart\Assert\Assert;
@@ -28,7 +28,7 @@ use Webmozart\Assert\Assert;
  *
  * @author Viktor Firus <v@n86.io>
  */
-class EntityInfoConfLoader implements SingletonInterface
+class EntityInfoConfLoader implements Singleton
 {
     /**
      * @inject

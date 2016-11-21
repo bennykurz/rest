@@ -19,7 +19,7 @@
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
 use N86io\Rest\Object\Container;
-use N86io\Rest\Object\SingletonInterface;
+use N86io\Rest\Object\Singleton;
 use Webmozart\Assert\Assert;
 
 /**
@@ -27,7 +27,7 @@ use Webmozart\Assert\Assert;
  *
  * @author Viktor Firus <v@n86.io>
  */
-class PropertyInfoFactory implements SingletonInterface
+class PropertyInfoFactory implements Singleton
 {
     /**
      * @inject

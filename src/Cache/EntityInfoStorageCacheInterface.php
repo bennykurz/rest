@@ -19,13 +19,13 @@
 namespace N86io\Rest\Cache;
 
 use Doctrine\Common\Cache\Cache;
-use N86io\Rest\Object\SingletonInterface;
+use N86io\Rest\Object\Singleton;
 
 /**
  * Interface EntityInfoStorageCacheInterface
  *
  * @author Viktor Firus <v@n86.io>
  */
-interface EntityInfoStorageCacheInterface extends Cache, SingletonInterface
+interface EntityInfoStorageCacheInterface extends Cache, Singleton
 {
 }
