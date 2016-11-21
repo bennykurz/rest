@@ -73,6 +73,11 @@ class Repository implements RepositoryInterface
     public function initializeObject()
     {
         $this->connector = $this->container->get($this->entityInfo->getConnectorClassName(), [$this->entityInfo]);
+        $this->connector->setConstraints(
+            $this->constraintFactory->logicalAnd(
+                $this->getDefaultConstraints()
+            )
+        );
     }
 
     /**
@@ -82,7 +87,7 @@ class Repository implements RepositoryInterface
     public function setConstraints(ConstraintInterface $constraints)
     {
         $constraints = [$constraints];
-        $constraints[] = $this->constraintUtility->createEnableFieldsConstraints($this->entityInfo);
+        $constraints = array_merge($constraints, $this->getDefaultConstraints());
         $constraints = $this->constraintFactory->logicalAnd($constraints);
         $this->connector->setConstraints($constraints);
         return $this;
@@ -146,5 +151,12 @@ class Repository implements RepositoryInterface
     public function delete()
     {
         return $this->connector->delete();
+    }
+
+    protected function getDefaultConstraints()
+    {
+        return [
+            $this->constraintUtility->createEnableFieldsConstraints($this->entityInfo)
+        ];
     }
 }
