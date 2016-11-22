@@ -41,8 +41,7 @@
     }
   },
   "suggest": {
-    "guzzlehttp/psr7": "If no implementation for psr/http-message available, this package or other require with implementation for psr/http-message.",
-    "symfony/yaml": "Required, if EntityInfo configurations in yaml exist."
+    "guzzlehttp/psr7": "If no implementation for psr/http-message available, this package or other require with implementation for psr/http-message."
   },
   "extra": {
     "branch-alias": {
