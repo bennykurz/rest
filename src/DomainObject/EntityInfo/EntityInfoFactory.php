@@ -75,7 +75,7 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
             $entityInfo->addPropertyInfo($propertyInfo);
         }
 
-        if (array_key_exists('enableFields', $entityInfoConf)) {
+        if (isset($entityInfoConf['enableFields'])) {
             foreach ($entityInfoConf['enableFields'] as $type => $enableField) {
                 $entityInfo->addPropertyInfo($this->propertyInfoFactory->buildEnableField(
                     $type,
@@ -98,7 +98,7 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
      */
     protected function mergeProperties(array $properties, array $entityInfoConf)
     {
-        if (!array_key_exists('properties', $entityInfoConf)) {
+        if (empty($entityInfoConf['properties'])) {
             return $properties;
         }
         return array_merge_recursive($entityInfoConf['properties'], $properties);
@@ -127,7 +127,7 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
         $attributes = [];
         $keys = ['connector', 'table', 'mode', 'enableFields'];
         foreach ($keys as $key) {
-            if (array_key_exists($key, $entityInfoConf)) {
+            if (isset($entityInfoConf[$key])) {
                 $attributes[$key] = $entityInfoConf[$key];
             }
         }
@@ -142,8 +142,8 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
     protected function setUndefinedPropertiesAttributes(array $properties)
     {
         foreach ($properties as $propertyName => &$attributes) {
-            if (!array_key_exists('resourcePropertyName', $attributes) &&
-                !array_key_exists('sqlExpression', $attributes) &&
+            if (empty($attributes['resourcePropertyName']) &&
+                empty($attributes['sqlExpression']) &&
                 $attributes['type'] !== '__dynamic'
             ) {
                 $attributes['resourcePropertyName'] = $this->convertPropertyName($propertyName);

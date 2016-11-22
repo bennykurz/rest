@@ -80,7 +80,7 @@ class RequestFactory implements RequestFactoryInterface
         $route = $routing->getRoute($serverRequest->getUri());
         $this->checkRoute($route);
 
-        $version = array_key_exists('version', $route) ? $route['version'] : '';
+        $version = isset($route['version']) ? $route['version'] : '';
         list($modelClassName, $controllerClassName) = $this->resolveClasses(
             $route['apiIdentifier'],
             $version
@@ -91,7 +91,7 @@ class RequestFactory implements RequestFactoryInterface
         $query = $serverRequest->getUri()->getQuery() ?: '';
         $queryParams = $this->queryUtility->resolveQueryParams($query, $entityInfo);
 
-        $resourceIds = array_key_exists('resourceId', $route) ? explode(',', $route['resourceId']) : [];
+        $resourceIds = isset($route['resourceId']) ? explode(',', $route['resourceId']) : [];
 
         $request = $this->container->get(RequestInterface::class);
         $request->setVersion($version)
@@ -116,7 +116,7 @@ class RequestFactory implements RequestFactoryInterface
      */
     protected function setOrdering(RequestInterface $request, array $queryParams)
     {
-        if (array_key_exists('ordering', $queryParams) &&
+        if (isset($queryParams['ordering']) &&
             $queryParams['ordering'] instanceof OrderingInterface
         ) {
             $request->setOrdering($queryParams['ordering']);
@@ -129,7 +129,7 @@ class RequestFactory implements RequestFactoryInterface
      */
     protected function setConstraints(RequestInterface $request, array $queryParams)
     {
-        if (array_key_exists('constraints', $queryParams) &&
+        if (isset($queryParams['constraints']) &&
             $queryParams['constraints'] instanceof ConstraintInterface
         ) {
             $request->setConstraints($queryParams['constraints']);
@@ -203,18 +203,18 @@ class RequestFactory implements RequestFactoryInterface
 
         if (empty($version)) {
             $first = current($apiConf);
-            $controller = array_key_exists('controller', $first) ? $first['controller'] : ControllerInterface::class;
+            $controller = isset($first['controller']) ? $first['controller'] : ControllerInterface::class;
             return [
                 $first['model'],
                 $controller
             ];
         }
 
-        if (!array_key_exists($version, $apiConf)) {
+        if (empty($apiConf[$version])) {
             throw new RequestNotFoundException;
         }
 
-        $controller = array_key_exists('controller', $apiConf[$version]) ? $apiConf[$version]['controller'] :
+        $controller = isset($apiConf[$version]['controller']) ? $apiConf[$version]['controller'] :
             ControllerInterface::class;
         return [
             $apiConf[$version]['model'],

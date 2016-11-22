@@ -84,7 +84,7 @@ class Container
         Assert::isInstanceOf(static::$definitionFactory, DefinitionFactory::class, 'Container should be initialized.');
         $className = static::mapClassName($className);
         $className = static::resolveInterface($className);
-        if (array_key_exists($className, static::$singletonInstances)) {
+        if (isset(static::$singletonInstances[$className])) {
             return static::$singletonInstances[$className];
         }
         if (!class_exists($className)) {
@@ -127,7 +127,7 @@ class Container
      */
     protected static function mapClassName($className)
     {
-        if (array_key_exists($className, static::$classMapping)) {
+        if (isset(static::$classMapping[$className])) {
             return static::$classMapping[$className];
         }
         return $className;

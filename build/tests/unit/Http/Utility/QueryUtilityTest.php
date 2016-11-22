@@ -78,16 +78,15 @@ class QueryUtilityTest extends UnitTestCase
             'invalidPropertyName.gt=10&sort=invalidPropertyName.asc',
             $this->entityInfo
         );
-        $this->assertFalse(array_key_exists('ordering', $queryParams));
-        $this->assertFalse(array_key_exists('constraints', $queryParams));
-
+        $this->assertArrayNotHasKey('ordering', $queryParams);
+        $this->assertArrayNotHasKey('constraints', $queryParams);
 
         $queryParams = $this->queryUtility->resolveQueryParams(
             'string.gt=10&sort=integer.desc',
             $this->entityInfo
         );
-        $this->assertFalse(array_key_exists('ordering', $queryParams));
-        $this->assertFalse(array_key_exists('constraints', $queryParams));
+        $this->assertArrayNotHasKey('ordering', $queryParams);
+        $this->assertArrayNotHasKey('constraints', $queryParams);
     }
 
     protected function createContainerMock()

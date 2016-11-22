@@ -103,24 +103,24 @@ class EntityInfo implements EntityInfoInterface
                 'Class for EntityInfo should be a subclass of "' . AbstractEntity::class . '".'
             );
         }
-        if (array_key_exists('className', $attributes)) {
+        if (isset($attributes['className'])) {
             Assert::string($attributes['className']);
             $this->className = $attributes['className'];
         }
-        if (array_key_exists('connector', $attributes)) {
+        if (isset($attributes['connector'])) {
             Assert::string($attributes['connector']);
             $this->connector = $attributes['connector'];
         }
-        if (array_key_exists('table', $attributes)) {
+        if (isset($attributes['table'])) {
             Assert::string($attributes['table']);
             $this->table = $attributes['table'];
         }
-        if (array_key_exists('mode', $attributes)) {
+        if (isset($attributes['mode'])) {
             Assert::isArray($attributes['mode']);
             $this->readMode = array_search('read', $attributes['mode']) !== false;
             $this->writeMode = array_search('write', $attributes['mode']) !== false;
         }
-        if (array_key_exists('enableFields', $attributes)) {
+        if (isset($attributes['enableFields'])) {
             Assert::isArray($attributes['enableFields']);
             $this->enableFields = $attributes['enableFields'];
         }
@@ -273,10 +273,10 @@ class EntityInfo implements EntityInfoInterface
     public function mapResourcePropertyName($name)
     {
         Assert::string($name);
-        if (array_key_exists($name, $this->propertyInfoList)) {
+        if (isset($this->propertyInfoList[$name])) {
             return $name;
         }
-        return array_key_exists($name, $this->propertyMapList) ? $this->propertyMapList[$name] : '';
+        return isset($this->propertyMapList[$name]) ? $this->propertyMapList[$name] : '';
     }
 
     /**

@@ -116,7 +116,7 @@ class Configuration implements Singleton
      */
     public function getApiControllerSettings($apiIdentifier)
     {
-        if (array_key_exists($apiIdentifier, $this->apiContrSettings)) {
+        if (isset($this->apiContrSettings[$apiIdentifier])) {
             return $this->apiContrSettings[$apiIdentifier];
         }
         return [];
@@ -243,7 +243,7 @@ class Configuration implements Singleton
      */
     protected function isApiAlias($apiIdentifier)
     {
-        return array_key_exists($apiIdentifier, $this->apiAliases);
+        return isset($this->apiAliases[$apiIdentifier]);
     }
 
     /**
@@ -252,6 +252,6 @@ class Configuration implements Singleton
      */
     protected function isRegularApiIdentifier($apiIdentifier)
     {
-        return array_key_exists($apiIdentifier, $this->apiConfiguration);
+        return isset($this->apiConfiguration[$apiIdentifier]);
     }
 }

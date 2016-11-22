@@ -43,7 +43,7 @@ class JoinAliasStorage implements Singleton
      */
     public function get($table)
     {
-        if (!array_key_exists($table, $this->aliases)) {
+        if (empty($this->aliases[$table])) {
             $this->counter++;
             $joinAlias = 'j' . $this->counter;
             $this->aliases[$table] = $joinAlias;

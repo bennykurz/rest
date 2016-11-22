@@ -150,15 +150,15 @@ class EntityClassReflection
     protected function mergeMethodsAttributesIntoProperties(array $methodsAttributes)
     {
         foreach ($methodsAttributes as $propertyName => $methodAttributes) {
-            if (array_key_exists($propertyName, $this->properties)) {
+            if (isset($this->properties[$propertyName])) {
                 continue;
             }
             $propertyAttributes = &$this->properties[$propertyName];
             $propertyAttributes['type'] = '__dynamic';
-            if (array_key_exists('getter', $methodAttributes)) {
+            if (isset($methodAttributes['getter'])) {
                 $propertyAttributes['getter'] = $methodAttributes['getter'];
             }
-            if (array_key_exists('setter', $methodAttributes)) {
+            if (isset($methodAttributes['setter'])) {
                 $propertyAttributes['setter'] = $methodAttributes['setter'];
             }
         }

@@ -91,7 +91,7 @@ abstract class AbstractPropertyInfo implements PropertyInfoInterface
     public function __construct($name, array $attributes)
     {
         Assert::string($name);
-        if (!array_key_exists('type', $attributes) || empty(trim($attributes['type']))) {
+        if (empty($attributes['type']) || empty(trim($attributes['type']))) {
             throw new \InvalidArgumentException('Missed type for PropertyInfo (' . $name . ').');
         }
         foreach ($attributes as $key => $attribute) {

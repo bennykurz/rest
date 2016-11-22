@@ -41,7 +41,7 @@ class RelationOnForeignField extends AbstractPropertyInfo implements RelationOnF
      */
     public function __construct($name, array $attributes)
     {
-        if (!array_key_exists('foreignField', $attributes) || empty(trim($attributes['foreignField']))) {
+        if (empty($attributes['foreignField']) || empty(trim($attributes['foreignField']))) {
             throw new \InvalidArgumentException('ForeignField should not empty string.');
         }
         parent::__construct($name, $attributes);

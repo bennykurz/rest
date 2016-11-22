@@ -65,7 +65,7 @@ class EntityInfoConfLoader implements Singleton
      */
     protected function addEmptyEntityInfoConf($className)
     {
-        if (!array_key_exists($className, $this->loadedConf)) {
+        if (empty($this->loadedConf[$className])) {
             $this->loadedConf[$className] = [
                 'properties' => []
             ];
@@ -107,7 +107,7 @@ class EntityInfoConfLoader implements Singleton
     protected function mergeComplete(array &$array1, array $array2)
     {
         foreach ($array2 as $modelName2 => $modelConf2) {
-            if (!array_key_exists($modelName2, $array1)) {
+            if (empty($array1[$modelName2])) {
                 $array1[$modelName2] = [];
             }
             $modelConf1 = &$array1[$modelName2];
@@ -122,8 +122,8 @@ class EntityInfoConfLoader implements Singleton
     protected function mergeModelConf(array &$modelConf1, array $modelConf2)
     {
         $this->mergeSingle($modelConf1, $modelConf2, ['table', 'mode', 'connector']);
-        if (array_key_exists('enableFields', $modelConf2)) {
-            if (!array_key_exists('enableFields', $modelConf1)) {
+        if (isset($modelConf2['enableFields'])) {
+            if (empty($modelConf1['enableFields'])) {
                 $modelConf1['enableFields'] = [];
             }
             $this->mergeSingle(
@@ -132,7 +132,7 @@ class EntityInfoConfLoader implements Singleton
                 ['deleted', 'disabled', 'startTime', 'endTime']
             );
         }
-        if (!array_key_exists('properties', $modelConf1)) {
+        if (empty($modelConf1['properties'])) {
             $modelConf1['properties'] = [];
         }
         $this->mergeProperties($modelConf1['properties'], $modelConf2['properties']);
@@ -145,7 +145,7 @@ class EntityInfoConfLoader implements Singleton
     protected function mergeProperties(array &$properties1, array $properties2)
     {
         foreach ($properties2 as $propertyName => $attributes2) {
-            if (!array_key_exists($propertyName, $properties1)) {
+            if (empty($properties1[$propertyName])) {
                 $properties1[$propertyName] = [];
             }
             $attributes1 = &$properties1[$propertyName];
@@ -161,7 +161,7 @@ class EntityInfoConfLoader implements Singleton
     protected function mergeSingle(array &$array1, array $array2, array $keys)
     {
         foreach ($keys as $key) {
-            if (array_key_exists($key, $array2)) {
+            if (isset($array2[$key])) {
                 $array1[$key] = $array2[$key];
             }
         }

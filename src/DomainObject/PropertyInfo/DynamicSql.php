@@ -58,7 +58,7 @@ class DynamicSql extends AbstractPropertyInfo implements
     public function __construct($name, array $attributes)
     {
         Assert::string($name);
-        if (!$this->isSqlOptional && (!array_key_exists('sql', $attributes) || empty(trim($attributes['sql'])))) {
+        if (!$this->isSqlOptional && (empty($attributes['sql']) || empty(trim($attributes['sql'])))) {
             throw new \InvalidArgumentException('Sql should not empty string.');
         }
         parent::__construct($name, $attributes);
@@ -94,6 +94,6 @@ class DynamicSql extends AbstractPropertyInfo implements
      */
     public static function verifyAttributes(array $attributes)
     {
-        return array_key_exists('sql', $attributes);
+        return isset($attributes['sql']);
     }
 }

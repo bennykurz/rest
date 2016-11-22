@@ -87,6 +87,6 @@ class Common extends AbstractStatic implements
      */
     public static function verifyAttributes(array $attributes)
     {
-        return array_key_exists('type', $attributes) && array_key_exists('resourcePropertyName', $attributes);
+        return isset($attributes['type']) && isset($attributes['resourcePropertyName']);
     }
 }
