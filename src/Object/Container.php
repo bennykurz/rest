@@ -20,6 +20,7 @@ namespace N86io\Rest\Object;
 
 use Doctrine\Common\Cache\Cache;
 use N86io\Reflection\ReflectionClass;
+use N86io\Rest\Cache\ContainerCacheInterface;
 use Webmozart\Assert\Assert;
 
 /**
@@ -52,7 +53,12 @@ class Container
         static::$singletonInstances[self::class] = $this;
     }
 
-    public static function initializeContainer(Cache $cache, array $classMapping = [])
+    /**
+     * @param ContainerCacheInterface $cache
+     * @param array $classMapping
+     * @throws \Exception
+     */
+    public static function initializeContainer(ContainerCacheInterface $cache, array $classMapping = [])
     {
         if (static::$definitionFactory instanceof Cache) {
             throw new \Exception('Cache for Container already exist.');

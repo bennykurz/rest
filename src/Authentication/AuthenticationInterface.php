@@ -18,18 +18,26 @@
 
 namespace N86io\Rest\Authentication;
 
+use N86io\Rest\Object\Singleton;
+
 /**
- * Class UserAuthentication
+ * Interface UserAuthenticationInterface
  *
  * @author Viktor Firus <v@n86.io>
  */
-class UserAuthentication implements UserAuthenticationInterface
+interface UserAuthenticationInterface extends Singleton
 {
+    public function load();
+
     /**
-     * @return bool
+     * @param string $model
+     * @param int $requestMode
+     * @return boolean
      */
-    public function hasAccess()
-    {
-        return true;
-    }
+    public function hasApiAccess($model, $requestMode);
+
+    /**
+     * @param AuthenticationConfiguration $authConf
+     */
+    public function setAuthenticationConfiguration(AuthenticationConfiguration $authConf);
 }

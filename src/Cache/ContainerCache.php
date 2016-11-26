@@ -16,19 +16,15 @@
  * along with N86io/Rest or see <http://www.gnu.org/licenses/>.
  */
 
-namespace N86io\Rest\Authentication;
+namespace N86io\Rest\Cache;
 
-use N86io\Rest\Object\Singleton;
+use Doctrine\Common\Cache\ArrayCache;
 
 /**
- * Interface UserAuthenticationInterface
+ * Class ContainerCache
  *
  * @author Viktor Firus <v@n86.io>
  */
-interface UserAuthenticationInterface extends Singleton
+class ContainerCache extends ArrayCache implements ContainerCacheInterface
 {
-    /**
-     * @return bool
-     */
-    public function hasAccess();
 }
