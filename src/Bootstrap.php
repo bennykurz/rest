@@ -18,7 +18,9 @@
 
 namespace N86io\Rest;
 
-use N86io\Rest\Authentication\UserAuthenticationInterface;
+use N86io\Rest\Authentication\AuthenticationConfiguration;
+use N86io\Rest\Authentication\AuthenticationInterface;
+use N86io\Rest\Cache\ContainerCacheInterface;
 use N86io\Rest\Http\RequestFactoryInterface;
 use N86io\Rest\Http\RequestInterface;
 use N86io\Rest\Http\ResponseFactory;
@@ -34,14 +36,16 @@ use Psr\Http\Message\ServerRequestInterface;
 class Bootstrap
 {
     /**
+     * @inject
      * @var Container
      */
     protected $container;
 
     /**
-     * @var UserAuthenticationInterface
+     * @inject
+     * @var AuthenticationInterface
      */
-    protected $userAuthentication;
+    protected $authentication;
 
     /**
      * @param ServerRequestInterface $serverRequest
@@ -50,10 +54,9 @@ class Bootstrap
      */
     public function run(ServerRequestInterface $serverRequest)
     {
-        $this->container = Container::makeInstance(Container::class);
-        $this->userAuthentication = $this->container->get(UserAuthenticationInterface::class);
-        $requestFactory = $this->container->get(RequestFactoryInterface::class);
+        $this->authentication->load();
 
+        $requestFactory = $this->container->get(RequestFactoryInterface::class);
         $responseFactory = $this->container->get(ResponseFactory::class);
         $responseFactory->setServerRequest($serverRequest);
 
@@ -63,7 +66,7 @@ class Bootstrap
             return $responseFactory->errorRequest($e->getCode());
         }
 
-        if (!$this->userAuthentication->hasAccess()) {
+        if (!$this->authentication->hasApiAccess($request->getModelClassName(), $request->getMode())) {
             return $responseFactory->unauthorized();
         }
 
@@ -72,6 +75,25 @@ class Bootstrap
         } catch (\Exception $e) {
             return $responseFactory->errorRequest($e->getCode());
         }
+    }
+
+    /**
+     * @param ContainerCacheInterface $containerCache
+     * @param array $classMapping
+     * @param AuthenticationConfiguration $authConf
+     * @return Bootstrap
+     */
+    public static function initialize(
+        AuthenticationConfiguration $authConf = null,
+        ContainerCacheInterface $containerCache = null,
+        array $classMapping = []
+    ) {
+        Container::initializeContainer($containerCache, $classMapping);
+        $container = Container::makeInstance(Container::class);
+        $self = $container->get(Bootstrap::class);
+        $self->authentication->setConfiguration($authConf);
+
+        return $self;
     }
 
     /**
