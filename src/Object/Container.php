@@ -58,15 +58,12 @@ class Container
      * @param array $classMapping
      * @throws \Exception
      */
-    public static function initializeContainer(ContainerCacheInterface $cache, array $classMapping = [])
+    public static function initialize(ContainerCacheInterface $cache, array $classMapping = [])
     {
-        if (static::$definitionFactory instanceof Cache) {
-            throw new \Exception('Cache for Container already exist.');
+        if (static::$definitionFactory instanceof DefinitionFactory) {
+            throw new \Exception('Container is already initialized.');
         }
         static::$definitionFactory = new DefinitionFactory($cache);
-        if (is_array(static::$classMapping)) {
-            throw new \Exception('Class mapping for Container already exist.');
-        }
         static::$classMapping = $classMapping;
     }
 
