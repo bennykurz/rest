@@ -18,9 +18,9 @@
 
 namespace N86io\Rest\Object;
 
-use Doctrine\Common\Cache\Cache;
 use N86io\Reflection\ReflectionClass;
 use N86io\Rest\Cache\ContainerCacheInterface;
+use N86io\Rest\Exception\ContainerException;
 use Webmozart\Assert\Assert;
 
 /**
@@ -61,7 +61,7 @@ class Container
     public static function initialize(ContainerCacheInterface $cache, array $classMapping = [])
     {
         if (static::$definitionFactory instanceof DefinitionFactory) {
-            throw new \Exception('Container is already initialized.');
+            throw new ContainerException('Container is already initialized.');
         }
         static::$definitionFactory = new DefinitionFactory($cache);
         static::$classMapping = $classMapping;
