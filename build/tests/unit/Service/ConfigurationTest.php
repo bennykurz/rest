@@ -75,7 +75,7 @@ class ConfigurationTest extends UnitTestCase
     public function test()
     {
         $secondConfiguration = new Configuration;
-        $secondConfiguration->injectConfiguration($this->configuration);
+        $secondConfiguration->overrideConfiguration($this->configuration);
 
         $this->assertEquals($this->configuration, $secondConfiguration);
 
@@ -122,7 +122,7 @@ class ConfigurationTest extends UnitTestCase
 
 
         $clearConf = new Configuration;
-        $this->configuration->injectConfiguration($clearConf);
+        $this->configuration->overrideConfiguration($clearConf);
         $this->configuration->registerEntityInfoConfiguration('SomeContent', Configuration::ENTITY_INFO_CONF_ARRAY);
         $this->configuration->registerEntityInfoConfiguration(
             'SomeFurtherContent',

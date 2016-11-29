@@ -62,7 +62,7 @@ class Configuration implements Singleton
     /**
      * @param Configuration $configuration
      */
-    public function injectConfiguration(Configuration $configuration)
+    public function overrideConfiguration(Configuration $configuration)
     {
         $this->apiBaseUrl = $configuration->apiBaseUrl;
         $this->apiConfiguration = $configuration->apiConfiguration;
