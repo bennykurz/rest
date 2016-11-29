@@ -29,4 +29,9 @@ class RequestNotFoundException extends \Exception
      * @var int
      */
     protected $code = 404;
+
+    /**
+     * @var string
+     */
+    protected $message = 'Not found';
 }

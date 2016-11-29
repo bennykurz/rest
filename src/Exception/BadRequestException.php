@@ -29,4 +29,9 @@ class BadRequestException extends \Exception
      * @var int
      */
     protected $code = 400;
+
+    /**
+     * @var string
+     */
+    protected $message = 'Bad request';
 }

@@ -29,4 +29,9 @@ class InternalServerErrorException extends \Exception
      * @var int
      */
     protected $code = 500;
+
+    /**
+     * @var string
+     */
+    protected $message = 'Internal server error';
 }
