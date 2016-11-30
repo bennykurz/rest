@@ -178,7 +178,7 @@ class Controller implements ControllerInterface
     {
         $entityInfo = $this->entityInfoStorage->get($this->request->getModelClassName());
         $repository = $entityInfo->createRepositoryInstance();
-        $this->addConstraints($repository, $entityInfo);
+        $this->setConstraints($repository, $entityInfo);
         $this->setOrdering($repository);
         $this->setLimit($repository);
         return $repository->read();
@@ -187,7 +187,7 @@ class Controller implements ControllerInterface
     /**
      * @param RepositoryInterface $repository
      */
-    private function setLimit(RepositoryInterface $repository)
+    protected function setLimit(RepositoryInterface $repository)
     {
         if (($limit = $this->request->getLimit()) !== null) {
             $repository->setLimit($limit);
@@ -201,7 +201,7 @@ class Controller implements ControllerInterface
     /**
      * @param RepositoryInterface $repository
      */
-    private function setOrdering(RepositoryInterface $repository)
+    protected function setOrdering(RepositoryInterface $repository)
     {
         if ($this->request->getOrdering()) {
             $repository->setOrdering($this->request->getOrdering());
@@ -212,7 +212,20 @@ class Controller implements ControllerInterface
      * @param RepositoryInterface $repository
      * @param EntityInfoInterface $entityInfo
      */
-    private function addConstraints(RepositoryInterface $repository, EntityInfoInterface $entityInfo)
+    protected function setConstraints(RepositoryInterface $repository, EntityInfoInterface $entityInfo)
+    {
+        $constraints = $this->getDefaultConstraints($entityInfo);
+        if (!empty($constraints)) {
+            $constraints = $this->constraintFactory->logicalAnd($constraints);
+            $repository->setConstraints($constraints);
+        }
+    }
+
+    /**
+     * @param EntityInfoInterface $entityInfo
+     * @return array
+     */
+    protected function getDefaultConstraints(EntityInfoInterface $entityInfo)
     {
         $constraints = [];
         if (($requestConstraints = $this->request->getConstraints()) !== null) {
@@ -224,9 +237,6 @@ class Controller implements ControllerInterface
                 $this->request->getResourceIds()
             );
         }
-        if (!empty($constraints)) {
-            $constraints = $this->constraintFactory->logicalAnd($constraints);
-            $repository->setConstraints($constraints);
-        }
+        return $constraints;
     }
 }
