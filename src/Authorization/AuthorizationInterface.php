@@ -16,19 +16,31 @@
  * along with N86io/Rest or see <http://www.gnu.org/licenses/>.
  */
 
-namespace N86io\Rest\Authentication;
+namespace N86io\Rest\Authorization;
 
 use N86io\Rest\Object\Singleton;
 
 /**
- * Interface AuthenticationInterface
+ * Interface AuthorizationInterface
  *
  * @author Viktor Firus <v@n86.io>
  */
-interface AuthenticationInterface extends Singleton
+interface AuthorizationInterface extends Singleton
 {
     /**
-     * @return void
+     * @param int $userGroup
      */
-    public function load();
+    public function addUserGroup($userGroup);
+
+    /**
+     * @param array $userGroups
+     */
+    public function addUserGroups(array $userGroups);
+
+    /**
+     * @param string $model
+     * @param int $requestMode
+     * @return boolean
+     */
+    public function hasApiAccess($model, $requestMode);
 }

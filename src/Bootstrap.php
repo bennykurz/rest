@@ -18,9 +18,11 @@
 
 namespace N86io\Rest;
 
-use N86io\Rest\Authentication\AuthenticationConfiguration;
 use N86io\Rest\Authentication\AuthenticationInterface;
+use N86io\Rest\Authorization\AuthorizationInterface;
+use N86io\Rest\Cache\ContainerCache;
 use N86io\Rest\Cache\ContainerCacheInterface;
+use N86io\Rest\Exception\ContainerException;
 use N86io\Rest\Http\RequestFactoryInterface;
 use N86io\Rest\Http\RequestInterface;
 use N86io\Rest\Http\ResponseFactory;
@@ -36,16 +38,42 @@ use Psr\Http\Message\ServerRequestInterface;
 class Bootstrap
 {
     /**
-     * @inject
      * @var Container
      */
     protected $container;
 
     /**
-     * @inject
-     * @var AuthenticationInterface
+     * @var bool
      */
-    protected $authentication;
+    protected $authenticationRun = false;
+
+    /**
+     * @param array $classMapping
+     * @param ContainerCacheInterface $containerCache
+     */
+    public function initializeContainer(
+        array $classMapping = [],
+        ContainerCacheInterface $containerCache = null
+    ) {
+        try {
+            $containerCache = $containerCache ?: new ContainerCache;
+            Container::initialize($containerCache, $classMapping);
+        } catch (ContainerException $e) {
+            // Nothing to do, if container already initialized
+        }
+        if (!$this->container) {
+            $this->container = Container::makeInstance(Container::class);
+        }
+    }
+
+    public function runAuthentication()
+    {
+        if (!$this->authenticationRun) {
+            $this->authenticationRun = true;
+            $authentication = Container::makeInstance(AuthenticationInterface::class);
+            $authentication->load();
+        }
+    }
 
     /**
      * @param ServerRequestInterface $serverRequest
@@ -54,7 +82,8 @@ class Bootstrap
      */
     public function run(ServerRequestInterface $serverRequest)
     {
-        $this->authentication->load();
+        $this->initializeContainer();
+        $this->runAuthentication();
 
         $requestFactory = $this->container->get(RequestFactoryInterface::class);
         $responseFactory = $this->container->get(ResponseFactory::class);
@@ -66,7 +95,8 @@ class Bootstrap
             return $responseFactory->errorRequest($e->getCode());
         }
 
-        if (!$this->authentication->hasApiAccess($request->getModelClassName(), $request->getMode())) {
+        $authorization = Container::makeInstance(AuthorizationInterface::class);
+        if (!$authorization->hasApiAccess($request->getModelClassName(), $request->getMode())) {
             return $responseFactory->unauthorized();
         }
 
@@ -75,25 +105,6 @@ class Bootstrap
         } catch (\Exception $e) {
             return $responseFactory->errorRequest($e->getCode());
         }
-    }
-
-    /**
-     * @param ContainerCacheInterface $containerCache
-     * @param array $classMapping
-     * @param AuthenticationConfiguration $authConf
-     * @return Bootstrap
-     */
-    public static function initialize(
-        AuthenticationConfiguration $authConf = null,
-        ContainerCacheInterface $containerCache = null,
-        array $classMapping = []
-    ) {
-        Container::initializeContainer($containerCache, $classMapping);
-        $container = Container::makeInstance(Container::class);
-        $self = $container->get(Bootstrap::class);
-        $self->authentication->setConfiguration($authConf);
-
-        return $self;
     }
 
     /**

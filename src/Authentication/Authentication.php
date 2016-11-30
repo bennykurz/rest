@@ -19,71 +19,53 @@
 namespace N86io\Rest\Authentication;
 
 use Lcobucci\JWT\Parser;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
+use N86io\Rest\Authorization\AuthorizationInterface;
+use N86io\Rest\Object\Container;
 
 /**
- * Class UserAuthentication
+ * Class Authentication
  *
  * @author Viktor Firus <v@n86.io>
  */
-class UserAuthentication implements UserAuthenticationInterface
+class Authentication implements AuthenticationInterface
 {
     /**
-     * @var AuthenticationConfiguration
+     * @inject
+     * @var Configuration
      */
-    protected $authConf = [];
+    protected $authConf;
 
     /**
-     * @var array
+     * @return void
      */
-    protected $userGroups = [-1];
-
     public function load()
     {
         $headerAuthorization = getallheaders()['Authorization'];
         if (substr($headerAuthorization, 0, 6) !== 'Bearer') {
             return;
         }
-        $token = substr($headerAuthorization, 7);
+
         $jwtParser = new Parser;
-        $token = $jwtParser->parse($token);
-        DebuggerUtility::var_dump($token);
+        $token = $jwtParser->parse(substr($headerAuthorization, 7));
 
-
-        die();
-    }
-
-    /**
-     * @param string $model
-     * @param int $requestMode
-     * @return boolean
-     */
-    public function hasApiAccess($model, $requestMode)
-    {
-        $allowedRead = false;
-        $allowedWrite = false;
-        foreach ($this->authConf->getAccessConf()[$model] as $groupId => $groupItem) {
-            if (array_search($groupId, $this->userGroups) === false) {
-                continue;
+        try {
+            $verified = $token->verify(
+                $this->authConf->getSigner(),
+                $this->authConf->getVerifyKey()
+            );
+            if ($verified === false) {
+                return;
             }
-            if (empty($groupItem['access'])) {
-                continue;
-            }
-            if (array_search('read', $groupItem['access']) !== false) {
-                $allowedRead = true;
-            }
-            if (array_search('write', $groupItem['access']) !== false) {
-                $allowedWrite = true;
-            }
+        } catch (\BadMethodCallException $e) {
+            return;
         }
-        return AccessUtility::canAccess($requestMode, $allowedRead, $allowedWrite);
-    }
 
-    /**
-     * @param AuthenticationConfiguration $authConf
-     */
-    public function setAuthenticationConfiguration(AuthenticationConfiguration $authConf)
-    {
-        $this->authConf = $authConf;
+        $userId = $token->getClaim('uid');
+
+        $closure = $this->authConf->getSuccessfulAuthenticationCallable();
+        $additionalGroups = $closure($userId);
+
+        $authorization = Container::makeInstance(AuthorizationInterface::class);
+        $authorization->addUserGroups($additionalGroups);
     }
 }
