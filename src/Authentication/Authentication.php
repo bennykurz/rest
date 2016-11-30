@@ -42,6 +42,7 @@ class Authentication implements AuthenticationInterface
     {
         $headerAuthorization = getallheaders()['Authorization'];
         if (substr($headerAuthorization, 0, 6) !== 'Bearer') {
+            $this->callFailedAuthenticationCallable();
             return;
         }
 
@@ -54,9 +55,11 @@ class Authentication implements AuthenticationInterface
                 $this->authConf->getVerifyKey()
             );
             if ($verified === false) {
+                $this->callFailedAuthenticationCallable();
                 return;
             }
         } catch (\BadMethodCallException $e) {
+            $this->callFailedAuthenticationCallable();
             return;
         }
 
@@ -72,5 +75,10 @@ class Authentication implements AuthenticationInterface
         $authorization = Container::makeInstance(AuthorizationInterface::class);
         $authorization->addUserGroup(0);
         $authorization->addUserGroups($additionalGroups);
+    }
+
+    protected function callFailedAuthenticationCallable()
+    {
+        call_user_func($this->authConf->getFailedAuthenticationCallable());
     }
 }

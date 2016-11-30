@@ -117,6 +117,14 @@ class Configuration implements Singleton
     }
 
     /**
+     * @return callable
+     */
+    public function getFailedAuthenticationCallable()
+    {
+        return $this->failedAuthCallable;
+    }
+
+    /**
      * @param int $alg
      * @param string $signKey
      * @param string $verifyKey
@@ -217,13 +225,5 @@ class Configuration implements Singleton
         }
         $this->signKey = new Signer\Key($key);
         $this->verifyKey = $this->signKey;
-    }
-
-    /**
-     * @param callable $callable
-     */
-    protected function setSuccessfulAuthenticationCallable(callable $callable)
-    {
-        $this->succAuthCallable = $callable;
     }
 }
