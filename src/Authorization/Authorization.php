@@ -65,6 +65,9 @@ class Authorization implements AuthorizationInterface
         $allowedRead = false;
         $allowedWrite = false;
         foreach ($this->authConf->getAccessConf()[$model] as $groupId => $groupItem) {
+            if ($allowedRead && $allowedWrite) {
+                break;
+            }
             if (array_search($groupId, $this->userGroups) === false) {
                 continue;
             }
@@ -79,5 +82,46 @@ class Authorization implements AuthorizationInterface
             }
         }
         return Utility::canAccess($requestMode, $allowedRead, $allowedWrite);
+    }
+
+    /**
+     * @param string $model
+     * @param string $propertyName
+     * @return bool
+     */
+    public function hasPropertyReadAuthorization($model, $propertyName)
+    {
+        return $this->hasPropertyAuthorization($model, $propertyName)[0];
+    }
+
+    /**
+     * @param string $model
+     * @param string $propertyName
+     * @return bool[]
+     */
+    protected function hasPropertyAuthorization($model, $propertyName)
+    {
+        $allowedRead = false;
+        $allowedWrite = false;
+
+        foreach ($this->authConf->getAccessConf()[$model] as $groupId => $groupItem) {
+            if ($allowedRead && $allowedWrite) {
+                break;
+            }
+            if (array_search($groupId, $this->userGroups) === false) {
+                continue;
+            }
+            if (empty($groupItem['properties']) || empty($groupItem['properties'][$propertyName])) {
+                continue;
+            }
+            if (array_search('read', $groupItem['properties'][$propertyName]) !== false) {
+                $allowedRead = true;
+            }
+            if (array_search('write', $groupItem['properties'][$propertyName]) !== false) {
+                $allowedWrite = true;
+            }
+        }
+
+        return [$allowedRead, $allowedWrite];
     }
 }

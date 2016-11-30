@@ -18,6 +18,7 @@
 
 namespace N86io\Rest\ContentConverter;
 
+use N86io\Rest\Authorization\AuthorizationInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
 use N86io\Rest\DomainObject\EntityInterface;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
@@ -36,6 +37,12 @@ abstract class AbstractConverter implements ConverterInterface
      * @var EntityInfoStorage
      */
     protected $entityInfoStorage;
+
+    /**
+     * @inject
+     * @var AuthorizationInterface
+     */
+    protected $authorization;
 
     /**
      * @param array $connectorList
@@ -90,6 +97,9 @@ abstract class AbstractConverter implements ConverterInterface
         $visibleProperties = $entityInfo->getVisiblePropertiesOrdered($outputLevel);
         /** @var PropertyInfoInterface $visibleProperty */
         foreach ($visibleProperties as $visibleProperty) {
+            if (!$this->hasPropertyAuthorization($visibleProperty)) {
+                continue;
+            }
             if (!$visibleProperty->getGetter()) {
                 $callable = [$entity, 'getProperty'];
                 $result[$visibleProperty->getName()] = call_user_func($callable, $visibleProperty->getName());
@@ -99,5 +109,17 @@ abstract class AbstractConverter implements ConverterInterface
             $result[$visibleProperty->getName()] = call_user_func($callable, $visibleProperty->getName());
         }
         return $result;
+    }
+
+    /**
+     * @param PropertyInfoInterface $propertyInfo
+     * @return boolean
+     */
+    protected function hasPropertyAuthorization(PropertyInfoInterface $propertyInfo)
+    {
+        return $this->authorization->hasPropertyReadAuthorization(
+            $propertyInfo->getEntityInfo()->getClassName(),
+            $propertyInfo->getName()
+        );
     }
 }

@@ -43,4 +43,11 @@ interface AuthorizationInterface extends Singleton
      * @return boolean
      */
     public function hasApiAccess($model, $requestMode);
+
+    /**
+     * @param string $model
+     * @param string $propertyName
+     * @return bool
+     */
+    public function hasPropertyReadAuthorization($model, $propertyName);
 }
