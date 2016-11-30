@@ -31,6 +31,7 @@ class JsonConverterTest extends AbstractConverterTest
     {
         $converter = new JsonConverter;
         $this->inject($converter, 'entityInfoStorage', $this->createEntityInfoStorageMock());
+        $this->inject($converter, 'authorization', $this->createAuthorizationMock());
 
         $expected = '{"key1":"value1","key2":{"key2_1":"value2"},"key3":{"nameOne":"_name_one_",' .
             '"nameTwo":"_name_two_"},"key4":"2016-11-15_10:42:26","key5":"valueOf5"}';

@@ -18,6 +18,7 @@
 
 namespace N86io\Rest\Tests\Unit\ContentConverter;
 
+use N86io\Rest\Authorization\AuthorizationInterface;
 use N86io\Rest\ContentConverter\ParsableInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
@@ -32,6 +33,9 @@ use N86io\Rest\UnitTestCase;
  */
 abstract class AbstractConverterTest extends UnitTestCase
 {
+    /**
+     * @return array
+     */
     protected function createList()
     {
         return [
@@ -48,20 +52,37 @@ abstract class AbstractConverterTest extends UnitTestCase
         ];
     }
 
+    /**
+     * @return \Mockery\MockInterface|EntityInfoStorage
+     */
     protected function createEntityInfoStorageMock()
     {
         $entityInfoMock = \Mockery::mock(EntityInfoInterface::class);
         $entityInfoMock->shouldReceive('getVisiblePropertiesOrdered')->withAnyArgs()->andReturn([
             \Mockery::mock(PropertyInfoInterface::class)
                 ->shouldReceive('getGetter')->andReturn('')->getMock()
-                ->shouldReceive('getName')->andReturn('nameOne')->getMock(),
+                ->shouldReceive('getName')->andReturn('nameOne')->getMock()
+                ->shouldReceive('getEntityInfo')->andReturn($entityInfoMock)->getMock(),
             \Mockery::mock(PropertyInfoInterface::class)
                 ->shouldReceive('getGetter')->andReturn('getNameTwo')->getMock()
                 ->shouldReceive('getName')->andReturn('nameTwo')->getMock()
+                ->shouldReceive('getEntityInfo')->andReturn($entityInfoMock)->getMock()
         ]);
+        $entityInfoMock->shouldReceive('getClassName')->andReturn(get_class($entityInfoMock));
 
         $mock = \Mockery::mock(EntityInfoStorage::class);
         $mock->shouldReceive('get')->withAnyArgs()->andReturn($entityInfoMock);
+
+        return $mock;
+    }
+
+    /**
+     * @return \Mockery\MockInterface|AuthorizationInterface
+     */
+    protected function createAuthorizationMock()
+    {
+        $mock = \Mockery::mock(AuthorizationInterface::class);
+        $mock->shouldReceive('hasPropertyReadAuthorization')->withAnyArgs()->andReturn(true);
 
         return $mock;
     }
