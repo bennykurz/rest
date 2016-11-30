@@ -65,6 +65,10 @@ class Authentication implements AuthenticationInterface
         $closure = $this->authConf->getSuccessfulAuthenticationCallable();
         $additionalGroups = $closure($userId);
 
+        if ($additionalGroups === false) {
+            return;
+        }
+
         $authorization = Container::makeInstance(AuthorizationInterface::class);
         $authorization->addUserGroup(0);
         $authorization->addUserGroups($additionalGroups);
