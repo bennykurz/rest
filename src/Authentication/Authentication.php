@@ -66,6 +66,7 @@ class Authentication implements AuthenticationInterface
         $additionalGroups = $closure($userId);
 
         $authorization = Container::makeInstance(AuthorizationInterface::class);
+        $authorization->addUserGroup(0);
         $authorization->addUserGroups($additionalGroups);
     }
 }
