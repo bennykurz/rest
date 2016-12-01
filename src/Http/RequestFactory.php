@@ -26,7 +26,6 @@ use N86io\Rest\Exception\RequestNotFoundException;
 use N86io\Rest\Http\Routing\RoutingFactoryInterface;
 use N86io\Rest\Http\Utility\QueryUtility;
 use N86io\Rest\Object\Container;
-use N86io\Rest\Persistence\Constraint\ConstraintInterface;
 use N86io\Rest\Persistence\LimitInterface;
 use N86io\Rest\Persistence\Ordering\OrderingInterface;
 use N86io\Rest\Service\Configuration;

@@ -19,9 +19,11 @@
 namespace N86io\Rest;
 
 use N86io\Rest\Authentication\AuthenticationInterface;
+use N86io\Rest\Authorization\Authorization;
 use N86io\Rest\Authorization\AuthorizationInterface;
 use N86io\Rest\Cache\ContainerCache;
 use N86io\Rest\Cache\ContainerCacheInterface;
+use N86io\Rest\Exception\BootstrapException;
 use N86io\Rest\Exception\ContainerException;
 use N86io\Rest\Http\RequestFactoryInterface;
 use N86io\Rest\Http\RequestInterface;
@@ -38,14 +40,113 @@ use Psr\Http\Message\ServerRequestInterface;
 class Bootstrap
 {
     /**
+     * @var ServerRequestInterface
+     */
+    protected $serverRequest;
+
+    /**
      * @var Container
      */
     protected $container;
 
     /**
-     * @var bool
+     * @var RequestFactoryInterface
      */
-    protected $authenticationRun = false;
+    protected $requestFactory;
+
+    /**
+     * @var ResponseFactory
+     */
+    protected $responseFactory;
+
+    /**
+     * @var RequestInterface
+     */
+    protected $request;
+
+    /**
+     * @var AuthenticationInterface
+     */
+    protected $authentication;
+
+    /**
+     * @var Authorization
+     */
+    protected $authorization;
+
+    /**
+     * @var BootstrapHooks
+     */
+    protected $hooks;
+
+    /**
+     * Bootstrap constructor.
+     * @param ServerRequestInterface $serverRequest
+     * @param BootstrapHooks $bootstrapHooks
+     */
+    public function __construct(ServerRequestInterface $serverRequest, BootstrapHooks $bootstrapHooks = null)
+    {
+        $this->serverRequest = $serverRequest;
+        $this->hooks = $bootstrapHooks ?: new BootstrapHooks;
+    }
+
+    /**
+     * @return ResponseFactory
+     */
+    public function getResponseFactory()
+    {
+        return $this->responseFactory;
+    }
+
+    /**
+     * @return RequestInterface
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
+     * @return AuthenticationInterface
+     */
+    public function getAuthentication()
+    {
+        return $this->authentication;
+    }
+
+    /**
+     * @return Authorization
+     */
+    public function getAuthorization()
+    {
+        return $this->authorization;
+    }
+
+    /**
+     * @return bool|ResponseInterface
+     */
+    public function run()
+    {
+        $this->hooks->runFirstRun($this);
+
+        $this->initializeContainer();
+        $this->hooks->runAfterInitializeContainer($this);
+
+        if (($result = $this->initializeRequest()) !== true) {
+            return $result;
+        }
+        $this->hooks->runAfterInitializeRequest($this);
+
+        $this->initializeAuthentication();
+        $this->hooks->runAfterInitializeAuthentication($this);
+
+        if (($result = $this->checkAuthorization()) !== true) {
+            return $result;
+        }
+        $this->hooks->runAfterCheckAuthorization($this);
+
+        return $this->createResult();
+    }
 
     /**
      * @param array $classMapping
@@ -66,53 +167,77 @@ class Bootstrap
         }
     }
 
-    public function runAuthentication()
+    /**
+     * @return bool|ResponseInterface
+     * @throws BootstrapException
+     */
+    public function initializeRequest()
     {
-        if (!$this->authenticationRun) {
-            $this->authenticationRun = true;
-            $authentication = Container::makeInstance(AuthenticationInterface::class);
-            $authentication->load();
+        if (!$this->container) {
+            throw new BootstrapException('Container should be initialized before.');
         }
+        if (!$this->requestFactory) {
+            $this->requestFactory = $this->container->get(RequestFactoryInterface::class);
+            $this->responseFactory = $this->container->get(ResponseFactory::class);
+            $this->responseFactory->setServerRequest($this->serverRequest);
+        }
+        if (!$this->request) {
+            try {
+                $this->request = $this->requestFactory->fromServerRequest($this->serverRequest);
+            } catch (\Exception $e) {
+                return $this->responseFactory->errorCode($e->getCode());
+            }
+        }
+        return true;
     }
 
     /**
-     * @param ServerRequestInterface $serverRequest
-     * @return ResponseInterface
-     * @throws \Exception
+     * @return AuthenticationInterface
+     * @throws BootstrapException
      */
-    public function run(ServerRequestInterface $serverRequest)
+    public function initializeAuthentication()
     {
-        $this->initializeContainer();
-        $this->runAuthentication();
-
-        $requestFactory = $this->container->get(RequestFactoryInterface::class);
-        $responseFactory = $this->container->get(ResponseFactory::class);
-        $responseFactory->setServerRequest($serverRequest);
-
-        try {
-            $request = $requestFactory->fromServerRequest($serverRequest);
-        } catch (\Exception $e) {
-            return $responseFactory->errorRequest($e->getCode());
+        if (!$this->request) {
+            throw new BootstrapException('Request should be initialized before.');
         }
-
-        $authorization = Container::makeInstance(AuthorizationInterface::class);
-        if (!$authorization->hasApiAccess($request->getModelClassName(), $request->getMode())) {
-            return $responseFactory->unauthorized();
+        if (!$this->authentication) {
+            $this->authentication = Container::makeInstance(AuthenticationInterface::class);
+            $this->authentication->load();
         }
-
-        try {
-            return $this->result($request);
-        } catch (\Exception $e) {
-            return $responseFactory->errorRequest($e->getCode());
-        }
+        return $this->authentication;
     }
 
     /**
-     * @param RequestInterface $request
-     * @return ResponseInterface
+     * @return bool|ResponseInterface
+     * @throws BootstrapException
      */
-    protected function result(RequestInterface $request)
+    public function checkAuthorization()
     {
-        return $this->container->get($request->getControllerClassName())->process($request);
+        if (!$this->authentication) {
+            throw new BootstrapException('Authentication should be initialized before.');
+        }
+        if (!$this->authorization) {
+            $this->authorization = Container::makeInstance(AuthorizationInterface::class);
+        }
+        if (!$this->authorization->hasApiAccess($this->request->getModelClassName(), $this->request->getMode())) {
+            return $this->responseFactory->unauthorized();
+        }
+        return true;
+    }
+
+    /**
+     * @return ResponseInterface
+     * @throws BootstrapException
+     */
+    public function createResult()
+    {
+        if (!$this->authorization) {
+            throw new BootstrapException('Authorization check should be done before.');
+        }
+        try {
+            return $this->container->get($this->request->getControllerClassName())->process($this->request);
+        } catch (\Exception $e) {
+            return $this->responseFactory->errorCode($e->getCode());
+        }
     }
 }

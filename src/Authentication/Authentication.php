@@ -19,6 +19,7 @@
 namespace N86io\Rest\Authentication;
 
 use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Token;
 use N86io\Rest\Authorization\AuthorizationInterface;
 use N86io\Rest\Object\Container;
 
@@ -36,13 +37,38 @@ class Authentication implements AuthenticationInterface
     protected $authConf;
 
     /**
+     * @var bool
+     */
+    protected $authSuccessful = false;
+
+    /**
+     * @var Token
+     */
+    protected $token;
+
+    /**
+     * @return boolean
+     */
+    public function isAuthenticationSuccessful()
+    {
+        return $this->authSuccessful;
+    }
+
+    /**
+     * @return Token
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    /**
      * @return void
      */
     public function load()
     {
         $headerAuthorization = getallheaders()['Authorization'];
         if (substr($headerAuthorization, 0, 6) !== 'Bearer') {
-            $this->callFailedAuthenticationCallable();
             return;
         }
 
@@ -55,30 +81,15 @@ class Authentication implements AuthenticationInterface
                 $this->authConf->getVerifyKey()
             );
             if ($verified === false) {
-                $this->callFailedAuthenticationCallable();
                 return;
             }
+            $this->token = $token;
         } catch (\BadMethodCallException $e) {
-            $this->callFailedAuthenticationCallable();
             return;
         }
 
-        $userId = $token->getClaim('uid');
-
-        $closure = $this->authConf->getSuccessfulAuthenticationCallable();
-        $additionalGroups = $closure($userId);
-
-        if ($additionalGroups === false) {
-            return;
-        }
-
+        $this->authSuccessful = true;
         $authorization = Container::makeInstance(AuthorizationInterface::class);
         $authorization->addUserGroup(0);
-        $authorization->addUserGroups($additionalGroups);
-    }
-
-    protected function callFailedAuthenticationCallable()
-    {
-        call_user_func($this->authConf->getFailedAuthenticationCallable());
     }
 }

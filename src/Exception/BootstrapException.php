@@ -16,30 +16,13 @@
  * along with N86io/Rest or see <http://www.gnu.org/licenses/>.
  */
 
-namespace N86io\Rest\Authentication;
-
-use Lcobucci\JWT\Token;
-use N86io\Rest\Object\Singleton;
+namespace N86io\Rest\Exception;
 
 /**
- * Interface AuthenticationInterface
+ * Class BootstrapException
  *
  * @author Viktor Firus <v@n86.io>
  */
-interface AuthenticationInterface extends Singleton
+class BootstrapException extends \Exception
 {
-    /**
-     * @return boolean
-     */
-    public function isAuthenticationSuccessful();
-
-    /**
-     * @return Token
-     */
-    public function getToken();
-
-    /**
-     * @return void
-     */
-    public function load();
 }

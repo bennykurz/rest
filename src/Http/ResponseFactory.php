@@ -70,7 +70,7 @@ class ResponseFactory implements Singleton
      * @param int $status
      * @return ResponseInterface
      */
-    public function errorRequest($status)
+    public function errorCode($status)
     {
         Assert::integer($status);
         switch ($status) {

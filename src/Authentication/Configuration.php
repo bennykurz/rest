@@ -53,35 +53,16 @@ class Configuration implements Singleton
     protected $signer;
 
     /**
-     * @var callable
-     */
-    protected $succAuthCallable;
-
-    /**
-     * @var callable
-     */
-    protected $failedAuthCallable;
-
-    /**
      * @param int $alg
      * @param string $signKey
      * @param string $verifyKey
-     * @param callable $succAuthCallable
-     * @param callable $failedAuthCallable
      */
     public function initialize(
         $alg,
         $signKey,
-        $verifyKey = '',
-        callable $succAuthCallable = null,
-        callable $failedAuthCallable = null
+        $verifyKey = ''
     ) {
         $this->setKey($alg, $signKey, $verifyKey);
-        $this->succAuthCallable = $succAuthCallable ?: function () {
-            return [];
-        };
-        $this->failedAuthCallable = $failedAuthCallable ?: function () {
-        };
     }
 
     /**
@@ -106,22 +87,6 @@ class Configuration implements Singleton
     public function getSigner()
     {
         return $this->signer;
-    }
-
-    /**
-     * @return callable
-     */
-    public function getSuccessfulAuthenticationCallable()
-    {
-        return $this->succAuthCallable;
-    }
-
-    /**
-     * @return callable
-     */
-    public function getFailedAuthenticationCallable()
-    {
-        return $this->failedAuthCallable;
     }
 
     /**
