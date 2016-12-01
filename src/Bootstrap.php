@@ -113,6 +113,6 @@ class Bootstrap
      */
     protected function result(RequestInterface $request)
     {
-        return $this->container->get(ControllerInterface::class)->process($request);
+        return $this->container->get($request->getControllerClassName())->process($request);
     }
 }
