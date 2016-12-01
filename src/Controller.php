@@ -229,7 +229,7 @@ class Controller implements ControllerInterface
     {
         $constraints = [];
         if (($requestConstraints = $this->request->getConstraints()) !== null) {
-            $constraints[] = $requestConstraints;
+            $constraints[] = $this->constraintFactory->logicalAnd($requestConstraints);
         }
         if (!empty($this->request->getResourceIds())) {
             $constraints[] = $this->constraintUtility->createResourceIdsConstraints(

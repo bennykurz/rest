@@ -80,15 +80,15 @@ interface RequestInterface
     public function setResourceIds(array $resourceIds);
 
     /**
-     * @return ConstraintInterface
+     * @return ConstraintInterface[]
      */
     public function getConstraints();
 
     /**
-     * @param ConstraintInterface $constraints
+     * @param ConstraintInterface[] $constraints
      * @return RequestInterface
      */
-    public function setConstraints(ConstraintInterface $constraints);
+    public function setConstraints(array $constraints);
 
     /**
      * @return OrderingInterface

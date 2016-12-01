@@ -88,7 +88,7 @@ class QueryUtility implements Singleton
             }
         }
         if (!empty($constraints)) {
-            $result['constraints'] = $this->constraintFactory->logicalAnd($constraints);
+            $result['constraints'] = $constraints;
         }
         return $result;
     }

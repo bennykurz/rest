@@ -129,9 +129,7 @@ class RequestFactory implements RequestFactoryInterface
      */
     protected function setConstraints(RequestInterface $request, array $queryParams)
     {
-        if (isset($queryParams['constraints']) &&
-            $queryParams['constraints'] instanceof ConstraintInterface
-        ) {
+        if (isset($queryParams['constraints'])) {
             $request->setConstraints($queryParams['constraints']);
         }
     }

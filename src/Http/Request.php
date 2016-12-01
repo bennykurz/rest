@@ -51,7 +51,7 @@ class Request implements RequestInterface
     protected $resourceIds;
 
     /**
-     * @var ConstraintInterface
+     * @var ConstraintInterface[]
      */
     protected $constraints;
 
@@ -165,7 +165,7 @@ class Request implements RequestInterface
     }
 
     /**
-     * @return ConstraintInterface
+     * @return ConstraintInterface[]
      */
     public function getConstraints()
     {
@@ -173,10 +173,10 @@ class Request implements RequestInterface
     }
 
     /**
-     * @param ConstraintInterface $constraints
+     * @param ConstraintInterface[] $constraints
      * @return RequestInterface
      */
-    public function setConstraints(ConstraintInterface $constraints)
+    public function setConstraints(array $constraints)
     {
         $this->constraints = $constraints;
         return $this;
