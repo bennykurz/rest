@@ -228,7 +228,7 @@ class Controller implements ControllerInterface
     protected function getDefaultConstraints(EntityInfoInterface $entityInfo)
     {
         $constraints = [];
-        if (($requestConstraints = $this->request->getConstraints()) !== null) {
+        if (!empty($requestConstraints = $this->request->getConstraints())) {
             $constraints[] = $this->constraintFactory->logicalAnd($requestConstraints);
         }
         if (!empty($this->request->getResourceIds())) {
