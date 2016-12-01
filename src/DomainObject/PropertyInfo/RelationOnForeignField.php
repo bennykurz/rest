@@ -85,7 +85,8 @@ class RelationOnForeignField extends AbstractPropertyInfo implements RelationOnF
             return;
         }
 
-        $entity->setProperty($this->getName(), current($result));
+        current($result);
+        $entity->setProperty($this->getName(), $result);
     }
 
     /**

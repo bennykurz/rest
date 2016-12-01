@@ -19,7 +19,6 @@
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
 use N86io\Rest\DomainObject\EntityInterface;
-use N86io\Rest\Persistence\Constraint\ConstraintInterface;
 use N86io\Rest\Persistence\Constraint\ConstraintUtility;
 
 /**
@@ -62,17 +61,16 @@ class Relation extends AbstractStatic implements RestrictableInterface
             $entity->setProperty($this->getName(), '');
             return;
         }
-        $entityInfo = $this->getEntityInfo();
 
-        $constraints = $this->constraintUtility->createResourceIdsConstraints(
-            $entityInfo->getUidPropertyInfo(),
-            explode(',', $value)
+        $typeEntityInfo = $this->entityInfoStorage->get($this->getType());
+
+        $repository = $typeEntityInfo->createRepositoryInstance();
+        $repository->setConstraints(
+            $this->constraintUtility->createResourceIdsConstraints(
+                $typeEntityInfo->getUidPropertyInfo(),
+                explode(',', $value)
+            )
         );
-
-        $repository = $entityInfo->createRepositoryInstance();
-        if ($constraints instanceof ConstraintInterface) {
-            $repository->setConstraints($constraints);
-        }
 
         $result = $repository->read();
 
@@ -81,7 +79,8 @@ class Relation extends AbstractStatic implements RestrictableInterface
             return;
         }
 
-        $entity->setProperty($this->getName(), current($result));
+        current($result);
+        $entity->setProperty($this->getName(), $result);
     }
 
     /**
