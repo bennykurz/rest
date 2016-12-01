@@ -54,6 +54,7 @@ class Relation extends AbstractStatic implements RestrictableInterface
     {
         $value = $entity->getProperty($this->getName());
         $isList = substr($this->type, -2) === '[]';
+        $type = $isList ? substr($this->type, 0, strlen($this->type) - 2) : $this->type;
         if ($isList && empty(trim($value))) {
             $entity->setProperty($this->getName(), []);
             return;
@@ -62,7 +63,7 @@ class Relation extends AbstractStatic implements RestrictableInterface
             return;
         }
 
-        $typeEntityInfo = $this->entityInfoStorage->get($this->getType());
+        $typeEntityInfo = $this->entityInfoStorage->get($type);
 
         $repository = $typeEntityInfo->createRepositoryInstance();
         $repository->setConstraints(
@@ -79,8 +80,8 @@ class Relation extends AbstractStatic implements RestrictableInterface
             return;
         }
 
-        current($result);
-        $entity->setProperty($this->getName(), $result);
+        reset($result);
+        $entity->setProperty($this->getName(), current($result));
     }
 
     /**
