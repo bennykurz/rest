@@ -65,6 +65,11 @@ interface PropertyInfoInterface
     public function getSetter();
 
     /**
+     * @return array
+     */
+    public function getRawAttributes();
+
+    /**
      * @param int $outputLevel
      * @return boolean
      */

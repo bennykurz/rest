@@ -84,6 +84,11 @@ abstract class AbstractPropertyInfo implements PropertyInfoInterface
     protected $setter;
 
     /**
+     * @var array
+     */
+    protected $rawAttributes = [];
+
+    /**
      * AbstractPropertyInfo constructor.
      * @param string $name
      * @param array $attributes
@@ -100,6 +105,7 @@ abstract class AbstractPropertyInfo implements PropertyInfoInterface
             }
         }
         $this->name = $name;
+        $this->rawAttributes = $attributes;
     }
 
     /**
@@ -150,6 +156,14 @@ abstract class AbstractPropertyInfo implements PropertyInfoInterface
     public function getSetter()
     {
         return $this->setter ?: '';
+    }
+
+    /**
+     * @return array
+     */
+    public function getRawAttributes()
+    {
+        return $this->rawAttributes;
     }
 
     /**
