@@ -62,15 +62,14 @@ class EntityFactory implements Singleton
     public function build(EntityInfoInterface $entityInfo, array $dbRow)
     {
         $entityClassName = $entityInfo->getClassName();
-        $entityUid = $dbRow[$entityInfo->getUidPropertyInfo()->getResourcePropertyName()];
+        $entityUid = $dbRow[$entityInfo->getUidPropertyInfo()->getName()];
         $entity = &$this->entityMemory[$entityClassName][$entityUid];
 
         if (!$entity instanceof EntityInterface) {
             /** @var AbstractEntity $entity */
             $entity = $this->container->get($entityInfo->getClassName());
-            foreach ($dbRow as $resourcePropertyName => $value) {
-                $propertyName = $entityInfo->mapResourcePropertyName($resourcePropertyName);
-                if ($propertyName === '') {
+            foreach ($dbRow as $propertyName => $value) {
+                if (!$entityInfo->hasPropertyInfo($propertyName)) {
                     continue;
                 }
                 $entity->setProperty($propertyName, $value);

@@ -80,11 +80,6 @@ class EntityInfo implements EntityInfoInterface
     /**
      * @var array
      */
-    protected $propertyMapList;
-
-    /**
-     * @var array
-     */
     protected $enableFields;
 
     /**
@@ -214,9 +209,6 @@ class EntityInfo implements EntityInfoInterface
         if ($this->isUidPropertyInfo($propertyInfo)) {
             $this->uidPropertyInfo = $propertyInfo;
         }
-        if ($propertyInfo instanceof StaticInterface) {
-            $this->propertyMapList[$propertyInfo->getResourcePropertyName()] = $propertyInfo->getName();
-        }
         $this->propertyInfoList[$propertyInfo->getName()] = $propertyInfo;
     }
 
@@ -264,19 +256,6 @@ class EntityInfo implements EntityInfoInterface
     public function hasUidPropertyInfo()
     {
         return $this->uidPropertyInfo instanceof PropertyInfoInterface;
-    }
-
-    /**
-     * @param string $name
-     * @return string
-     */
-    public function mapResourcePropertyName($name)
-    {
-        Assert::string($name);
-        if (isset($this->propertyInfoList[$name])) {
-            return $name;
-        }
-        return isset($this->propertyMapList[$name]) ? $this->propertyMapList[$name] : '';
     }
 
     /**

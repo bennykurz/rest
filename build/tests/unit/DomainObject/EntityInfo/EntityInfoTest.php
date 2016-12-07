@@ -81,8 +81,6 @@ class EntityInfoTest extends UnitTestCase
         $propInfo = $this->createCommonPropertyInfoMock(true, false, 'name', '_name_', 2, 2);
         $entityInfo->addPropertyInfo($propInfo);
         $this->assertTrue($entityInfo->hasResourceIdPropertyInfo());
-        $this->assertEquals('name', $entityInfo->mapResourcePropertyName('_name_'));
-        $this->assertEquals('name', $entityInfo->mapResourcePropertyName('name'));
         $this->assertEquals($propInfo, $entityInfo->getResourceIdPropertyInfo());
         $this->assertEquals($propInfo, $entityInfo->getPropertyInfo('name'));
         $expected = [

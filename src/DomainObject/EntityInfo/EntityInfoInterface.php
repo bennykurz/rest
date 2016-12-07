@@ -93,12 +93,6 @@ interface EntityInfoInterface
     public function hasUidPropertyInfo();
 
     /**
-     * @param string $name
-     * @return string
-     */
-    public function mapResourcePropertyName($name);
-
-    /**
      * @param int $outputLevel
      * @return array
      */
