@@ -26,7 +26,7 @@ use N86io\Rest\Persistence\Constraint\ConstraintUtility;
  *
  * @author Viktor Firus <v@n86.io>
  */
-class Relation extends AbstractStatic implements RestrictableInterface
+class Relation extends AbstractStatic implements RelationInterface
 {
     /**
      * @inject
