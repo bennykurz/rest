@@ -40,7 +40,7 @@ class PropertyInfoFactory implements Singleton
      */
     protected $propertyInfoClasses = [
         DynamicPhp::class,
-        DynamicSql::class,
+        DynamicSelect::class,
         Relation::class,
         RelationOnForeignField::class
     ];

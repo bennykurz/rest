@@ -18,15 +18,15 @@
 
 namespace N86io\Rest\Tests\Unit\DomainObject\PropertyInfo;
 
-use N86io\Rest\DomainObject\PropertyInfo\DynamicSql;
+use N86io\Rest\DomainObject\PropertyInfo\DynamicSelect;
 use N86io\Rest\UnitTestCase;
 
 /**
- * Class DynamicSqlTest
+ * Class DynamicSelectTest
  *
  * @author Viktor Firus <v@n86.io>
  */
-class DynamicSqlTest extends UnitTestCase
+class DynamicSelectTest extends UnitTestCase
 {
     public function test()
     {
@@ -36,20 +36,20 @@ class DynamicSqlTest extends UnitTestCase
             'constraint' => false,
             'sql' => 'thisIsNotRealSqlExpression',
         ];
-        $propertyInfo = new DynamicSql('testSomething', $attributes);
+        $propertyInfo = new DynamicSelect('testSomething', $attributes);
 
         $this->assertTrue($propertyInfo->isOrdering());
         $this->assertFalse($propertyInfo->isConstraint());
-        $this->assertEquals('thisIsNotRealSqlExpression', $propertyInfo->getSql());
+        $this->assertEquals('thisIsNotRealSqlExpression', $propertyInfo->getSelect());
 
-        $this->assertTrue(DynamicSql::verifyAttributes($attributes));
+        $this->assertTrue(DynamicSelect::verifyAttributes($attributes));
         unset($attributes['sql']);
-        $this->assertFalse(DynamicSql::verifyAttributes($attributes));
+        $this->assertFalse(DynamicSelect::verifyAttributes($attributes));
     }
 
     public function testConstructor()
     {
         $this->setExpectedException(\InvalidArgumentException::class);
-        new DynamicSql('testSomething', []);
+        new DynamicSelect('testSomething', []);
     }
 }

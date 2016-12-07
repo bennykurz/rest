@@ -19,18 +19,10 @@
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
 /**
- * Class DynamicPhp
+ * Interface DynamicPhpInterface
  *
  * @author Viktor Firus <v@n86.io>
  */
-class DynamicPhp extends AbstractPropertyInfo implements DynamicPhpInterface
+interface DynamicPhpInterface
 {
-    /**
-     * @param array $attributes
-     * @return boolean
-     */
-    public static function verifyAttributes(array $attributes)
-    {
-        return $attributes['type'] === '__dynamic';
-    }
 }
