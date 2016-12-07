@@ -23,11 +23,7 @@ namespace N86io\Rest\DomainObject\PropertyInfo;
  *
  * @author Viktor Firus <v@n86.io>
  */
-class Common extends AbstractStatic implements
-    ResourceIdInterface,
-    SortableInterface,
-    RestrictableInterface,
-    UidInterface
+class Common extends AbstractStatic implements CommonInterface
 {
     /**
      * @var boolean
