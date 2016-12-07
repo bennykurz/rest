@@ -22,7 +22,9 @@
             <property name="minimum" value="25" />
         </properties>
     </rule>
-    <rule ref="rulesets/naming.xml"/>
+    <rule ref="rulesets/naming.xml">
+        <exclude name="LongVariable"/>
+    </rule>
     <rule ref="rulesets/unusedcode.xml"/>
 
     <exclude-pattern>build/tests/</exclude-pattern>
