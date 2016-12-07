@@ -19,14 +19,14 @@
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
 /**
- * Interface DynamicSqlInterface
+ * Interface DynamicSelectInterface
  *
  * @author Viktor Firus <v@n86.io>
  */
-interface DynamicSqlInterface
+interface DynamicSelectInterface extends RestrictableInterface, SortableInterface
 {
     /**
      * @return string
      */
-    public function getSql();
+    public function getSelect();
 }

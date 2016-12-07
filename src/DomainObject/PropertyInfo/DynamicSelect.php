@@ -18,17 +18,12 @@
 
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
-use Webmozart\Assert\Assert;
-
 /**
- * Class DynamicSql
+ * Class DynamicSelect
  *
  * @author Viktor Firus <v@n86.io>
  */
-class DynamicSql extends AbstractPropertyInfo implements
-    DynamicSqlInterface,
-    RestrictableInterface,
-    SortableInterface
+class DynamicSelect extends AbstractPropertyInfo implements DynamicSelectInterface
 {
     /**
      * @var boolean
@@ -43,23 +38,24 @@ class DynamicSql extends AbstractPropertyInfo implements
     /**
      * @var string
      */
-    protected $sql;
+    protected $select;
 
     /**
      * @var bool
      */
-    protected $isSqlOptional = false;
+    protected $isSelectOptional = false;
 
     /**
-     * DynamicSqlPropertyInfo constructor.
+     * DynamicSelectPropertyInfo constructor.
      * @param string $name
      * @param array $attributes
      */
     public function __construct($name, array $attributes)
     {
-        Assert::string($name);
-        if (!$this->isSqlOptional && (empty($attributes['sql']) || empty(trim($attributes['sql'])))) {
-            throw new \InvalidArgumentException('Sql should not empty string.');
+        if (!$this->isSelectOptional && (empty($attributes['select']) || !is_string($attributes['select']) ||
+                empty(trim($attributes['select'])))
+        ) {
+            throw new \InvalidArgumentException('Select should not empty string.');
         }
         parent::__construct($name, $attributes);
     }
@@ -83,9 +79,9 @@ class DynamicSql extends AbstractPropertyInfo implements
     /**
      * @return string
      */
-    public function getSql()
+    public function getSelect()
     {
-        return $this->sql;
+        return $this->select;
     }
 
     /**
@@ -94,6 +90,6 @@ class DynamicSql extends AbstractPropertyInfo implements
      */
     public static function verifyAttributes(array $attributes)
     {
-        return isset($attributes['sql']);
+        return isset($attributes['select']);
     }
 }
