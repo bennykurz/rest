@@ -20,6 +20,7 @@ namespace N86io\Rest\Persistence;
 
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
 use N86io\Rest\DomainObject\EntityInterface;
+use N86io\Rest\Exception\NoEnableFieldsException;
 use N86io\Rest\Object\Container;
 use N86io\Rest\Persistence\Constraint\ConstraintFactory;
 use N86io\Rest\Persistence\Constraint\ConstraintInterface;
@@ -153,10 +154,17 @@ class Repository implements RepositoryInterface
         return $this->connector->delete();
     }
 
+    /**
+     * @return array
+     */
     protected function getDefaultConstraints()
     {
-        return [
-            $this->constraintUtility->createEnableFieldsConstraints($this->entityInfo)
-        ];
+        $result = [];
+        try {
+            $result[] = $this->constraintUtility->createEnableFieldsConstraints($this->entityInfo);
+        } catch (NoEnableFieldsException $e) {
+            // Nothing to do
+        }
+        return $result;
     }
 }

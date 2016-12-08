@@ -16,25 +16,32 @@
  * along with N86io/Rest or see <http://www.gnu.org/licenses/>.
  */
 
-namespace N86io\Rest\DomainObject\PropertyInfo;
-
-use N86io\Rest\DomainObject\AbstractEntity;
-use N86io\Rest\Object\Singleton;
+namespace N86io\Rest\DomainObject\EntityInfo;
 
 /**
- * Class PropertyInfoUtility
+ * Interface JoinInterface
  *
  * @author Viktor Firus <v@n86.io>
  */
-class PropertyInfoUtility implements Singleton
+interface JoinInterface
 {
     /**
-     * @param string $className
-     * @return bool
-     * @throws \Exception
+     * @return string
      */
-    public function checkForAbstractEntitySubclass($className)
-    {
-        return is_subclass_of($className, AbstractEntity::class);
-    }
+    public function getAlias();
+
+    /**
+     * @return string
+     */
+    public function getTable();
+
+    /**
+     * @return string
+     */
+    public function getCondition();
+
+    /**
+     * @return string
+     */
+    public function getType();
 }

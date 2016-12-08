@@ -45,11 +45,6 @@ interface EntityInfoInterface
     public function getTable();
 
     /**
-     * @return array
-     */
-    public function getEnableFields();
-
-    /**
      * @return PropertyInfoInterface
      */
     public function getResourceIdPropertyInfo();
@@ -91,6 +86,16 @@ interface EntityInfoInterface
      * @return bool
      */
     public function hasUidPropertyInfo();
+
+    /**
+     * @return JoinInterface[]
+     */
+    public function getJoins();
+
+    /**
+     * @param JoinInterface $join
+     */
+    public function addJoin(JoinInterface $join);
 
     /**
      * @param int $outputLevel

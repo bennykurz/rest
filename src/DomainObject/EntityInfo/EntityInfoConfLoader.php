@@ -132,10 +132,31 @@ class EntityInfoConfLoader implements Singleton
                 ['deleted', 'disabled', 'startTime', 'endTime']
             );
         }
+        if (isset($modelConf2['joins'])) {
+            if (empty($modelConf1['joins'])) {
+                $modelConf1['joins'] = [];
+            }
+            $this->mergeJoins($modelConf1['joins'], $modelConf2['joins']);
+        }
         if (empty($modelConf1['properties'])) {
             $modelConf1['properties'] = [];
         }
         $this->mergeProperties($modelConf1['properties'], $modelConf2['properties']);
+    }
+
+    /**
+     * @param array $joins1
+     * @param array $joins2
+     */
+    protected function mergeJoins(array &$joins1, array $joins2)
+    {
+        foreach ($joins2 as $aliasName => $join2) {
+            if (empty($joins1[$aliasName])) {
+                $joins1[$aliasName] = [];
+            }
+            $join1 = &$joins1[$aliasName];
+            $this->mergeSingle($join1, $join2, array_keys($join2));
+        }
     }
 
     /**

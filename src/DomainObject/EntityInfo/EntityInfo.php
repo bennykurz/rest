@@ -78,14 +78,14 @@ class EntityInfo implements EntityInfoInterface
     protected $writeMode;
 
     /**
-     * @var array
-     */
-    protected $enableFields;
-
-    /**
      * @var PropertyInfoInterface[]
      */
     protected $propertyInfoList = [];
+
+    /**
+     * @var JoinInterface[]
+     */
+    protected $joins = [];
 
     /**
      * EntityInfo constructor.
@@ -98,26 +98,22 @@ class EntityInfo implements EntityInfoInterface
                 'Class for EntityInfo should be a subclass of "' . AbstractEntity::class . '".'
             );
         }
-        if (isset($attributes['className'])) {
+        if (!empty($attributes['className'])) {
             Assert::string($attributes['className']);
             $this->className = $attributes['className'];
         }
-        if (isset($attributes['connector'])) {
+        if (!empty($attributes['connector'])) {
             Assert::string($attributes['connector']);
             $this->connector = $attributes['connector'];
         }
-        if (isset($attributes['table'])) {
+        if (!empty($attributes['table'])) {
             Assert::string($attributes['table']);
             $this->table = $attributes['table'];
         }
-        if (isset($attributes['mode'])) {
+        if (!empty($attributes['mode'])) {
             Assert::isArray($attributes['mode']);
             $this->readMode = array_search('read', $attributes['mode']) !== false;
             $this->writeMode = array_search('write', $attributes['mode']) !== false;
-        }
-        if (isset($attributes['enableFields'])) {
-            Assert::isArray($attributes['enableFields']);
-            $this->enableFields = $attributes['enableFields'];
         }
     }
 
@@ -143,14 +139,6 @@ class EntityInfo implements EntityInfoInterface
     public function getTable()
     {
         return $this->table;
-    }
-
-    /**
-     * @return array
-     */
-    public function getEnableFields()
-    {
-        return $this->enableFields;
     }
 
     /**
@@ -256,6 +244,22 @@ class EntityInfo implements EntityInfoInterface
     public function hasUidPropertyInfo()
     {
         return $this->uidPropertyInfo instanceof PropertyInfoInterface;
+    }
+
+    /**
+     * @return JoinInterface[]
+     */
+    public function getJoins()
+    {
+        return $this->joins;
+    }
+
+    /**
+     * @param JoinInterface $join
+     */
+    public function addJoin(JoinInterface $join)
+    {
+        $this->joins[$join->getAlias()] = $join;
     }
 
     /**

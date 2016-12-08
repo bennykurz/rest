@@ -16,25 +16,13 @@
  * along with N86io/Rest or see <http://www.gnu.org/licenses/>.
  */
 
-namespace N86io\Rest\DomainObject\PropertyInfo;
-
-use N86io\Rest\DomainObject\AbstractEntity;
-use N86io\Rest\Object\Singleton;
+namespace N86io\Rest\Exception;
 
 /**
- * Class PropertyInfoUtility
+ * Class NoEnableFieldsException
  *
  * @author Viktor Firus <v@n86.io>
  */
-class PropertyInfoUtility implements Singleton
+class NoEnableFieldsException extends \Exception
 {
-    /**
-     * @param string $className
-     * @return bool
-     * @throws \Exception
-     */
-    public function checkForAbstractEntitySubclass($className)
-    {
-        return is_subclass_of($className, AbstractEntity::class);
-    }
 }

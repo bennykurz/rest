@@ -63,26 +63,47 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
     public function buildEntityInfoFromClassName($className)
     {
         Assert::string($className);
-        $entityClassRefl = $this->container->get(EntityClassReflection::class, [$className]);
-        $properties = $entityClassRefl->getProperties();
-        $entityInfoConf = $this->loadEntityInfoConf($className, $entityClassRefl);
-        $properties = $this->mergeProperties($properties, $entityInfoConf);
+        $entityClassReflection = $this->container->get(EntityClassReflection::class, [$className]);
+        $properties = $entityClassReflection->getProperties();
+
+        list(
+            $propertiesConf,
+            $connector,
+            $table,
+            $mode,
+            $enableFields,
+            $joins
+            ) = $this->loadEntityInfoConf($className, $entityClassReflection);
+
+        $properties = $this->mergeProperties($properties, $propertiesConf);
         $properties = $this->setUndefinedPropertiesAttributes($properties);
-        $entityInfo = $this->createEntityInfo($className, $entityInfoConf);
+
+        $entityInfo = $this->container->get(EntityInfo::class, [
+            [
+                'className' => $className,
+                'connector' => $connector,
+                'table' => $table,
+                'mode' => $mode,
+            ]
+        ]);
+
         foreach ($properties as $name => $attributes) {
             $attributes['entityClassName'] = $entityInfo->getClassName();
             $propertyInfo = $this->propertyInfoFactory->build($name, $attributes);
             $entityInfo->addPropertyInfo($propertyInfo);
         }
 
-        if (isset($entityInfoConf['enableFields'])) {
-            foreach ($entityInfoConf['enableFields'] as $type => $enableField) {
-                $entityInfo->addPropertyInfo($this->propertyInfoFactory->buildEnableField(
-                    $type,
-                    $enableField,
-                    $entityInfo->getClassName()
-                ));
-            }
+        foreach ($enableFields as $type => $enableField) {
+            $entityInfo->addPropertyInfo($this->propertyInfoFactory->buildEnableField(
+                $type,
+                $enableField,
+                $entityInfo->getClassName()
+            ));
+        }
+
+        foreach ($joins as $alias => $attributes) {
+            $attributes['alias'] = $alias;
+            $entityInfo->addJoin($this->container->get(JoinInterface::class, [$attributes]));
         }
 
         if (!$entityInfo->hasUidPropertyInfo()) {
@@ -93,46 +114,36 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
 
     /**
      * @param array $properties
-     * @param array $entityInfoConf
+     * @param array $propertiesConf
      * @return array
      */
-    protected function mergeProperties(array $properties, array $entityInfoConf)
+    protected function mergeProperties(array $properties, array $propertiesConf)
     {
-        if (empty($entityInfoConf['properties'])) {
+        if (empty($propertiesConf)) {
             return $properties;
         }
-        return array_merge_recursive($entityInfoConf['properties'], $properties);
+        return array_merge_recursive($propertiesConf, $properties);
     }
 
     /**
      * @param string $className
-     * @param EntityClassReflection $entityClassRefl
+     * @param EntityClassReflection $entityClassReflection
      * @return array
      */
-    protected function loadEntityInfoConf($className, EntityClassReflection $entityClassRefl)
+    protected function loadEntityInfoConf($className, EntityClassReflection $entityClassReflection)
     {
-        return $this->entityInfoConfLoader->loadSingle(
+        $entityInfoConf = $this->entityInfoConfLoader->loadSingle(
             $className,
-            $entityClassRefl->getParentClasses()
+            $entityClassReflection->getParentClasses()
         );
-    }
-
-    /**
-     * @param string $className
-     * @param array $entityInfoConf
-     * @return EntityInfoInterface
-     */
-    protected function createEntityInfo($className, array $entityInfoConf)
-    {
-        $attributes = [];
-        $keys = ['connector', 'table', 'mode', 'enableFields'];
-        foreach ($keys as $key) {
-            if (isset($entityInfoConf[$key])) {
-                $attributes[$key] = $entityInfoConf[$key];
-            }
-        }
-        $attributes['className'] = $className;
-        return $this->container->get(EntityInfo::class, [$attributes]);
+        return [
+            isset($entityInfoConf['properties']) ? $entityInfoConf['properties'] : [],
+            isset($entityInfoConf['connector']) ? $entityInfoConf['connector'] : '',
+            isset($entityInfoConf['table']) ? $entityInfoConf['table'] : '',
+            isset($entityInfoConf['mode']) ? $entityInfoConf['mode'] : [],
+            isset($entityInfoConf['enableFields']) ? $entityInfoConf['enableFields'] : [],
+            isset($entityInfoConf['joins']) ? $entityInfoConf['joins'] : []
+        ];
     }
 
     /**

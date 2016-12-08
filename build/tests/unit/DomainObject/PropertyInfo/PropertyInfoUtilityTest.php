@@ -41,19 +41,6 @@ class PropertyInfoUtilityTest extends UnitTestCase
         $this->propertyInfoUtility = new PropertyInfoUtility;
     }
 
-    public function testPlaceTableAlias()
-    {
-        $this->assertEquals('a.test', $this->propertyInfoUtility->placeTableAlias('%test%', 'a'));
-        $this->assertEquals(
-            'somethinga.testsomething',
-            $this->propertyInfoUtility->placeTableAlias('something%test%something', 'a')
-        );
-        $this->assertEquals(
-            'a.test',
-            $this->propertyInfoUtility->placeTableAlias('%aliasPlaceholder%test%', 'a', 'aliasPlaceholder')
-        );
-    }
-
     public function testCheckForAbstractEntitySubclass()
     {
         $entityMock = get_class(\Mockery::mock(AbstractEntity::class));

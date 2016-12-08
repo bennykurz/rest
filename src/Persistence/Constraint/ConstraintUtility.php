@@ -20,6 +20,7 @@ namespace N86io\Rest\Persistence\Constraint;
 
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
+use N86io\Rest\Exception\NoEnableFieldsException;
 use N86io\Rest\Object\Singleton;
 
 /**
@@ -52,6 +53,7 @@ class ConstraintUtility implements Singleton
     /**
      * @param EntityInfoInterface $entityInfo
      * @return LogicalInterface
+     * @throws NoEnableFieldsException
      */
     public function createEnableFieldsConstraints(EntityInfoInterface $entityInfo)
     {
@@ -76,6 +78,10 @@ class ConstraintUtility implements Singleton
                 $this->constraintFactory->greaterThan($endTimePropInfo, $accessTime, true)
             ]);
         }
-        return $this->constraintFactory->logicalAnd($constraints);
+        try {
+            return $this->constraintFactory->logicalAnd($constraints);
+        } catch (\InvalidArgumentException $e) {
+            throw new NoEnableFieldsException;
+        }
     }
 }
