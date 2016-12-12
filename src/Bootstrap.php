@@ -119,6 +119,9 @@ class Bootstrap
      */
     public function getAuthorization()
     {
+        if (!$this->authorization) {
+            $this->authorization = Container::makeInstance(AuthorizationInterface::class);
+        }
         return $this->authorization;
     }
 
