@@ -217,7 +217,11 @@ abstract class AbstractPropertyInfo implements PropertyInfoInterface
             return (new \DateTime())->setTimestamp($value);
         }
         $timezone = new \DateTimeZone(date_default_timezone_get());
-        $dateTime = \DateTime::createFromFormat('Y-m-d H:i:s e', $value . ' UTC')->setTimezone($timezone);
+        $dateTime = \DateTime::createFromFormat('Y-m-d H:i:s e', $value . ' UTC');
+        if (!$dateTime instanceof \DateTime) {
+            $dateTime = (new \DateTime())->setTimestamp(0);
+        }
+        $dateTime->setTimezone($timezone);
         return $dateTime;
     }
 }
