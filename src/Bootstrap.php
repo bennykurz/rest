@@ -18,6 +18,8 @@
 
 namespace N86io\Rest;
 
+use GuzzleHttp\Psr7\Response;
+use N86io\Di\ClassResolver;
 use N86io\Di\Container;
 use N86io\Di\ContainerInterface;
 use N86io\Di\Exception\ContainerException;
@@ -136,6 +138,10 @@ class Bootstrap
         $this->hooks->runFirstRun($this);
 
         $this->initializeContainer();
+        Container::getInstance()->get(ClassResolver::class)->addMapping(
+            ResponseInterface::class,
+            Response::class
+        );
         $this->hooks->runAfterInitializeContainer($this);
 
         if (($result = $this->initializeRequest()) !== true) {
