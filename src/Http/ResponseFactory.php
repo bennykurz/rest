@@ -18,10 +18,10 @@
 
 namespace N86io\Rest\Http;
 
+use N86io\Di\ContainerInterface;
+use N86io\Di\Singleton;
 use N86io\Rest\ContentConverter\ConverterFactory;
 use N86io\Rest\ContentConverter\ConverterInterface;
-use N86io\Rest\Object\Container;
-use N86io\Rest\Object\Singleton;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Webmozart\Assert\Assert;
@@ -35,7 +35,7 @@ class ResponseFactory implements Singleton
 {
     /**
      * @inject
-     * @var Container
+     * @var ContainerInterface
      */
     protected $container;
 

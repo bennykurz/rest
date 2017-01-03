@@ -18,9 +18,9 @@
 
 namespace N86io\Rest\DomainObject\EntityInfo;
 
+use N86io\Di\ContainerInterface;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoFactory;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoUtility;
-use N86io\Rest\Object\Container;
 use N86io\Rest\Reflection\EntityClassReflection;
 use Webmozart\Assert\Assert;
 
@@ -33,7 +33,7 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
 {
     /**
      * @inject
-     * @var Container
+     * @var ContainerInterface
      */
     protected $container;
 
@@ -57,13 +57,14 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
 
     /**
      * @param string $className
+     *
      * @return EntityInfoInterface
      * @throws \Exception
      */
     public function buildEntityInfoFromClassName($className)
     {
         Assert::string($className);
-        $entityClassReflection = $this->container->get(EntityClassReflection::class, [$className]);
+        $entityClassReflection = $this->container->get(EntityClassReflection::class, $className);
         $properties = $entityClassReflection->getProperties();
 
         list(
@@ -79,12 +80,10 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
         $properties = $this->setUndefinedPropertiesAttributes($properties);
 
         $entityInfo = $this->container->get(EntityInfo::class, [
-            [
-                'className' => $className,
-                'connector' => $connector,
-                'table' => $table,
-                'mode' => $mode,
-            ]
+            'className' => $className,
+            'connector' => $connector,
+            'table'     => $table,
+            'mode'      => $mode,
         ]);
 
         foreach ($properties as $name => $attributes) {
@@ -103,18 +102,20 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
 
         foreach ($joins as $alias => $attributes) {
             $attributes['alias'] = $alias;
-            $entityInfo->addJoin($this->container->get(JoinInterface::class, [$attributes]));
+            $entityInfo->addJoin($this->container->get(JoinInterface::class, $attributes));
         }
 
         if (!$entityInfo->hasUidPropertyInfo()) {
             throw new \Exception('It is necessary to define a field for unique id.');
         }
+
         return $entityInfo;
     }
 
     /**
      * @param array $properties
      * @param array $propertiesConf
+     *
      * @return array
      */
     protected function mergeProperties(array $properties, array $propertiesConf)
@@ -122,12 +123,14 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
         if (empty($propertiesConf)) {
             return $properties;
         }
+
         return array_merge_recursive($propertiesConf, $properties);
     }
 
     /**
-     * @param string $className
+     * @param string                $className
      * @param EntityClassReflection $entityClassReflection
+     *
      * @return array
      */
     protected function loadEntityInfoConf($className, EntityClassReflection $entityClassReflection)
@@ -136,6 +139,7 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
             $className,
             $entityClassReflection->getParentClasses()
         );
+
         return [
             isset($entityInfoConf['properties']) ? $entityInfoConf['properties'] : [],
             isset($entityInfoConf['connector']) ? $entityInfoConf['connector'] : '',
@@ -148,6 +152,7 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
 
     /**
      * @param array $properties
+     *
      * @return array
      */
     protected function setUndefinedPropertiesAttributes(array $properties)
@@ -160,11 +165,13 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
                 $attributes['resourcePropertyName'] = $this->convertPropertyName($propertyName);
             }
         }
+
         return $properties;
     }
 
     /**
      * @param string $string
+     *
      * @return string
      */
     protected function convertPropertyName($string)

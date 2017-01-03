@@ -20,8 +20,8 @@ namespace N86io\Rest\Authentication;
 
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Token;
+use N86io\Di\Container;
 use N86io\Rest\Authorization\AuthorizationInterface;
-use N86io\Rest\Object\Container;
 
 /**
  * Class Authentication
@@ -89,7 +89,7 @@ class Authentication implements AuthenticationInterface
         }
 
         $this->authSuccessful = true;
-        $authorization = Container::makeInstance(AuthorizationInterface::class);
+        $authorization = Container::getInstance()->get(AuthorizationInterface::class);
         $authorization->addUserGroup(0);
     }
 }

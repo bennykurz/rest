@@ -18,8 +18,8 @@
 
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
+use N86io\Di\Singleton;
 use N86io\Rest\DomainObject\AbstractEntity;
-use N86io\Rest\Object\Singleton;
 
 /**
  * Class PropertyInfoUtility

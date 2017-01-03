@@ -18,7 +18,7 @@
 
 namespace N86io\Rest\Http;
 
-use N86io\Rest\Object\Singleton;
+use N86io\Di\Singleton;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**

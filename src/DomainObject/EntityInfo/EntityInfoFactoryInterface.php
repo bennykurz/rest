@@ -18,7 +18,7 @@
 
 namespace N86io\Rest\DomainObject\EntityInfo;
 
-use N86io\Rest\Object\Singleton;
+use N86io\Di\Singleton;
 
 /**
  * Interface EntityInfoFactoryInterface

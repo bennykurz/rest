@@ -18,10 +18,10 @@
 
 namespace N86io\Rest\Persistence;
 
+use N86io\Di\ContainerInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
 use N86io\Rest\DomainObject\EntityInterface;
 use N86io\Rest\Exception\NoEnableFieldsException;
-use N86io\Rest\Object\Container;
 use N86io\Rest\Persistence\Constraint\ConstraintFactory;
 use N86io\Rest\Persistence\Constraint\ConstraintInterface;
 use N86io\Rest\Persistence\Constraint\ConstraintUtility;
@@ -36,7 +36,7 @@ class Repository implements RepositoryInterface
 {
     /**
      * @inject
-     * @var Container
+     * @var ContainerInterface
      */
     protected $container;
 
@@ -69,11 +69,8 @@ class Repository implements RepositoryInterface
     public function __construct(EntityInfoInterface $entityInfo)
     {
         $this->entityInfo = $entityInfo;
-    }
 
-    public function initializeObject()
-    {
-        $this->connector = $this->container->get($this->entityInfo->getConnectorClassName(), [$this->entityInfo]);
+        $this->connector = $this->container->get($this->entityInfo->getConnectorClassName(), $this->entityInfo);
         $this->connector->setConstraints(
             $this->constraintFactory->logicalAnd(
                 $this->getDefaultConstraints()

@@ -18,9 +18,9 @@
 
 namespace N86io\Rest\Service;
 
+use N86io\Di\Singleton;
 use N86io\Rest\ControllerInterface;
 use N86io\Rest\DomainObject\EntityInterface;
-use N86io\Rest\Object\Singleton;
 
 /**
  * Class Configuration

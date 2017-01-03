@@ -18,8 +18,8 @@
 
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
-use N86io\Rest\Object\Container;
-use N86io\Rest\Object\Singleton;
+use N86io\Di\ContainerInterface;
+use N86io\Di\Singleton;
 use Webmozart\Assert\Assert;
 
 /**
@@ -31,7 +31,7 @@ class PropertyInfoFactory implements Singleton
 {
     /**
      * @inject
-     * @var Container
+     * @var ContainerInterface
      */
     protected $container;
 
@@ -56,11 +56,11 @@ class PropertyInfoFactory implements Singleton
         foreach ($this->propertyInfoClasses as $propertyInfoClass) {
             if (call_user_func([$propertyInfoClass, 'verifyAttributes'], $attributes)) {
                 /** @var PropertyInfoInterface $propertyInfo */
-                $propertyInfo = $this->container->get($propertyInfoClass, [$name, $attributes]);
+                $propertyInfo = $this->container->get($propertyInfoClass, $name, $attributes);
                 return $propertyInfo;
             }
         }
-        return $this->container->get(Common::class, [$name, $attributes]);
+        return $this->container->get(Common::class, $name, $attributes);
     }
 
     /**

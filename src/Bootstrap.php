@@ -18,17 +18,18 @@
 
 namespace N86io\Rest;
 
+use N86io\Di\Container;
+use N86io\Di\ContainerInterface;
+use N86io\Di\Exception\ContainerException;
 use N86io\Rest\Authentication\AuthenticationInterface;
 use N86io\Rest\Authorization\Authorization;
 use N86io\Rest\Authorization\AuthorizationInterface;
 use N86io\Rest\Cache\ContainerCache;
 use N86io\Rest\Cache\ContainerCacheInterface;
 use N86io\Rest\Exception\BootstrapException;
-use N86io\Rest\Exception\ContainerException;
 use N86io\Rest\Http\RequestFactoryInterface;
 use N86io\Rest\Http\RequestInterface;
 use N86io\Rest\Http\ResponseFactory;
-use N86io\Rest\Object\Container;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -45,7 +46,7 @@ class Bootstrap
     protected $serverRequest;
 
     /**
-     * @var Container
+     * @var ContainerInterface
      */
     protected $container;
 
@@ -81,8 +82,9 @@ class Bootstrap
 
     /**
      * Bootstrap constructor.
+     *
      * @param ServerRequestInterface $serverRequest
-     * @param BootstrapHooks $bootstrapHooks
+     * @param BootstrapHooks         $bootstrapHooks
      */
     public function __construct(ServerRequestInterface $serverRequest, BootstrapHooks $bootstrapHooks = null)
     {
@@ -120,8 +122,9 @@ class Bootstrap
     public function getAuthorization()
     {
         if (!$this->authorization) {
-            $this->authorization = Container::makeInstance(AuthorizationInterface::class);
+            $this->authorization = Container::getInstance()->get(AuthorizationInterface::class);
         }
+
         return $this->authorization;
     }
 
@@ -152,7 +155,7 @@ class Bootstrap
     }
 
     /**
-     * @param array $classMapping
+     * @param array                   $classMapping
      * @param ContainerCacheInterface $containerCache
      */
     public function initializeContainer(
@@ -166,7 +169,7 @@ class Bootstrap
             // Nothing to do, if container already initialized
         }
         if (!$this->container) {
-            $this->container = Container::makeInstance(Container::class);
+            $this->container = Container::getInstance()->get(Container::class);
         }
     }
 
@@ -191,6 +194,7 @@ class Bootstrap
                 return $this->responseFactory->errorCode($e->getCode());
             }
         }
+
         return true;
     }
 
@@ -204,9 +208,10 @@ class Bootstrap
             throw new BootstrapException('Request should be initialized before.');
         }
         if (!$this->authentication) {
-            $this->authentication = Container::makeInstance(AuthenticationInterface::class);
+            $this->authentication = Container::getInstance()->get(AuthenticationInterface::class);
             $this->authentication->load();
         }
+
         return $this->authentication;
     }
 
@@ -220,11 +225,12 @@ class Bootstrap
             throw new BootstrapException('Authentication should be initialized before.');
         }
         if (!$this->authorization) {
-            $this->authorization = Container::makeInstance(AuthorizationInterface::class);
+            $this->authorization = Container::getInstance()->get(AuthorizationInterface::class);
         }
         if (!$this->authorization->hasApiAccess($this->request->getModelClassName(), $this->request->getMode())) {
             return $this->responseFactory->unauthorized();
         }
+
         return true;
     }
 

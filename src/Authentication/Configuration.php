@@ -19,7 +19,7 @@
 namespace N86io\Rest\Authentication;
 
 use Lcobucci\JWT\Signer;
-use N86io\Rest\Object\Singleton;
+use N86io\Di\Singleton;
 use Webmozart\Assert\Assert;
 
 /**

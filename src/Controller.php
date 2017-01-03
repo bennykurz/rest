@@ -18,6 +18,7 @@
 
 namespace N86io\Rest;
 
+use N86io\Di\ContainerInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
 use N86io\Rest\Exception\BadRequestException;
@@ -26,7 +27,6 @@ use N86io\Rest\Exception\MethodNotAllowedException;
 use N86io\Rest\Exception\RequestNotFoundException;
 use N86io\Rest\Http\RequestInterface;
 use N86io\Rest\Http\ResponseFactory;
-use N86io\Rest\Object\Container;
 use N86io\Rest\Persistence\Constraint\ConstraintFactory;
 use N86io\Rest\Persistence\Constraint\ConstraintUtility;
 use N86io\Rest\Persistence\LimitInterface;
@@ -43,7 +43,7 @@ class Controller implements ControllerInterface
 {
     /**
      * @inject
-     * @var Container
+     * @var ContainerInterface
      */
     protected $container;
 
@@ -194,7 +194,7 @@ class Controller implements ControllerInterface
             return;
         }
         $rowCount = $this->settings['defaultRowCount'] ? $this->settings['defaultRowCount'] : 10;
-        $limit = $this->container->get(LimitInterface::class, [0, $rowCount]);
+        $limit = $this->container->get(LimitInterface::class, 0, $rowCount);
         $repository->setLimit($limit);
     }
 

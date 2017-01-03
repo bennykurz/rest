@@ -18,9 +18,9 @@
 
 namespace N86io\Rest\Persistence\Constraint;
 
+use N86io\Di\ContainerInterface;
+use N86io\Di\Singleton;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
-use N86io\Rest\Object\Container;
-use N86io\Rest\Object\Singleton;
 
 /**
  * Class ConstraintFactory
@@ -31,15 +31,16 @@ class ConstraintFactory implements Singleton
 {
     /**
      * @inject
-     * @var Container
+     * @var ContainerInterface
      */
     protected $container;
 
     /**
      * @param PropertyInfoInterface $leftOperand
-     * @param string $operator
-     * @param $rightOperand
-     * @param boolean $save
+     * @param string                $operator
+     * @param                       $rightOperand
+     * @param boolean               $save
+     *
      * @return ConstraintInterface
      */
     public function createComparisonFromStringDetection(
@@ -62,129 +63,162 @@ class ConstraintFactory implements Singleton
             case 'c':
                 return $this->contains($leftOperand, $rightOperand, $save);
         }
+
         // Default or e
         return $this->equalTo($leftOperand, $rightOperand, $save);
     }
 
     /**
      * @param array $constraints
+     *
      * @return LogicalInterface
      */
     public function logicalAnd(array $constraints)
     {
         return $this->container->get(
             Logical::class,
-            [$constraints, LogicalInterface::OPERATOR_AND]
+            $constraints,
+            LogicalInterface::OPERATOR_AND
         );
     }
 
     /**
      * @param array $constraints
+     *
      * @return LogicalInterface
      */
     public function logicalOr(array $constraints)
     {
         return $this->container->get(
             Logical::class,
-            [$constraints, LogicalInterface::OPERATOR_OR]
+            $constraints,
+            LogicalInterface::OPERATOR_OR
         );
     }
 
     /**
      * @param PropertyInfoInterface $leftOperand
-     * @param $rightOperand
-     * @param bool $save
+     * @param                       $rightOperand
+     * @param bool                  $save
+     *
      * @return ComparisonInterface
      */
     public function lessThan(PropertyInfoInterface $leftOperand, $rightOperand, $save = null)
     {
         return $this->container->get(
             Comparison::class,
-            [$leftOperand, ComparisonInterface::LESS_THAN, $rightOperand, $save]
+            $leftOperand,
+            ComparisonInterface::LESS_THAN,
+            $rightOperand,
+            $save
         );
     }
 
     /**
      * @param PropertyInfoInterface $leftOperand
-     * @param $rightOperand
-     * @param bool $save
+     * @param                       $rightOperand
+     * @param bool                  $save
+     *
      * @return ComparisonInterface
      */
     public function lessThanOrEqualTo(PropertyInfoInterface $leftOperand, $rightOperand, $save = null)
     {
         return $this->container->get(
             Comparison::class,
-            [$leftOperand, ComparisonInterface::LESS_THAN_OR_EQUAL_TO, $rightOperand, $save]
+            $leftOperand,
+            ComparisonInterface::LESS_THAN_OR_EQUAL_TO,
+            $rightOperand,
+            $save
         );
     }
 
     /**
      * @param PropertyInfoInterface $leftOperand
-     * @param $rightOperand
-     * @param bool $save
+     * @param                       $rightOperand
+     * @param bool                  $save
+     *
      * @return ComparisonInterface
      */
     public function greaterThan(PropertyInfoInterface $leftOperand, $rightOperand, $save = null)
     {
         return $this->container->get(
             Comparison::class,
-            [$leftOperand, ComparisonInterface::GREATER_THAN, $rightOperand, $save]
+            $leftOperand,
+            ComparisonInterface::GREATER_THAN,
+            $rightOperand,
+            $save
         );
     }
 
     /**
      * @param PropertyInfoInterface $leftOperand
-     * @param $rightOperand
-     * @param bool $save
+     * @param                       $rightOperand
+     * @param bool                  $save
+     *
      * @return ComparisonInterface
      */
     public function greaterThanOrEqualTo(PropertyInfoInterface $leftOperand, $rightOperand, $save = null)
     {
         return $this->container->get(
             Comparison::class,
-            [$leftOperand, ComparisonInterface::GREATER_THAN_OR_EQUAL_TO, $rightOperand, $save]
+            $leftOperand,
+            ComparisonInterface::GREATER_THAN_OR_EQUAL_TO,
+            $rightOperand,
+            $save
         );
     }
 
     /**
      * @param PropertyInfoInterface $leftOperand
-     * @param $rightOperand
-     * @param bool $save
+     * @param                       $rightOperand
+     * @param bool                  $save
+     *
      * @return ComparisonInterface
      */
     public function equalTo(PropertyInfoInterface $leftOperand, $rightOperand, $save = null)
     {
         return $this->container->get(
             Comparison::class,
-            [$leftOperand, ComparisonInterface::EQUAL_TO, $rightOperand, $save]
+            $leftOperand,
+            ComparisonInterface::EQUAL_TO,
+            $rightOperand,
+            $save
         );
     }
 
     /**
      * @param PropertyInfoInterface $leftOperand
-     * @param $rightOperand
-     * @param bool $save
+     * @param                       $rightOperand
+     * @param bool                  $save
+     *
      * @return ComparisonInterface
      */
     public function notEqualTo(PropertyInfoInterface $leftOperand, $rightOperand, $save = null)
     {
         return $this->container->get(
             Comparison::class,
-            [$leftOperand, ComparisonInterface::NOT_EQUAL_TO, $rightOperand, $save]
+            $leftOperand,
+            ComparisonInterface::NOT_EQUAL_TO,
+            $rightOperand,
+            $save
         );
     }
 
     /**
      * @param PropertyInfoInterface $leftOperand
-     * @param $rightOperand
-     * @param bool $save
+     * @param                       $rightOperand
+     * @param bool                  $save
+     *
      * @return ComparisonInterface
      */
     public function contains(PropertyInfoInterface $leftOperand, $rightOperand, $save = null)
     {
         return $this->container->get(
             Comparison::class,
-            [$leftOperand, ComparisonInterface::CONTAINS, $rightOperand, $save]
+            $leftOperand,
+            ComparisonInterface::CONTAINS,
+            $rightOperand,
+            $save
         );
     }
 }

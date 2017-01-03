@@ -18,7 +18,7 @@
 
 namespace N86io\Rest\DomainObject\EntityInfo;
 
-use N86io\Rest\Object\Singleton;
+use N86io\Di\Singleton;
 use N86io\Rest\Service\Configuration;
 use Symfony\Component\Yaml\Yaml;
 use Webmozart\Assert\Assert;

@@ -18,8 +18,8 @@
 
 namespace N86io\Rest\ContentConverter;
 
-use N86io\Rest\Object\Container;
-use N86io\Rest\Object\Singleton;
+use N86io\Di\ContainerInterface;
+use N86io\Di\Singleton;
 use Webmozart\Assert\Assert;
 
 /**
@@ -31,7 +31,7 @@ class ConverterFactory implements Singleton
 {
     /**
      * @inject
-     * @var Container
+     * @var ContainerInterface
      */
     protected $container;
 

@@ -18,10 +18,10 @@
 
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
+use N86io\Di\ContainerInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfo;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
 use N86io\Rest\DomainObject\EntityInterface;
-use N86io\Rest\Object\Container;
 use Webmozart\Assert\Assert;
 
 /**
@@ -33,7 +33,7 @@ abstract class AbstractPropertyInfo implements PropertyInfoInterface
 {
     /**
      * @inject
-     * @var Container
+     * @var ContainerInterface
      */
     protected $container;
 

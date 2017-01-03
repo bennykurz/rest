@@ -18,7 +18,7 @@
 
 namespace N86io\Rest\Authorization;
 
-use N86io\Rest\Object\Singleton;
+use N86io\Di\Singleton;
 
 /**
  * Interface AuthorizationInterface

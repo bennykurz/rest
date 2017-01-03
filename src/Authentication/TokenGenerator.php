@@ -20,8 +20,8 @@ namespace N86io\Rest\Authentication;
 
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Token;
-use N86io\Rest\Object\Container;
-use N86io\Rest\Object\Singleton;
+use N86io\Di\ContainerInterface;
+use N86io\Di\Singleton;
 use Webmozart\Assert\Assert;
 
 /**
@@ -33,7 +33,7 @@ class TokenGenerator implements Singleton
 {
     /**
      * @inject
-     * @var Container
+     * @var ContainerInterface
      */
     protected $container;
 

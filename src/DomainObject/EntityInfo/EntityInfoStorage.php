@@ -18,9 +18,9 @@
 
 namespace N86io\Rest\DomainObject\EntityInfo;
 
+use N86io\Di\Singleton;
 use N86io\Rest\Cache\EntityInfoStorageArrayCacheInterface;
 use N86io\Rest\Cache\EntityInfoStorageCacheInterface;
-use N86io\Rest\Object\Singleton;
 use Webmozart\Assert\Assert;
 
 /**

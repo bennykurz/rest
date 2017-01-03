@@ -18,6 +18,7 @@
 
 namespace N86io\Rest\Http;
 
+use N86io\Di\ContainerInterface;
 use N86io\Rest\ControllerInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
@@ -25,7 +26,6 @@ use N86io\Rest\Exception\MethodNotAllowedException;
 use N86io\Rest\Exception\RequestNotFoundException;
 use N86io\Rest\Http\Routing\RoutingFactoryInterface;
 use N86io\Rest\Http\Utility\QueryUtility;
-use N86io\Rest\Object\Container;
 use N86io\Rest\Persistence\LimitInterface;
 use N86io\Rest\Persistence\Ordering\OrderingInterface;
 use N86io\Rest\Service\Configuration;
@@ -40,7 +40,7 @@ class RequestFactory implements RequestFactoryInterface
 {
     /**
      * @inject
-     * @var Container
+     * @var ContainerInterface
      */
     protected $container;
 
@@ -140,7 +140,7 @@ class RequestFactory implements RequestFactoryInterface
     protected function setLimit(RequestInterface $request, array $queryParams)
     {
         if ($queryParams['rowCount'] && $queryParams['offset']) {
-            $limit = $this->container->get(LimitInterface::class, [$queryParams['offset'], $queryParams['rowCount']]);
+            $limit = $this->container->get(LimitInterface::class, $queryParams['offset'], $queryParams['rowCount']);
             $request->setLimit($limit);
         }
     }

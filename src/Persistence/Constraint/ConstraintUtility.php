@@ -18,10 +18,10 @@
 
 namespace N86io\Rest\Persistence\Constraint;
 
+use N86io\Di\Singleton;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 use N86io\Rest\Exception\NoEnableFieldsException;
-use N86io\Rest\Object\Singleton;
 
 /**
  * Class ConstraintUtility

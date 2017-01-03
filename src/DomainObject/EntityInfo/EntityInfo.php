@@ -18,14 +18,13 @@
 
 namespace N86io\Rest\DomainObject\EntityInfo;
 
+use N86io\Di\ContainerInterface;
 use N86io\Rest\DomainObject\AbstractEntity;
 use N86io\Rest\DomainObject\PropertyInfo\AbstractStatic;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 use N86io\Rest\DomainObject\PropertyInfo\ResourceIdInterface;
-use N86io\Rest\DomainObject\PropertyInfo\StaticInterface;
 use N86io\Rest\DomainObject\PropertyInfo\UidInterface;
 use N86io\Rest\Http\RequestInterface;
-use N86io\Rest\Object\Container;
 use N86io\Rest\Persistence\RepositoryInterface;
 use Webmozart\Assert\Assert;
 
@@ -38,7 +37,7 @@ class EntityInfo implements EntityInfoInterface
 {
     /**
      * @inject
-     * @var Container
+     * @var ContainerInterface
      */
     protected $container;
 
@@ -323,7 +322,7 @@ class EntityInfo implements EntityInfoInterface
      */
     public function createRepositoryInstance()
     {
-        $connector = $this->container->get(RepositoryInterface::class, [$this]);
+        $connector = $this->container->get(RepositoryInterface::class, $this);
         return $connector;
     }
 }

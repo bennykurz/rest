@@ -36,8 +36,9 @@ class RelationOnForeignField extends AbstractPropertyInfo implements RelationOnF
 
     /**
      * RelationOnForeignFieldPropertyInfo constructor.
+     *
      * @param string $name
-     * @param array $attributes
+     * @param array  $attributes
      */
     public function __construct($name, array $attributes)
     {
@@ -68,12 +69,13 @@ class RelationOnForeignField extends AbstractPropertyInfo implements RelationOnF
         $foreignEntityInfo = $this->entityInfoStorage->get($type);
         $foreignPropertyInfo = $foreignEntityInfo->getPropertyInfo($this->getForeignField());
 
-        $constraints = $this->container->get(Comparison::class, [
+        $constraints = $this->container->get(
+            Comparison::class,
             $foreignPropertyInfo,
             ComparisonInterface::INTERNAL_FIND_IN_SET,
             $uid,
             true
-        ]);
+        );
 
         $repository = $foreignEntityInfo->createRepositoryInstance();
         $repository->setConstraints($constraints);
@@ -82,6 +84,7 @@ class RelationOnForeignField extends AbstractPropertyInfo implements RelationOnF
 
         if ($isList) {
             $entity->setProperty($this->getName(), $result);
+
             return;
         }
 
@@ -91,6 +94,7 @@ class RelationOnForeignField extends AbstractPropertyInfo implements RelationOnF
 
     /**
      * @param array $attributes
+     *
      * @return boolean
      */
     public static function verifyAttributes(array $attributes)
@@ -98,16 +102,19 @@ class RelationOnForeignField extends AbstractPropertyInfo implements RelationOnF
         if (empty($attributes['foreignField'])) {
             return false;
         }
+
         return self::checkForAbstractEntitySubclass($attributes['type']);
     }
 
     /**
      * @param string $className
+     *
      * @return boolean
      */
     protected static function checkForAbstractEntitySubclass($className)
     {
         $propertyInfoUtility = new PropertyInfoUtility;
+
         return ($propertyInfoUtility->checkForAbstractEntitySubclass($className) ||
             $propertyInfoUtility->checkForAbstractEntitySubclass(
                 substr($className, 0, strlen($className) - 2)

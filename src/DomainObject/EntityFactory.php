@@ -18,9 +18,10 @@
 
 namespace N86io\Rest\DomainObject;
 
+use N86io\Di\Container;
+use N86io\Di\ContainerInterface;
+use N86io\Di\Singleton;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
-use N86io\Rest\Object\Container;
-use N86io\Rest\Object\Singleton;
 
 /**
  * Class EntityFactory
@@ -31,7 +32,7 @@ class EntityFactory implements Singleton
 {
     /**
      * @inject
-     * @var Container
+     * @var ContainerInterface
      */
     protected $container;
 

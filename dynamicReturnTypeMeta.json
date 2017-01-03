@@ -1,13 +1,13 @@
 {
   "methodCalls": [
     {
-      "class": "\\N86io\\Rest\\Object\\Container",
+      "class": "\\N86io\\Di\\ContainerInterface",
       "method": "get",
       "position": 0
     },
     {
-      "class": "\\N86io\\Rest\\Object\\Container",
-      "method": "makeInstance",
+      "class": "\\N86io\\Di\\Container",
+      "method": "get",
       "position": 0
     },
     {
