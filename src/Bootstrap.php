@@ -23,6 +23,7 @@ use N86io\Di\ClassResolver;
 use N86io\Di\Container;
 use N86io\Di\ContainerInterface;
 use N86io\Di\Exception\ContainerException;
+use N86io\Hook\HookHandler;
 use N86io\Rest\Authentication\AuthenticationInterface;
 use N86io\Rest\Authorization\Authorization;
 use N86io\Rest\Authorization\AuthorizationInterface;
@@ -78,20 +79,13 @@ class Bootstrap
     protected $authorization;
 
     /**
-     * @var BootstrapHooks
-     */
-    protected $hooks;
-
-    /**
      * Bootstrap constructor.
      *
      * @param ServerRequestInterface $serverRequest
-     * @param BootstrapHooks         $bootstrapHooks
      */
-    public function __construct(ServerRequestInterface $serverRequest, BootstrapHooks $bootstrapHooks = null)
+    public function __construct(ServerRequestInterface $serverRequest)
     {
         $this->serverRequest = $serverRequest;
-        $this->hooks = $bootstrapHooks ?: new BootstrapHooks;
     }
 
     /**
@@ -135,27 +129,27 @@ class Bootstrap
      */
     public function run()
     {
-        $this->hooks->runFirstRun($this);
+        HookHandler::trigger(self::class . '_beforeRun', $this);
 
         $this->initializeContainer();
         Container::getInstance()->get(ClassResolver::class)->addMapping(
             ResponseInterface::class,
             Response::class
         );
-        $this->hooks->runAfterInitializeContainer($this);
+        HookHandler::trigger(self::class . '_afterContainerInitializing', $this);
 
         if (($result = $this->initializeRequest()) !== true) {
             return $result;
         }
-        $this->hooks->runAfterInitializeRequest($this);
+        HookHandler::trigger(self::class . '_afterRequestInitializing', $this);
 
         $this->initializeAuthentication();
-        $this->hooks->runAfterInitializeAuthentication($this);
+        HookHandler::trigger(self::class . '_afterAuthenticationInitializing', $this);
 
         if (($result = $this->checkAuthorization()) !== true) {
             return $result;
         }
-        $this->hooks->runAfterCheckAuthorization($this);
+        HookHandler::trigger(self::class . '_afterAuthorizationCheck', $this);
 
         return $this->createResult();
     }
