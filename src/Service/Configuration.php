@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -23,21 +23,19 @@ use N86io\Rest\ControllerInterface;
 use N86io\Rest\DomainObject\EntityInterface;
 
 /**
- * Class Configuration
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class Configuration implements Singleton
 {
     const ENTITY_INFO_CONF_ARRAY = 1;
     const ENTITY_INFO_CONF_JSON = 2;
-    const ENTITY_INFO_CONF_YAML = 4;
-    const ENTITY_INFO_CONF_FILE = 8;
+    const ENTITY_INFO_CONF_JSON_FILE = 3;
 
     /**
      * @var string
      */
-    protected $apiBaseUrl;
+    protected $apiBaseUrl = '';
 
     /**
      * @var array
@@ -52,7 +50,7 @@ class Configuration implements Singleton
     /**
      * @var array
      */
-    protected $apiContrSettings = [];
+    protected $apiControllerSettings = [];
 
     /**
      * @var array
@@ -60,21 +58,25 @@ class Configuration implements Singleton
     protected $entityInfoConf = [];
 
     /**
+     * Takes all configuration from given instance.
+     *
      * @param Configuration $configuration
+     *
+     * @internal
      */
     public function overrideConfiguration(Configuration $configuration)
     {
         $this->apiBaseUrl = $configuration->apiBaseUrl;
         $this->apiConfiguration = $configuration->apiConfiguration;
         $this->apiAliases = $configuration->apiAliases;
-        $this->apiContrSettings = $configuration->apiContrSettings;
+        $this->apiControllerSettings = $configuration->apiControllerSettings;
         $this->entityInfoConf = $configuration->entityInfoConf;
     }
 
     /**
      * @return string
      */
-    public function getApiBaseUrl()
+    public function getApiBaseUrl(): string
     {
         return $this->apiBaseUrl;
     }
@@ -82,7 +84,7 @@ class Configuration implements Singleton
     /**
      * @param string $apiBaseUrl
      */
-    public function setApiBaseUrl($apiBaseUrl)
+    public function setApiBaseUrl(string $apiBaseUrl)
     {
         $this->apiBaseUrl = $this->removeAllSlashesAtEnd($apiBaseUrl);
     }
@@ -90,7 +92,7 @@ class Configuration implements Singleton
     /**
      * @return array
      */
-    public function getApiIdentifiers()
+    public function getApiIdentifiers(): array
     {
         return array_merge(
             array_keys($this->apiConfiguration),
@@ -100,32 +102,36 @@ class Configuration implements Singleton
 
     /**
      * @param string $apiIdentifier
+     *
      * @return array
      */
-    public function getApiConfiguration($apiIdentifier)
+    public function getApiConfiguration(string $apiIdentifier): array
     {
         if ($this->isApiAlias($apiIdentifier)) {
             $apiIdentifier = $this->apiAliases[$apiIdentifier];
         }
+
         return $this->apiConfiguration[$apiIdentifier];
     }
 
     /**
      * @param string $apiIdentifier
+     *
      * @return array
      */
-    public function getApiControllerSettings($apiIdentifier)
+    public function getApiControllerSettings(string $apiIdentifier): array
     {
-        if (isset($this->apiContrSettings[$apiIdentifier])) {
-            return $this->apiContrSettings[$apiIdentifier];
+        if (isset($this->apiControllerSettings[$apiIdentifier])) {
+            return $this->apiControllerSettings[$apiIdentifier];
         }
+
         return [];
     }
 
     /**
      * @return array
      */
-    public function getEntityInfoConfiguration()
+    public function getEntityInfoConfiguration(): array
     {
         return $this->entityInfoConf;
     }
@@ -134,8 +140,10 @@ class Configuration implements Singleton
      * @param string $apiIdentifier
      * @param string $model
      * @param string $version
+     *
+     * @throws \InvalidArgumentException
      */
-    public function registerApiModel($apiIdentifier, $model, $version = '1')
+    public function registerApiModel(string $apiIdentifier, string $model, string $version = '1')
     {
         $this->makeSureNotAlias($apiIdentifier);
         if (!is_subclass_of($model, EntityInterface::class)) {
@@ -149,8 +157,10 @@ class Configuration implements Singleton
      * @param string $apiIdentifier
      * @param string $controller
      * @param string $version
+     *
+     * @throws \InvalidArgumentException
      */
-    public function registerApiController($apiIdentifier, $controller, $version = '1')
+    public function registerApiController(string $apiIdentifier, string $controller, string $version = '1')
     {
         $this->makeSureNotAlias($apiIdentifier);
         if (!is_subclass_of($controller, ControllerInterface::class)) {
@@ -163,8 +173,10 @@ class Configuration implements Singleton
     /**
      * @param string $apiAlias
      * @param string $apiIdentifier
+     *
+     * @throws \InvalidArgumentException
      */
-    public function registerAlias($apiAlias, $apiIdentifier)
+    public function registerAlias(string $apiAlias, string $apiIdentifier)
     {
         if ($this->isApiAlias($apiIdentifier)) {
             throw new \InvalidArgumentException('Can\'t register api-alias "' . $apiAlias . '" on another alias "' .
@@ -182,54 +194,63 @@ class Configuration implements Singleton
 
     /**
      * @param string $apiIdentifier
-     * @param array $settings
+     * @param array  $settings
      */
-    public function registerApiControllerSettings($apiIdentifier, array $settings)
+    public function registerApiControllerSettings(string $apiIdentifier, array $settings)
     {
-        $this->apiContrSettings[$apiIdentifier] = $settings;
+        $this->apiControllerSettings[$apiIdentifier] = $settings;
     }
 
     /**
      * @param $content
-     * @param int $type
      */
-    public function registerEntityInfoConfiguration($content, $type)
+    public function registerEntityInfoConfiguration($content)
     {
-        $this->checkEntityInfoType($type);
         $this->entityInfoConf[] = [
-            'type' => $type,
+            'type'    => $this->getEntityInfoType($content),
             'content' => $content
         ];
     }
 
     /**
-     * @param int $type
+     * @param mixed $content
+     *
+     * @return int
      */
-    protected function checkEntityInfoType($type)
+    protected function getEntityInfoType($content): int
     {
-        $allowed = [1, 2, 4, 9, 10, 12];
-        if (array_search($type, $allowed) === false) {
-            throw new \InvalidArgumentException('Invalid type selected for EntityInfo configuration.');
+        if (is_array($content)) {
+            return self::ENTITY_INFO_CONF_ARRAY;
         }
+        if (is_string($content) && is_readable($content)) {
+            return self::ENTITY_INFO_CONF_JSON_FILE;
+        }
+
+        return self::ENTITY_INFO_CONF_JSON;
     }
 
     /**
      * @param string $string
+     *
      * @return string
      */
-    protected function removeAllSlashesAtEnd($string)
+    protected function removeAllSlashesAtEnd(string $string): string
     {
         if (substr($string, -1) === '/') {
             $string = substr($string, 0, strlen($string) - 1);
+
             return $this->removeAllSlashesAtEnd($string);
         }
+
         return $string;
     }
 
     /**
      * @param string $apiIdentifier
+     *
+     * @throws \InvalidArgumentException
      */
-    protected function makeSureNotAlias($apiIdentifier)
+    protected function makeSureNotAlias(string $apiIdentifier)
     {
         if ($this->isApiAlias($apiIdentifier)) {
             throw new \InvalidArgumentException('"' . $apiIdentifier . '" is already registered as api-alias and ' .
@@ -239,18 +260,20 @@ class Configuration implements Singleton
 
     /**
      * @param string $apiIdentifier
+     *
      * @return bool
      */
-    protected function isApiAlias($apiIdentifier)
+    protected function isApiAlias(string $apiIdentifier): bool
     {
         return isset($this->apiAliases[$apiIdentifier]);
     }
 
     /**
      * @param string $apiIdentifier
+     *
      * @return bool
      */
-    protected function isRegularApiIdentifier($apiIdentifier)
+    protected function isRegularApiIdentifier(string $apiIdentifier): bool
     {
         return isset($this->apiConfiguration[$apiIdentifier]);
     }

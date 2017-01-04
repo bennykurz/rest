@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -24,9 +24,8 @@ use N86io\Rest\Service\Configuration;
 use N86io\Rest\UnitTestCase;
 
 /**
- * Class ConfigurationTest
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class ConfigurationTest extends UnitTestCase
 {
@@ -89,7 +88,7 @@ class ConfigurationTest extends UnitTestCase
 
         $expectedApi1 = [
             '1' => [
-                'model' => $this->entityClassNames[1],
+                'model'      => $this->entityClassNames[1],
                 'controller' => $this->controllerMock1Name
             ],
             '2' => [
@@ -101,7 +100,7 @@ class ConfigurationTest extends UnitTestCase
                 'model' => $this->entityClassNames[3]
             ],
             '2' => [
-                'model' => $this->entityClassNames[4],
+                'model'      => $this->entityClassNames[4],
                 'controller' => $this->controllerMock2Name
             ]
         ];
@@ -123,19 +122,21 @@ class ConfigurationTest extends UnitTestCase
 
         $clearConf = new Configuration;
         $this->configuration->overrideConfiguration($clearConf);
-        $this->configuration->registerEntityInfoConfiguration('SomeContent', Configuration::ENTITY_INFO_CONF_ARRAY);
-        $this->configuration->registerEntityInfoConfiguration(
-            'SomeFurtherContent',
-            Configuration::ENTITY_INFO_CONF_JSON + Configuration::ENTITY_INFO_CONF_FILE
-        );
+        $this->configuration->registerEntityInfoConfiguration('SomeContent');
+        $this->configuration->registerEntityInfoConfiguration([]);
+        $this->configuration->registerEntityInfoConfiguration(__FILE__);
         $expected = [
             [
-                'type' => Configuration::ENTITY_INFO_CONF_ARRAY,
+                'type'    => Configuration::ENTITY_INFO_CONF_JSON,
                 'content' => 'SomeContent'
             ],
             [
-                'type' => Configuration::ENTITY_INFO_CONF_JSON + Configuration::ENTITY_INFO_CONF_FILE,
-                'content' => 'SomeFurtherContent'
+                'type'    => Configuration::ENTITY_INFO_CONF_ARRAY,
+                'content' => []
+            ],
+            [
+                'type'    => Configuration::ENTITY_INFO_CONF_JSON_FILE,
+                'content' => __FILE__
             ]
         ];
         $this->assertEquals($expected, $this->configuration->getEntityInfoConfiguration());
@@ -143,46 +144,37 @@ class ConfigurationTest extends UnitTestCase
 
     public function testExceptionRegisterApiModel()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->configuration->registerApiModel('api1', Configuration::class);
     }
 
     public function testExceptionRegisterApiController()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->configuration->registerApiController('api1', Configuration::class);
     }
 
     public function testExceptionRegisterAliasOnAlias()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->configuration->registerAlias('otherAlias', 'aliasForApi1');
     }
 
     public function testExceptionRegisterAliasExistedApiIdentifier()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->configuration->registerAlias('api1', 'api2');
     }
 
     public function testExceptionRegisterAliasOnUnknownApiIdentifier()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->configuration->registerAlias('aliasForUnknown', 'Unknown');
     }
 
     public function testExceptionRegisterModelOnAlias()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->configuration->registerApiModel('aliasForApi1', 'Irrelevant');
-    }
-
-    public function testExceptionInvalidEntityInfoConfType()
-    {
-        $this->setExpectedException(\InvalidArgumentException::class);
-        $this->configuration->registerEntityInfoConfiguration(
-            'Content',
-            Configuration::ENTITY_INFO_CONF_YAML + Configuration::ENTITY_INFO_CONF_ARRAY
-        );
     }
 }
