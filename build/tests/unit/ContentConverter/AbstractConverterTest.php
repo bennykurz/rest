@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -27,12 +27,12 @@ use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 use N86io\Rest\UnitTestCase;
 
 /**
- * Class AbstractConverterTest
- *
  * @author Viktor Firus <v@n86.io>
  */
 abstract class AbstractConverterTest extends UnitTestCase
 {
+    protected $entityInfoMockClassName = '';
+
     /**
      * @return array
      */
@@ -58,6 +58,7 @@ abstract class AbstractConverterTest extends UnitTestCase
     protected function createEntityInfoStorageMock()
     {
         $entityInfoMock = \Mockery::mock(EntityInfoInterface::class);
+        $this->entityInfoMockClassName = get_class($entityInfoMock);
         $entityInfoMock->shouldReceive('getVisiblePropertiesOrdered')->withAnyArgs()->andReturn([
             \Mockery::mock(PropertyInfoInterface::class)
                 ->shouldReceive('getGetter')->andReturn('')->getMock()
@@ -66,9 +67,13 @@ abstract class AbstractConverterTest extends UnitTestCase
             \Mockery::mock(PropertyInfoInterface::class)
                 ->shouldReceive('getGetter')->andReturn('getNameTwo')->getMock()
                 ->shouldReceive('getName')->andReturn('nameTwo')->getMock()
+                ->shouldReceive('getEntityInfo')->andReturn($entityInfoMock)->getMock(),
+            \Mockery::mock(PropertyInfoInterface::class)
+                ->shouldReceive('getGetter')->andReturn('')->getMock()
+                ->shouldReceive('getName')->andReturn('nameThree')->getMock()
                 ->shouldReceive('getEntityInfo')->andReturn($entityInfoMock)->getMock()
         ]);
-        $entityInfoMock->shouldReceive('getClassName')->andReturn(get_class($entityInfoMock));
+        $entityInfoMock->shouldReceive('getClassName')->andReturn($this->entityInfoMockClassName);
 
         $mock = \Mockery::mock(EntityInfoStorage::class);
         $mock->shouldReceive('get')->withAnyArgs()->andReturn($entityInfoMock);
@@ -81,9 +86,18 @@ abstract class AbstractConverterTest extends UnitTestCase
      */
     protected function createAuthorizationMock()
     {
-        $mock = \Mockery::mock(AuthorizationInterface::class);
-        $mock->shouldReceive('hasPropertyReadAuthorization')->withAnyArgs()->andReturn(true);
-
-        return $mock;
+        return \Mockery::mock(AuthorizationInterface::class)
+            ->shouldReceive('hasPropertyReadAuthorization')->with(
+                $this->entityInfoMockClassName,
+                'nameOne'
+            )->andReturn(true)->getMock()
+            ->shouldReceive('hasPropertyReadAuthorization')->with(
+                $this->entityInfoMockClassName,
+                'nameTwo'
+            )->andReturn(true)->getMock()
+            ->shouldReceive('hasPropertyReadAuthorization')->with(
+                $this->entityInfoMockClassName,
+                'nameThree'
+            )->andReturn(false)->getMock();
     }
 }

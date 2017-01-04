@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -26,9 +26,8 @@ use N86io\Rest\Exception\InternalServerErrorException;
 use Webmozart\Assert\Assert;
 
 /**
- * Class AbstractConverter
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 abstract class AbstractConverter implements ConverterInterface
 {
@@ -45,12 +44,15 @@ abstract class AbstractConverter implements ConverterInterface
     protected $authorization;
 
     /**
+     * Render raw connector list to an array.
+     *
      * @param array $connectorList
-     * @param int $outputLevel
+     * @param int   $outputLevel
+     *
      * @return array
      * @throws InternalServerErrorException
      */
-    protected function renderRaw(array &$connectorList, $outputLevel)
+    protected function renderRaw(array &$connectorList, int $outputLevel): array
     {
         foreach ($connectorList as &$item) {
             if (is_array($item)) {
@@ -73,24 +75,31 @@ abstract class AbstractConverter implements ConverterInterface
                 continue;
             }
         }
+
         return $connectorList;
     }
 
     /**
+     * Format DateTime to string.
+     *
      * @param \DateTime $dateTime
+     *
      * @return string
      */
-    protected function renderDateTime(\DateTime $dateTime)
+    protected function renderDateTime(\DateTime $dateTime): string
     {
         return $dateTime->format('Y-m-d_H:i:s');
     }
 
     /**
+     * Render an Entity to an array.
+     *
      * @param EntityInterface $entity
-     * @param $outputLevel
+     * @param int             $outputLevel
+     *
      * @return array
      */
-    protected function renderEntity(EntityInterface $entity, $outputLevel)
+    protected function renderEntity(EntityInterface $entity, int $outputLevel): array
     {
         $result = [];
         $entityInfo = $this->entityInfoStorage->get(get_class($entity));
@@ -108,14 +117,18 @@ abstract class AbstractConverter implements ConverterInterface
             $callable = [$entity, $visibleProperty->getGetter()];
             $result[$visibleProperty->getName()] = call_user_func($callable, $visibleProperty->getName());
         }
+
         return $result;
     }
 
     /**
+     * If user is authorized to read given property returns true.
+     *
      * @param PropertyInfoInterface $propertyInfo
-     * @return boolean
+     *
+     * @return bool
      */
-    protected function hasPropertyAuthorization(PropertyInfoInterface $propertyInfo)
+    protected function hasPropertyAuthorization(PropertyInfoInterface $propertyInfo): bool
     {
         return $this->authorization->hasPropertyReadAuthorization(
             $propertyInfo->getEntityInfo()->getClassName(),

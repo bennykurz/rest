@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -21,27 +21,28 @@ namespace N86io\Rest\ContentConverter;
 use N86io\Di\Singleton;
 
 /**
- * Interface ConverterInterface
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 interface ConverterInterface extends Singleton
 {
     /**
      * @param array $connectorList
-     * @param int $outputLevel
+     * @param int   $outputLevel
+     *
      * @return string
      */
-    public function render(array $connectorList, $outputLevel);
+    public function render(array $connectorList, int $outputLevel): string;
 
     /**
      * @param string $string
+     *
      * @return array
      */
-    public function parse($string);
+    public function parse(string $string): array;
 
     /**
      * @return string
      */
-    public function getContentType();
+    public function getContentType(): string;
 }

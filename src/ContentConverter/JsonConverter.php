@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -21,39 +21,45 @@ namespace N86io\Rest\ContentConverter;
 use Webmozart\Assert\Assert;
 
 /**
- * Class JsonConverter
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class JsonConverter extends AbstractConverter
 {
     /**
+     * Render raw connector list and returns an json.
+     *
      * @param array $connectorList
-     * @param int $outputLevel
+     * @param int   $outputLevel
+     *
      * @return string
      */
-    public function render(array $connectorList, $outputLevel)
+    public function render(array $connectorList, int $outputLevel): string
     {
-        Assert::integer($outputLevel);
         Assert::greaterThanEq($outputLevel, 0);
         $array = $this->renderRaw($connectorList, $outputLevel);
+
         return json_encode($array);
     }
 
     /**
+     * Parse an json and returns valid content for further processing.
+     *
+     * TODO: Currently not working for save api-input.
+     *
      * @param string $string
+     *
      * @return array
      */
-    public function parse($string)
+    public function parse(string $string): array
     {
-        Assert::string($string);
         return json_decode($string, true);
     }
 
     /**
      * @return string
      */
-    public function getContentType()
+    public function getContentType(): string
     {
         return 'application/json';
     }

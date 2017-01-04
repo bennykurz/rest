@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -18,14 +18,12 @@
 
 namespace N86io\Rest\Tests\Unit\ContentConverter;
 
+use N86io\Di\Container;
 use N86io\Rest\ContentConverter\ConverterFactory;
 use N86io\Rest\ContentConverter\JsonConverter;
-use N86io\Rest\Object\Container;
 use N86io\Rest\UnitTestCase;
 
 /**
- * Class ConverterFactoryTest
- *
  * @author Viktor Firus <v@n86.io>
  */
 class ConverterFactoryTest extends UnitTestCase

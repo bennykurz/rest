@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -21,8 +21,6 @@ namespace N86io\Rest\Tests\Unit\ContentConverter;
 use N86io\Rest\ContentConverter\JsonConverter;
 
 /**
- * Class JsonConverterTest
- *
  * @author Viktor Firus <v@n86.io>
  */
 class JsonConverterTest extends AbstractConverterTest

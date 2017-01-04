@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -23,9 +23,8 @@ use N86io\Di\Singleton;
 use Webmozart\Assert\Assert;
 
 /**
- * Class ConverterFactory
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class ConverterFactory implements Singleton
 {
@@ -35,29 +34,38 @@ class ConverterFactory implements Singleton
      */
     protected $container;
 
-    protected $renderer = [
+    /**
+     * Class-register with converter.
+     *
+     * @var array
+     */
+    protected $converter = [
         JsonConverter::class
     ];
 
     /**
+     * Create a converter from html header accept.
+     *
      * TODO: determine proper converter from accept with package willdurand/negotiation
+     *
      * @param string $accept
+     *
      * @return ConverterInterface
      */
-    public function createFromAccept($accept)
+    public function createFromAccept(string $accept): ConverterInterface
     {
-        Assert::string($accept);
-        $defaultRenderer = null;
-        foreach ($this->renderer as $item) {
-            /** @var ConverterInterface $rendererInstance */
-            $rendererInstance = $this->container->get($item);
-            if (!$defaultRenderer) {
-                $defaultRenderer = $rendererInstance;
+        $defaultConverter = null;
+        foreach ($this->converter as $item) {
+            /** @var ConverterInterface $converterInstance */
+            $converterInstance = $this->container->get($item);
+            if (!$defaultConverter) {
+                $defaultConverter = $converterInstance;
             }
-            if ($rendererInstance->getContentType() === $accept) {
-                return $rendererInstance;
+            if ($converterInstance->getContentType() === $accept) {
+                return $converterInstance;
             }
         }
-        return $defaultRenderer;
+
+        return $defaultConverter;
     }
 }
