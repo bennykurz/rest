@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -19,29 +19,28 @@
 namespace N86io\Rest\DomainObject\EntityInfo;
 
 /**
- * Interface JoinInterface
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 interface JoinInterface
 {
     /**
      * @return string
      */
-    public function getAlias();
+    public function getAlias(): string;
 
     /**
      * @return string
      */
-    public function getTable();
+    public function getTable(): string;
 
     /**
      * @return string
      */
-    public function getCondition();
+    public function getCondition(): string;
 
     /**
      * @return string
      */
-    public function getType();
+    public function getType(): string;
 }

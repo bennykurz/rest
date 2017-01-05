@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -21,9 +21,8 @@ namespace N86io\Rest\DomainObject\EntityInfo;
 use Webmozart\Assert\Assert;
 
 /**
- * Class Join
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class Join implements JoinInterface
 {
@@ -43,26 +42,21 @@ class Join implements JoinInterface
     protected $condition;
 
     /**
-     * Join constructor.
-     * @param array $attributes
+     * @param string $alias
+     * @param string $table
+     * @param string $condition
      */
-    public function __construct(array $attributes)
+    public function __construct(string $alias, string $table, string $condition)
     {
-        if (!empty($attributes['alias'])) {
-            $this->alias = $attributes['alias'];
-        }
-        Assert::string($attributes['table']);
-        $this->table = $attributes['table'];
-        if (!empty($attributes['condition'])) {
-            $this->condition = $attributes['condition'];
-            Assert::string($attributes['condition']);
-        }
+        $this->alias = $alias;
+        $this->table = $table;
+        $this->condition = $condition;
     }
 
     /**
      * @return string
      */
-    public function getAlias()
+    public function getAlias(): string
     {
         return $this->alias;
     }
@@ -70,7 +64,7 @@ class Join implements JoinInterface
     /**
      * @return string
      */
-    public function getTable()
+    public function getTable(): string
     {
         return $this->table;
     }
@@ -78,7 +72,7 @@ class Join implements JoinInterface
     /**
      * @return string
      */
-    public function getCondition()
+    public function getCondition(): string
     {
         return $this->condition;
     }
@@ -86,7 +80,7 @@ class Join implements JoinInterface
     /**
      * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return 'inner';
     }
