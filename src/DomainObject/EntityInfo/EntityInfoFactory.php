@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -22,12 +22,10 @@ use N86io\Di\ContainerInterface;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoFactory;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoUtility;
 use N86io\Rest\Reflection\EntityClassReflection;
-use Webmozart\Assert\Assert;
 
 /**
- * Class EntityInfoFactory
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class EntityInfoFactory implements EntityInfoFactoryInterface
 {
@@ -61,9 +59,8 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
      * @return EntityInfoInterface
      * @throws \Exception
      */
-    public function buildEntityInfoFromClassName($className)
+    public function buildEntityInfoFromClassName(string $className): EntityInfoInterface
     {
-        Assert::string($className);
         $entityClassReflection = $this->container->get(EntityClassReflection::class, $className);
         $properties = $entityClassReflection->getProperties();
 
@@ -79,12 +76,7 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
         $properties = $this->mergeProperties($properties, $propertiesConf);
         $properties = $this->setUndefinedPropertiesAttributes($properties);
 
-        $entityInfo = $this->container->get(EntityInfo::class, [
-            'className' => $className,
-            'connector' => $connector,
-            'table'     => $table,
-            'mode'      => $mode,
-        ]);
+        $entityInfo = $this->container->get(EntityInfo::class, $className, $table, $mode, $connector);
 
         foreach ($properties as $name => $attributes) {
             $attributes['entityClassName'] = $entityInfo->getClassName();
@@ -101,8 +93,9 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
         }
 
         foreach ($joins as $alias => $attributes) {
-            $attributes['alias'] = $alias;
-            $entityInfo->addJoin($this->container->get(JoinInterface::class, $attributes));
+            /** @var JoinInterface $join */
+            $join = $this->container->get(JoinInterface::class, $alias, $attributes['table'], $attributes['condition']);
+            $entityInfo->addJoin($join);
         }
 
         if (!$entityInfo->hasUidPropertyInfo()) {
@@ -118,7 +111,7 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
      *
      * @return array
      */
-    protected function mergeProperties(array $properties, array $propertiesConf)
+    protected function mergeProperties(array $properties, array $propertiesConf): array
     {
         if (empty($propertiesConf)) {
             return $properties;
@@ -133,7 +126,7 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
      *
      * @return array
      */
-    protected function loadEntityInfoConf($className, EntityClassReflection $entityClassReflection)
+    protected function loadEntityInfoConf(string $className, EntityClassReflection $entityClassReflection): array
     {
         $entityInfoConf = $this->entityInfoConfLoader->loadSingle(
             $className,
@@ -155,7 +148,7 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
      *
      * @return array
      */
-    protected function setUndefinedPropertiesAttributes(array $properties)
+    protected function setUndefinedPropertiesAttributes(array $properties): array
     {
         foreach ($properties as $propertyName => &$attributes) {
             if (empty($attributes['resourcePropertyName']) &&
@@ -174,7 +167,7 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
      *
      * @return string
      */
-    protected function convertPropertyName($string)
+    protected function convertPropertyName(string $string): string
     {
         return strtolower(preg_replace('/(?<=\\w)([A-Z])/', '_$1', $string));
     }

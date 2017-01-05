@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -18,19 +18,18 @@
 
 namespace N86io\Rest\Tests\Unit\DomainObject\EntityInfo;
 
+use N86io\Di\ContainerInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfo;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoConfLoader;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoFactory;
+use N86io\Rest\DomainObject\EntityInfo\JoinInterface;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoFactory;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoUtility;
-use N86io\Rest\Object\Container;
 use N86io\Rest\Reflection\EntityClassReflection;
 use N86io\Rest\UnitTestCase;
 
 /**
- * Class EntityInfoFactoryTest
- *
  * @author Viktor Firus <v@n86.io>
  */
 class EntityInfoFactoryTest extends UnitTestCase
@@ -38,7 +37,7 @@ class EntityInfoFactoryTest extends UnitTestCase
     /**
      * @var EntityInfoFactory
      */
-    protected $factory;
+    private $factory;
 
     public function setUp()
     {
@@ -59,38 +58,39 @@ class EntityInfoFactoryTest extends UnitTestCase
 
     public function testNoUidDefined()
     {
-        $this->setExpectedException(\Exception::class);
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('It is necessary to define a field for unique id.');
         $this->factory->buildEntityInfoFromClassName('Entity2');
     }
 
-    protected function createPropertyInfoFactoryMock()
+    private function createPropertyInfoFactoryMock()
     {
         $mock = \Mockery::mock(PropertyInfoFactory::class);
         $mock->shouldReceive('build')->withAnyArgs()->andReturn(\Mockery::mock(PropertyInfoInterface::class));
         $mock->shouldReceive('buildEnableField')->withAnyArgs()->andReturn(
             \Mockery::mock(PropertyInfoInterface::class)
         );
+
         return $mock;
     }
 
-    protected function createContainerMock()
+    private function createContainerMock()
     {
-        $mock = \Mockery::mock(Container::class);
-        $mock->shouldReceive('get')->with(EntityClassReflection::class, ['Entity1'])
+        $mock = \Mockery::mock(ContainerInterface::class);
+
+        $mock->shouldReceive('get')->with(EntityClassReflection::class, 'Entity1')
             ->andReturn($this->createEntityClassReflectionMock1());
-        $mock->shouldReceive('get')->with(EntityClassReflection::class, ['Entity2'])
+
+        $mock->shouldReceive('get')->with(EntityClassReflection::class, 'Entity2')
             ->andReturn($this->createEntityClassReflectionMock2());
-        $mock->shouldReceive('get')->with(EntityInfo::class, [
-            [
-                'className' => 'Entity1',
-                'table' => 'fake_table',
-                'enableFields' => ['disabled' => 'disableFieldName']
-            ]
-        ])->andReturn($this->createEntityInfoMock1());
-        $mock->shouldReceive('get')->with(
-            EntityInfo::class,
-            [['className' => 'Entity2']]
-        )->andReturn($this->createEntityInfoMock2());
+
+        $mock->shouldReceive('get')->with(EntityInfo::class, 'Entity1', 'fake_table', [], '')
+            ->andReturn($this->createEntityInfoMock1());
+
+        $mock->shouldReceive('get')->with(EntityInfo::class, 'Entity2', 'entity2_table', [], '')
+            ->andReturn($this->createEntityInfoMock2());
+
+        $mock->shouldReceive('get')->andReturn(\Mockery::mock(JoinInterface::class));
 
         return $mock;
     }
@@ -98,12 +98,13 @@ class EntityInfoFactoryTest extends UnitTestCase
     /**
      * build mock for EntityInfo for class Entity1
      */
-    protected function createEntityInfoMock1()
+    private function createEntityInfoMock1()
     {
         $mock = \Mockery::mock(EntityInfo::class);
-        $mock->shouldReceive('addPropertyInfo')->withAnyArgs();
+        $mock->shouldReceive('addPropertyInfo');
         $mock->shouldReceive('hasUidPropertyInfo')->andReturn(true);
         $mock->shouldReceive('getClassName')->withAnyArgs()->andReturn('ClassName');
+        $mock->shouldReceive('addJoin');
 
         return $mock;
     }
@@ -111,10 +112,10 @@ class EntityInfoFactoryTest extends UnitTestCase
     /**
      * build mock for EntityInfo for class Entity2
      */
-    protected function createEntityInfoMock2()
+    private function createEntityInfoMock2()
     {
         $mock = \Mockery::mock(EntityInfo::class);
-        $mock->shouldReceive('addPropertyInfo')->withAnyArgs();
+        $mock->shouldReceive('addPropertyInfo');
         $mock->shouldReceive('hasUidPropertyInfo')->andReturn(false);
         $mock->shouldReceive('hasResourceId')->andReturn(false);
         $mock->shouldReceive('getClassName')->withAnyArgs()->andReturn('ClassName');
@@ -125,14 +126,14 @@ class EntityInfoFactoryTest extends UnitTestCase
     /**
      * build mock for reflection of Entity1
      */
-    protected function createEntityClassReflectionMock1()
+    private function createEntityClassReflectionMock1()
     {
         $mock = \Mockery::mock(EntityClassReflection::class);
         $mock->shouldReceive('getParentClasses')->andReturn(['N86io\Rest\Examples\Example1']);
         $mock->shouldReceive('getProperties')->andReturn([
             'fakeId' => ['type' => 'int'],
             'string' => ['type' => 'string'],
-            'array' => ['type' => 'array']
+            'array'  => ['type' => 'array']
         ]);
 
         return $mock;
@@ -141,7 +142,7 @@ class EntityInfoFactoryTest extends UnitTestCase
     /**
      * build mock for reflection of Entity2
      */
-    protected function createEntityClassReflectionMock2()
+    private function createEntityClassReflectionMock2()
     {
         $mock = \Mockery::mock(EntityClassReflection::class);
         $mock->shouldReceive('getParentClasses')->andReturn([]);
@@ -153,7 +154,7 @@ class EntityInfoFactoryTest extends UnitTestCase
         return $mock;
     }
 
-    protected function createPropertyInfoUtilityMock()
+    private function createPropertyInfoUtilityMock()
     {
         $methodName = 'convertPropertyName';
         $mock = \Mockery::mock(PropertyInfoUtility::class);
@@ -162,36 +163,60 @@ class EntityInfoFactoryTest extends UnitTestCase
         $mock->shouldReceive($methodName)->with('array')->andReturn('array');
     }
 
-    protected function createEntityInfoConfLoaderMock1()
+    private function createEntityInfoConfLoaderMock1()
     {
         $mock = \Mockery::mock(EntityInfoConfLoader::class);
         $mock->shouldReceive('loadSingle')->with(
             'Entity1',
             ['N86io\\Rest\\Examples\\Example1']
         )->andReturn([
-            'table' => 'fake_table',
-            'enableFields' => ['disabled' => 'disableFieldName'],
-            'properties' => [
-                'fakeId' => ['resourcePropertyName' => 'uid', 'resourceId' => true]
+            'table'        => 'fake_table',
+            'enableFields' => [
+                'disabled' => 'disableFieldName'
+            ],
+            'joins'        => [
+                'join_alias' => [
+                    'table'     => 'join_table',
+                    'condition' => 'join_condition'
+                ]
+            ],
+            'properties'   => [
+                'fakeId' => [
+                    'resourceId'           => true,
+                    'hide'                 => false,
+                    'ordering'             => false,
+                    'constraint'           => false,
+                    'outputLevel'          => 0,
+                    'position'             => 0,
+                    'resourcePropertyName' => 'uid'
+                ]
             ]
         ]);
         $mock->shouldReceive('loadSingle')->with('Entity2', [])->andReturn([
+            'table'      => 'entity2_table',
             'properties' => [
-                'string' => ['ordering' => true]
+                'string' => [
+                    'resourceId'  => false,
+                    'hide'        => false,
+                    'ordering'    => true,
+                    'constraint'  => false,
+                    'outputLevel' => 0,
+                    'position'    => 0
+                ]
             ]
         ]);
 
         return $mock;
     }
 
-    protected function createEntityInfoConfLoaderMock2()
+    private function createEntityInfoConfLoaderMock2()
     {
         $mock = \Mockery::mock(EntityInfoConfLoader::class);
         $mock->shouldReceive('loadSingle')->with(
             'Entity1',
             ['N86io\\Rest\\Examples\\Example1']
         )->andReturn([
-            'table' => 'fake_table',
+            'table'        => 'fake_table',
             'enableFields' => ['disabled' => 'disableFieldName']
         ]);
 

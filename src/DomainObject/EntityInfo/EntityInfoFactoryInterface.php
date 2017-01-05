@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -21,15 +21,15 @@ namespace N86io\Rest\DomainObject\EntityInfo;
 use N86io\Di\Singleton;
 
 /**
- * Interface EntityInfoFactoryInterface
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 interface EntityInfoFactoryInterface extends Singleton
 {
     /**
-     * @param $className
+     * @param string $className
+     *
      * @return EntityInfoInterface
      */
-    public function buildEntityInfoFromClassName($className);
+    public function buildEntityInfoFromClassName(string $className): EntityInfoInterface;
 }
