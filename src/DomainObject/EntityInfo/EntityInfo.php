@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -29,9 +29,8 @@ use N86io\Rest\Persistence\RepositoryInterface;
 use Webmozart\Assert\Assert;
 
 /**
- * Class EntityInfo
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class EntityInfo implements EntityInfoInterface
 {
@@ -87,39 +86,31 @@ class EntityInfo implements EntityInfoInterface
     protected $joins = [];
 
     /**
-     * EntityInfo constructor.
-     * @param array $attributes
+     * @param string $className
+     * @param string $table
+     * @param array  $mode
+     * @param string $connector
+     *
+     * @throws \InvalidArgumentException
      */
-    public function __construct(array $attributes)
+    public function __construct(string $className, string $table, array $mode, string $connector = '')
     {
-        if (!is_subclass_of($attributes['className'], AbstractEntity::class)) {
+        if (!is_subclass_of($className, AbstractEntity::class)) {
             throw new \InvalidArgumentException(
                 'Class for EntityInfo should be a subclass of "' . AbstractEntity::class . '".'
             );
         }
-        if (!empty($attributes['className'])) {
-            Assert::string($attributes['className']);
-            $this->className = $attributes['className'];
-        }
-        if (!empty($attributes['connector'])) {
-            Assert::string($attributes['connector']);
-            $this->connector = $attributes['connector'];
-        }
-        if (!empty($attributes['table'])) {
-            Assert::string($attributes['table']);
-            $this->table = $attributes['table'];
-        }
-        if (!empty($attributes['mode'])) {
-            Assert::isArray($attributes['mode']);
-            $this->readMode = array_search('read', $attributes['mode']) !== false;
-            $this->writeMode = array_search('write', $attributes['mode']) !== false;
-        }
+        $this->className = $className;
+        $this->table = $table;
+        $this->readMode = array_search('read', $mode) !== false;
+        $this->writeMode = array_search('write', $mode) !== false;
+        $this->connector = $connector;
     }
 
     /**
      * @return string
      */
-    public function getConnectorClassName()
+    public function getConnectorClassName(): string
     {
         return $this->connector;
     }
@@ -127,7 +118,7 @@ class EntityInfo implements EntityInfoInterface
     /**
      * @return string
      */
-    public function getClassName()
+    public function getClassName(): string
     {
         return $this->className;
     }
@@ -135,7 +126,7 @@ class EntityInfo implements EntityInfoInterface
     /**
      * @return string
      */
-    public function getTable()
+    public function getTable(): string
     {
         return $this->table;
     }
@@ -143,7 +134,7 @@ class EntityInfo implements EntityInfoInterface
     /**
      * @return PropertyInfoInterface
      */
-    public function getResourceIdPropertyInfo()
+    public function getResourceIdPropertyInfo(): PropertyInfoInterface
     {
         return $this->resIdPropertyInfo;
     }
@@ -151,41 +142,42 @@ class EntityInfo implements EntityInfoInterface
     /**
      * @return AbstractStatic
      */
-    public function getUidPropertyInfo()
+    public function getUidPropertyInfo(): AbstractStatic
     {
         return $this->uidPropertyInfo;
     }
 
     /**
      * @param string $propertyName
+     *
      * @return PropertyInfoInterface
      */
-    public function getPropertyInfo($propertyName)
+    public function getPropertyInfo(string $propertyName): PropertyInfoInterface
     {
-        Assert::string($propertyName);
         return $this->propertyInfoList[$propertyName];
     }
 
     /**
-     * @param $propertyName
+     * @param string $propertyName
+     *
      * @return bool
      */
-    public function hasPropertyInfo($propertyName)
+    public function hasPropertyInfo(string $propertyName): bool
     {
-        Assert::string($propertyName);
         return !empty($this->propertyInfoList[$propertyName]);
     }
 
     /**
      * @return PropertyInfoInterface[]
      */
-    public function getPropertyInfoList()
+    public function getPropertyInfoList(): array
     {
         return $this->propertyInfoList;
     }
 
     /**
      * @param PropertyInfoInterface $propertyInfo
+     *
      * @throws \Exception
      */
     public function addPropertyInfo(PropertyInfoInterface $propertyInfo)
@@ -201,9 +193,11 @@ class EntityInfo implements EntityInfoInterface
 
     /**
      * @param PropertyInfoInterface $propertyInfo
-     * @return boolean
+     *
+     * @return bool
+     * @throws \InvalidArgumentException
      */
-    protected function isResourceIdPropertyInfo(PropertyInfoInterface $propertyInfo)
+    protected function isResourceIdPropertyInfo(PropertyInfoInterface $propertyInfo): bool
     {
         if (!$propertyInfo instanceof ResourceIdInterface) {
             return false;
@@ -211,14 +205,17 @@ class EntityInfo implements EntityInfoInterface
         if ($propertyInfo->isResourceId() && !empty($this->resIdPropertyInfo)) {
             throw new \InvalidArgumentException('Only one column can selected as resourceId.');
         }
+
         return $propertyInfo->isResourceId();
     }
 
     /**
      * @param PropertyInfoInterface $propertyInfo
-     * @return boolean
+     *
+     * @return bool
+     * @throws \InvalidArgumentException
      */
-    protected function isUidPropertyInfo(PropertyInfoInterface $propertyInfo)
+    protected function isUidPropertyInfo(PropertyInfoInterface $propertyInfo): bool
     {
         if (!$propertyInfo instanceof UidInterface) {
             return false;
@@ -226,13 +223,14 @@ class EntityInfo implements EntityInfoInterface
         if ($propertyInfo->isUid() && !empty($this->uidPropertyInfo)) {
             throw new \InvalidArgumentException('Only one column can selected as uid.');
         }
+
         return $propertyInfo->isUid();
     }
 
     /**
      * @return bool
      */
-    public function hasResourceIdPropertyInfo()
+    public function hasResourceIdPropertyInfo(): bool
     {
         return $this->resIdPropertyInfo instanceof PropertyInfoInterface;
     }
@@ -240,7 +238,7 @@ class EntityInfo implements EntityInfoInterface
     /**
      * @return bool
      */
-    public function hasUidPropertyInfo()
+    public function hasUidPropertyInfo(): bool
     {
         return $this->uidPropertyInfo instanceof PropertyInfoInterface;
     }
@@ -248,7 +246,7 @@ class EntityInfo implements EntityInfoInterface
     /**
      * @return JoinInterface[]
      */
-    public function getJoins()
+    public function getJoins(): array
     {
         return $this->joins;
     }
@@ -263,28 +261,30 @@ class EntityInfo implements EntityInfoInterface
 
     /**
      * @param int $outputLevel
+     *
      * @return array
      */
-    public function getVisiblePropertiesOrdered($outputLevel)
+    public function getVisiblePropertiesOrdered(int $outputLevel): array
     {
-        Assert::integer($outputLevel);
         Assert::greaterThanEq($outputLevel, 0);
         $list = [];
         /** @var PropertyInfoInterface $item */
         foreach ($this->propertyInfoList as $item) {
             if ($item->shouldShow($outputLevel)) {
-                $list[str_pad($item->getPosition(), 6, '0', STR_PAD_LEFT) . $item->getName()] = $item;
+                $list[str_pad((string)$item->getPosition(), 6, '0', STR_PAD_LEFT) . $item->getName()] = $item;
             }
         }
         ksort($list);
+
         return array_values($list);
     }
 
     /**
      * @param int $requestMode
+     *
      * @return bool
      */
-    public function canHandleRequestMode($requestMode)
+    public function canHandleRequestMode(int $requestMode): bool
     {
         Assert::oneOf(
             $requestMode,
@@ -296,6 +296,7 @@ class EntityInfo implements EntityInfoInterface
                 RequestInterface::REQUEST_MODE_DELETE
             ]
         );
+
         return (
             $requestMode === RequestInterface::REQUEST_MODE_READ && $this->readMode ||
             $requestMode === RequestInterface::REQUEST_MODE_CREATE && $this->writeMode ||
@@ -305,11 +306,13 @@ class EntityInfo implements EntityInfoInterface
 
     /**
      * @param int $requestMode
+     *
      * @return bool
      */
-    protected function canReadAndWrite($requestMode)
+    protected function canReadAndWrite(int $requestMode): bool
     {
         $isReadWriteMode = $this->readMode && $this->writeMode;
+
         return (
             $requestMode === RequestInterface::REQUEST_MODE_UPDATE && $isReadWriteMode ||
             $requestMode === RequestInterface::REQUEST_MODE_PATCH && $isReadWriteMode ||
@@ -320,9 +323,10 @@ class EntityInfo implements EntityInfoInterface
     /**
      * @return RepositoryInterface
      */
-    public function createRepositoryInstance()
+    public function createRepositoryInstance(): RepositoryInterface
     {
         $connector = $this->container->get(RepositoryInterface::class, $this);
+
         return $connector;
     }
 }

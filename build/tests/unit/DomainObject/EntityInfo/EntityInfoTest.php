@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -19,18 +19,16 @@
 namespace N86io\Rest\Tests\Unit\DomainObject\EntityInfo;
 
 use Mockery\MockInterface;
+use N86io\Di\Container;
 use N86io\Rest\DomainObject\AbstractEntity;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfo;
 use N86io\Rest\DomainObject\PropertyInfo\AbstractPropertyInfo;
 use N86io\Rest\DomainObject\PropertyInfo\Common;
 use N86io\Rest\Http\RequestInterface;
-use N86io\Rest\Object\Container;
 use N86io\Rest\Persistence\RepositoryInterface;
 use N86io\Rest\UnitTestCase;
 
 /**
- * Class EntityInfoTest
- *
  * @author Viktor Firus <v@n86.io>
  */
 class EntityInfoTest extends UnitTestCase
@@ -61,7 +59,6 @@ class EntityInfoTest extends UnitTestCase
         list($entityClassName, $entityInfo) = $this->createEntityInfoReadOnly();
         $this->assertEquals($entityClassName, $entityInfo->getClassName());
         $this->assertEquals('_table_', $entityInfo->getTable());
-        $this->assertEquals(['deleted' => 'delete'], $entityInfo->getEnableFields());
         $this->assertTrue($entityInfo->canHandleRequestMode(RequestInterface::REQUEST_MODE_READ));
         $this->assertFalse($entityInfo->canHandleRequestMode(RequestInterface::REQUEST_MODE_DELETE));
         $this->assertTrue($entityInfo->createRepositoryInstance() instanceof RepositoryInterface);
@@ -108,8 +105,8 @@ class EntityInfoTest extends UnitTestCase
 
     public function testConstructorException()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
-        new EntityInfo(['className' => EntityInfoTest::class]);
+        $this->expectException(\InvalidArgumentException::class);
+        new EntityInfo(EntityInfoTest::class, 'table', []);
     }
 
     public function testSecondResourceIdPropInfoException()
@@ -117,7 +114,7 @@ class EntityInfoTest extends UnitTestCase
         $entityInfo = $this->createEntityInfoReadWrite();
         $propInfo = $this->createCommonPropertyInfoMock(true, false, 'name', '_name_', 2, 1);
         $entityInfo->addPropertyInfo($propInfo);
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $propInfo = $this->createCommonPropertyInfoMock(true, false, 'name', '_name_', 2, 1);
         $entityInfo->addPropertyInfo($propInfo);
     }
@@ -127,7 +124,7 @@ class EntityInfoTest extends UnitTestCase
         $entityInfo = $this->createEntityInfoReadWrite();
         $propInfo = $this->createCommonPropertyInfoMock(false, true, 'name', '_name_', 2, 1);
         $entityInfo->addPropertyInfo($propInfo);
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $propInfo = $this->createCommonPropertyInfoMock(false, true, 'name', '_name_', 2, 1);
         $entityInfo->addPropertyInfo($propInfo);
     }
@@ -135,10 +132,11 @@ class EntityInfoTest extends UnitTestCase
     /**
      * @param boolean $isResourceId
      * @param boolean $isUid
-     * @param string $name
-     * @param string $resPropName
-     * @param int $outputLevel
-     * @param int $position
+     * @param string  $name
+     * @param string  $resPropName
+     * @param int     $outputLevel
+     * @param int     $position
+     *
      * @return MockInterface|Common
      */
     protected function createCommonPropertyInfoMock($isResourceId, $isUid, $name, $resPropName, $outputLevel, $position)
@@ -160,10 +158,7 @@ class EntityInfoTest extends UnitTestCase
      */
     protected function createEntityInfoReadWrite()
     {
-        return new EntityInfo([
-            'className' => get_class(\Mockery::mock(AbstractEntity::class)),
-            'mode' => ['read', 'write']
-        ]);
+        return new EntityInfo(get_class(\Mockery::mock(AbstractEntity::class)), 'table', ['read', 'write']);
     }
 
     /**
@@ -171,10 +166,7 @@ class EntityInfoTest extends UnitTestCase
      */
     protected function createEntityInfoWriteOnly()
     {
-        return new EntityInfo([
-            'className' => get_class(\Mockery::mock(AbstractEntity::class)),
-            'mode' => ['write']
-        ]);
+        return new EntityInfo(get_class(\Mockery::mock(AbstractEntity::class)), 'table', ['write']);
     }
 
     /**
@@ -183,16 +175,9 @@ class EntityInfoTest extends UnitTestCase
     protected function createEntityInfoReadOnly()
     {
         $entityClassName = get_class(\Mockery::mock(AbstractEntity::class));
-        $entityInfo = new EntityInfo([
-            'className' => $entityClassName,
-            'connector' => '_connector_',
-            'table' => '_table_',
-            'enableFields' => [
-                'deleted' => 'delete'
-            ],
-            'mode' => ['read']
-        ]);
+        $entityInfo = new EntityInfo($entityClassName, '_table_', ['read'], '_connector_');
         $this->inject($entityInfo, 'container', $this->createContainerMock());
+
         return [$entityClassName, $entityInfo];
     }
 

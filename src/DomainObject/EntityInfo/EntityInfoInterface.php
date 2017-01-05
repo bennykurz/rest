@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -23,74 +23,76 @@ use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 use N86io\Rest\Persistence\RepositoryInterface;
 
 /**
- * Interface EntityInfoInterface
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 interface EntityInfoInterface
 {
     /**
      * @return string
      */
-    public function getConnectorClassName();
+    public function getConnectorClassName(): string;
 
     /**
      * @return string
      */
-    public function getClassName();
+    public function getClassName(): string;
 
     /**
      * @return string
      */
-    public function getTable();
+    public function getTable(): string;
 
     /**
      * @return PropertyInfoInterface
      */
-    public function getResourceIdPropertyInfo();
+    public function getResourceIdPropertyInfo(): PropertyInfoInterface;
 
     /**
      * @return AbstractStatic
      */
-    public function getUidPropertyInfo();
+    public function getUidPropertyInfo(): AbstractStatic;
 
     /**
      * @param string $offset
+     *
      * @return PropertyInfoInterface
      */
-    public function getPropertyInfo($offset);
+    public function getPropertyInfo(string $offset): PropertyInfoInterface;
 
     /**
      * @return PropertyInfoInterface[]
      */
-    public function getPropertyInfoList();
+    public function getPropertyInfoList(): array;
 
     /**
      * @param PropertyInfoInterface $propertyInfo
+     *
      * @throws \Exception
      */
     public function addPropertyInfo(PropertyInfoInterface $propertyInfo);
 
     /**
-     * @param $propertyName
+     * @param string $propertyName
+     *
      * @return bool
      */
-    public function hasPropertyInfo($propertyName);
+    public function hasPropertyInfo(string $propertyName): bool;
 
     /**
      * @return bool
      */
-    public function hasResourceIdPropertyInfo();
+    public function hasResourceIdPropertyInfo(): bool;
 
     /**
      * @return bool
      */
-    public function hasUidPropertyInfo();
+    public function hasUidPropertyInfo(): bool;
 
     /**
      * @return JoinInterface[]
      */
-    public function getJoins();
+    public function getJoins(): array;
 
     /**
      * @param JoinInterface $join
@@ -99,18 +101,20 @@ interface EntityInfoInterface
 
     /**
      * @param int $outputLevel
+     *
      * @return array
      */
-    public function getVisiblePropertiesOrdered($outputLevel);
+    public function getVisiblePropertiesOrdered(int $outputLevel): array;
 
     /**
-     * @param string $requestMode
+     * @param int $requestMode
+     *
      * @return bool
      */
-    public function canHandleRequestMode($requestMode);
+    public function canHandleRequestMode(int $requestMode): bool;
 
     /**
      * @return RepositoryInterface
      */
-    public function createRepositoryInstance();
+    public function createRepositoryInstance(): RepositoryInterface;
 }
