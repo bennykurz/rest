@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -18,188 +18,183 @@
 
 namespace N86io\Rest\Tests\Unit\DomainObject\EntityInfo;
 
+use Doctrine\Instantiator\Instantiator;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoConfLoader;
 use N86io\Rest\Service\Configuration;
 use N86io\Rest\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
-use Symfony\Component\Yaml\Yaml;
 
 /**
- * Class EntityInfoConfLoaderTest
- *
  * @author Viktor Firus <v@n86.io>
  */
 class EntityInfoConfLoaderTest extends UnitTestCase
 {
-    public function testLoad()
+    private $conf1 = [
+        'Model1' => [
+            'table'        => 'model1_table',
+            'mode'         => ['read'],
+            'enableFields' => [
+                'deleted'   => 'delete',
+                'disabled'  => 'disable',
+                'startTime' => 'startTime',
+                'endTime'   => 'endTime'
+            ],
+            'properties'   => [
+                'integer' => ['constraint' => false]
+            ]
+        ]
+    ];
+
+    private $conf2 = [
+        'Model2' => [
+            'table'      => 'table_fake',
+            'properties' => [
+                'fakeId' => ['resourcePropertyName' => 'uid']
+            ]
+        ],
+        'Model3' => [
+            'table'      => 'model3_table',
+            'properties' => [
+                'nothing' => ['ordering' => true]
+            ]
+        ]
+    ];
+
+    public function testLoadAll()
+    {
+        $expected['Model1'] = $this->conf1['Model1'];
+        $expected['Model1']['properties'] = [
+            'integer'   => [
+                'constraint'  => false,
+                'resourceId'  => false,
+                'hide'        => false,
+                'outputLevel' => 0,
+                'position'    => 0,
+                'ordering'    => false
+            ]
+        ];
+
+        $expected['Model2'] = $this->conf2['Model2'];
+        $expected['Model2']['properties'] = [
+            'fakeId'    => [
+                'resourcePropertyName' => 'uid',
+                'resourceId'           => false,
+                'hide'                 => false,
+                'outputLevel'          => 0,
+                'position'             => 0,
+                'ordering'             => false,
+                'constraint'           => false
+            ]
+        ];
+
+        $expected['Model3'] = $this->conf2['Model3'];
+        $expected['Model3']['properties'] = [
+            'nothing' => [
+                'ordering'    => true,
+                'resourceId'  => false,
+                'hide'        => false,
+                'outputLevel' => 0,
+                'position'    => 0,
+                'constraint'  => false
+            ]
+        ];
+
+        $this->assertEquals($expected, $this->getLoader()->loadAll());
+    }
+
+    public function testLoadSingle()
+    {
+        $expected = [
+            'table'        => 'model1_table',
+            'mode'         => ['read'],
+            'enableFields' => [
+                'deleted'   => 'delete',
+                'disabled'  => 'disable',
+                'startTime' => 'startTime',
+                'endTime'   => 'endTime'
+            ],
+            'properties'   => [
+                'fakeId'    => [
+                    'resourcePropertyName' => 'uid',
+                    'resourceId'           => false,
+                    'hide'                 => false,
+                    'outputLevel'          => 0,
+                    'position'             => 0,
+                    'ordering'             => false,
+                    'constraint'           => false
+                ],
+                'nothing'   => [
+                    'ordering'    => true,
+                    'resourceId'  => false,
+                    'hide'        => false,
+                    'outputLevel' => 0,
+                    'position'    => 0,
+                    'constraint'  => false
+                ],
+                'integer'   => [
+                    'constraint'  => false,
+                    'resourceId'  => false,
+                    'hide'        => false,
+                    'outputLevel' => 0,
+                    'position'    => 0,
+                    'ordering'    => false
+                ]
+            ]
+        ];
+        $this->assertEquals($expected, $this->getLoader()->loadSingle('Model1', ['Model2', 'Model3']));
+    }
+
+    public function testInvalidJson()
+    {
+        $entityInfoConfReturn = [
+            [
+                'type'    => Configuration::ENTITY_INFO_CONF_JSON,
+                'content' => ''
+            ]
+        ];
+
+        $configurationMock = \Mockery::mock(Configuration::class);
+        $configurationMock->shouldReceive('getEntityInfoConfiguration')->andReturn($entityInfoConfReturn);
+
+        /** @var EntityInfoConfLoader $loader */
+        $loader = (new Instantiator)->instantiate(EntityInfoConfLoader::class);
+        $this->inject($loader, 'configuration', $configurationMock);
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Invalid JSON.');
+
+        $loader->__construct();
+    }
+
+    /**
+     * @return EntityInfoConfLoader
+     */
+    private function getLoader(): EntityInfoConfLoader
     {
         $streamDirectory = vfsStream::setup('entityinfoconfloader');
-        $content = json_encode([
-            'Model1' => [
-                'mode' => ['read'],
-                'enableFields' => [
-                    'deleted' => 'delete',
-                    'disabled' => 'disable',
-                    'startTime' => 'startTime',
-                    'endTime' => 'endTime'
-                ],
-                'properties' => [
-                    'integer' => ['constraint' => false],
-                    'someThing' => ['foreignField' => 'field']
-                ]
-            ]
-        ]);
         $json = vfsStream::newFile('EntityInfoConf.json')
-            ->withContent($content)
-            ->at($streamDirectory);
-
-        $content = Yaml::dump([
-            'Model2' => [
-                'table' => 'table_fake',
-                'properties' => [
-                    'fakeId' => ['resourcePropertyName' => 'uid'],
-                    'sql' => ['sqlExpression' => 'sql'],
-                    'someThing' => ['resourcePropertyName' => 'something_else']
-                ]
-            ],
-            'Model3' => [
-                'properties' => [
-                    'nothing' => ['ordering' => true]
-                ]
-            ]
-        ]);
-        $yaml = vfsStream::newFile('EntityInfoConf.yaml')
-            ->withContent($content)
+            ->withContent(json_encode($this->conf1))
             ->at($streamDirectory);
 
         $entityInfoConfReturn = [
             [
-                'type' => Configuration::ENTITY_INFO_CONF_FILE | Configuration::ENTITY_INFO_CONF_JSON,
+                'type'    => Configuration::ENTITY_INFO_CONF_JSON_FILE,
                 'content' => $json->url()
             ],
             [
-                'type' => Configuration::ENTITY_INFO_CONF_FILE | Configuration::ENTITY_INFO_CONF_YAML,
-                'content' => $yaml->url()
+                'type'    => Configuration::ENTITY_INFO_CONF_ARRAY,
+                'content' => $this->conf2
             ]
         ];
 
         $configurationMock = \Mockery::mock(Configuration::class);
         $configurationMock->shouldReceive('getEntityInfoConfiguration')->andReturn($entityInfoConfReturn);
 
-        $loader = new EntityInfoConfLoader;
+        /** @var EntityInfoConfLoader $loader */
+        $loader = (new Instantiator)->instantiate(EntityInfoConfLoader::class);
         $this->inject($loader, 'configuration', $configurationMock);
+        $loader->__construct();
 
-        $expected = [
-            'Model1' => [
-                'mode' => ['read'],
-                'enableFields' => [
-                    'deleted' => 'delete',
-                    'disabled' => 'disable',
-                    'startTime' => 'startTime',
-                    'endTime' => 'endTime'
-                ],
-                'properties' => [
-                    'integer' => ['constraint' => false],
-                    'someThing' => ['foreignField' => 'field']
-                ]
-            ],
-            'Model2' => [
-                'table' => 'table_fake',
-                'properties' => [
-                    'fakeId' => ['resourcePropertyName' => 'uid'],
-                    'sql' => ['sqlExpression' => 'sql'],
-                    'someThing' => ['resourcePropertyName' => 'something_else']
-                ]
-            ],
-            'Model3' => [
-                'properties' => [
-                    'nothing' => ['ordering' => true]
-                ]
-            ]
-        ];
-        $this->assertEquals($expected, $loader->loadAll());
-
-        $content = '<?php
-return [
-    \'Model1\' => [
-        \'mode\' => [\'write\'],
-        \'properties\' => [
-            \'integer\' => [\'constraint\' => true]
-        ]
-    ],
-    \'Model2\' => [
-        \'table\' => \'table_fake_2\',
-        \'properties\' => [
-            \'fakeId\' => [\'resourcePropertyName\' => \'fake_id\']
-        ]
-    ]
-];';
-        $array = vfsStream::newFile('EntityInfoConf.php')
-            ->withContent($content)
-            ->at($streamDirectory);
-
-        $entityInfoConfReturn[] = [
-            'type' => Configuration::ENTITY_INFO_CONF_FILE | Configuration::ENTITY_INFO_CONF_ARRAY,
-            'content' => $array->url()
-        ];
-
-        $configurationMock = \Mockery::mock(Configuration::class);
-        $configurationMock->shouldReceive('getEntityInfoConfiguration')->andReturn($entityInfoConfReturn);
-
-        $loader = new EntityInfoConfLoader;
-        $this->inject($loader, 'configuration', $configurationMock);
-
-        $expected['Model1']['mode'] = ['write'];
-        $expected['Model1']['properties']['integer']['constraint'] = true;
-        $expected['Model2']['table'] = 'table_fake_2';
-        $expected['Model2']['properties']['fakeId']['resourcePropertyName'] = 'fake_id';
-
-        $this->assertEquals($expected, $loader->loadAll());
-
-        $expected = [
-            'mode' => ['write'],
-            'table' => 'table_fake_2',
-            'enableFields' => [
-                'deleted' => 'delete',
-                'disabled' => 'disable',
-                'startTime' => 'startTime',
-                'endTime' => 'endTime'
-            ],
-            'properties' => [
-                'fakeId' => ['resourcePropertyName' => 'fake_id'],
-                'integer' => ['constraint' => true],
-                'someThing' => ['foreignField' => 'field', 'resourcePropertyName' => 'something_else'],
-                'sql' => ['sqlExpression' => 'sql'],
-                'nothing' => ['ordering' => true]
-            ]
-        ];
-        $this->assertEquals($expected, $loader->loadSingle('Model3', ['Model1', 'Model2', 'NotConfiguredParent']));
-    }
-
-    public function testInvalidJsonException()
-    {
-        $this->runException(Configuration::ENTITY_INFO_CONF_JSON);
-    }
-
-    public function testInvalidYamlException()
-    {
-        $this->runException(Configuration::ENTITY_INFO_CONF_YAML);
-    }
-
-    /**
-     * @param int $type
-     */
-    protected function runException($type)
-    {
-        $entityInfoConfReturn = [['type' => $type, 'content' => '']];
-
-        $configurationMock = \Mockery::mock(Configuration::class);
-        $configurationMock->shouldReceive('getEntityInfoConfiguration')->andReturn($entityInfoConfReturn);
-
-        $loader = new EntityInfoConfLoader;
-        $this->inject($loader, 'configuration', $configurationMock);
-
-        $this->setExpectedException(\Exception::class);
-        $loader->loadAll();
+        return $loader;
     }
 }

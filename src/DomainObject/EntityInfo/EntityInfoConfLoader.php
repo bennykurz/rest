@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -20,13 +20,10 @@ namespace N86io\Rest\DomainObject\EntityInfo;
 
 use N86io\Di\Singleton;
 use N86io\Rest\Service\Configuration;
-use Symfony\Component\Yaml\Yaml;
-use Webmozart\Assert\Assert;
 
 /**
- * Class EntityInfoConfLoader
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class EntityInfoConfLoader implements Singleton
 {
@@ -34,199 +31,161 @@ class EntityInfoConfLoader implements Singleton
      * @inject
      * @var Configuration
      */
-    protected $configuration;
+    private $configuration;
 
     /**
      * @var array
      */
-    protected $loadedConf;
+    private $loadedConf;
+
+    /**
+     * @var array
+     */
+    private $modelDefinition = [
+        'table'        => [
+            'type' => 'string'
+        ],
+        'connector'    => [
+            'type' => '?string'
+        ],
+        'mode'         => [
+            'type'             => '?unique-list',
+            'allowed-elements' => ['read', 'write']
+        ],
+        'joins'        => [
+            'type'       => '?conf-list',
+            'definition' => [
+                'table'     => [
+                    'type' => 'string'
+                ],
+                'condition' => [
+                    'type' => 'string'
+                ]
+            ]
+        ],
+        'enableFields' => [
+            'type'       => '?conf',
+            'definition' => [
+                'deleted'   => [
+                    'type' => '?string'
+                ],
+                'disabled'  => [
+                    'type' => '?string'
+                ],
+                'startTime' => [
+                    'type' => '?string'
+                ],
+                'endTime'   => [
+                    'type' => '?string'
+                ]
+            ]
+        ],
+        'properties'   => [
+            'type'       => 'conf-list',
+            'definition' => [
+                'resourceId'           => [
+                    'type'    => 'bool',
+                    'default' => false
+                ],
+                'hide'                 => [
+                    'type'    => 'bool',
+                    'default' => false
+                ],
+                'ordering'             => [
+                    'type'    => 'bool',
+                    'default' => false
+                ],
+                'constraint'           => [
+                    'type'    => 'bool',
+                    'default' => false
+                ],
+                'outputLevel'          => [
+                    'type'    => 'int',
+                    'default' => 0
+                ],
+                'position'             => [
+                    'type'    => 'int',
+                    'default' => 0
+                ],
+                'foreignField'         => [
+                    'type' => '?string'
+                ],
+                'resourcePropertyName' => [
+                    'type' => '?string'
+                ],
+                'sqlExpression'        => [
+                    'type' => '?string'
+                ]
+            ]
+        ]
+    ];
 
     /**
      * @param string $className
-     * @param array $parentClassNames
+     * @param array  $parentClassNames
+     *
      * @return array
      */
-    public function loadSingle($className, array $parentClassNames = [])
+    public function loadSingle(string $className, array $parentClassNames = []): array
     {
-        Assert::string($className);
         $this->loadAll();
-        $result = [];
+        $definition = [
+            'type'       => 'conf',
+            'definition' => $this->modelDefinition
+        ];
+        $configuration = new \N86io\ArrayConf\Configuration($definition);
         foreach ($parentClassNames as $parentClassName) {
-            $this->addEmptyEntityInfoConf($parentClassName);
-            $this->mergeModelConf($result, $this->loadedConf[$parentClassName]);
+            $configuration->add($this->loadedConf[$parentClassName]);
         }
-        $this->addEmptyEntityInfoConf($className);
-        $this->mergeModelConf($result, $this->loadedConf[$className]);
-        return $result;
+        $configuration->add($this->loadedConf[$className]);
+
+        return $configuration->get();
     }
 
-    /**
-     * @param string $className
-     */
-    protected function addEmptyEntityInfoConf($className)
+    public function __construct()
     {
-        if (empty($this->loadedConf[$className])) {
-            $this->loadedConf[$className] = [
-                'properties' => []
-            ];
-        }
-    }
+        $definition = [
+            'type'       => 'conf-list',
+            'definition' => $this->modelDefinition
+        ];
+        $arrayConfiguration = new \N86io\ArrayConf\Configuration($definition);
 
-    /**
-     * @return array
-     */
-    public function loadAll()
-    {
-        if ($this->loadedConf) {
-            return $this->loadedConf;
-        }
         $entityInfoConf = $this->configuration->getEntityInfoConfiguration();
-        $result = [];
         foreach ($entityInfoConf as $item) {
             $content = $item['content'];
             $type = $item['type'];
-            if (($type & Configuration::ENTITY_INFO_CONF_FILE) !== 0) {
-                $content = $this->loadFromFile($content, $type);
+            if ($type === Configuration::ENTITY_INFO_CONF_JSON_FILE) {
+                $content = file_get_contents($content);
             }
-            if (($type & Configuration::ENTITY_INFO_CONF_JSON) !== 0) {
+            if ($type === Configuration::ENTITY_INFO_CONF_JSON || $type === Configuration::ENTITY_INFO_CONF_JSON_FILE) {
                 $content = $this->parseJson($content);
             }
-            if (($type & Configuration::ENTITY_INFO_CONF_YAML) !== 0) {
-                $content = $this->parseYaml($content);
-            }
-            $this->mergeComplete($result, $content);
+            $arrayConfiguration->add($content);
         }
-        $this->loadedConf = $result;
-        return $result;
+        $this->loadedConf = $arrayConfiguration->get();
     }
 
     /**
-     * @param array $array1
-     * @param array $array2
-     */
-    protected function mergeComplete(array &$array1, array $array2)
-    {
-        foreach ($array2 as $modelName2 => $modelConf2) {
-            if (empty($array1[$modelName2])) {
-                $array1[$modelName2] = [];
-            }
-            $modelConf1 = &$array1[$modelName2];
-            $this->mergeModelConf($modelConf1, $modelConf2);
-        }
-    }
-
-    /**
-     * @param array $modelConf1
-     * @param array $modelConf2
-     */
-    protected function mergeModelConf(array &$modelConf1, array $modelConf2)
-    {
-        $this->mergeSingle($modelConf1, $modelConf2, ['table', 'mode', 'connector']);
-        if (isset($modelConf2['enableFields'])) {
-            if (empty($modelConf1['enableFields'])) {
-                $modelConf1['enableFields'] = [];
-            }
-            $this->mergeSingle(
-                $modelConf1['enableFields'],
-                $modelConf2['enableFields'],
-                ['deleted', 'disabled', 'startTime', 'endTime']
-            );
-        }
-        if (isset($modelConf2['joins'])) {
-            if (empty($modelConf1['joins'])) {
-                $modelConf1['joins'] = [];
-            }
-            $this->mergeJoins($modelConf1['joins'], $modelConf2['joins']);
-        }
-        if (empty($modelConf1['properties'])) {
-            $modelConf1['properties'] = [];
-        }
-        $this->mergeProperties($modelConf1['properties'], $modelConf2['properties']);
-    }
-
-    /**
-     * @param array $joins1
-     * @param array $joins2
-     */
-    protected function mergeJoins(array &$joins1, array $joins2)
-    {
-        foreach ($joins2 as $aliasName => $join2) {
-            if (empty($joins1[$aliasName])) {
-                $joins1[$aliasName] = [];
-            }
-            $join1 = &$joins1[$aliasName];
-            $this->mergeSingle($join1, $join2, array_keys($join2));
-        }
-    }
-
-    /**
-     * @param array $properties1
-     * @param array $properties2
-     */
-    protected function mergeProperties(array &$properties1, array $properties2)
-    {
-        foreach ($properties2 as $propertyName => $attributes2) {
-            if (empty($properties1[$propertyName])) {
-                $properties1[$propertyName] = [];
-            }
-            $attributes1 = &$properties1[$propertyName];
-            $this->mergeSingle($attributes1, $attributes2, array_keys($attributes2));
-        }
-    }
-
-    /**
-     * @param array $array1
-     * @param array $array2
-     * @param array $keys
-     */
-    protected function mergeSingle(array &$array1, array $array2, array $keys)
-    {
-        foreach ($keys as $key) {
-            if (isset($array2[$key])) {
-                $array1[$key] = $array2[$key];
-            }
-        }
-    }
-
-    /**
-     * @param string $yaml
      * @return array
-     * @throws \Exception
      */
-    protected function parseYaml($yaml)
+    public function loadAll(): array
     {
-        $array = Yaml::parse($yaml);
-        if (!is_array($array)) {
-            throw  new \Exception('Invalid YAML or configuration given.');
-        }
-        return $array;
+        return $this->loadedConf;
     }
 
     /**
      * @param string $json
+     *
      * @return array
      * @throws \Exception
      */
-    protected function parseJson($json)
+    private function parseJson(string $json): array
     {
         $array = json_decode($json, true);
         if (!is_array($array)) {
-            throw  new \Exception('Invalid JSON or configuration given.');
+            throw  new \Exception('Invalid JSON.');
         }
-        return $array;
-    }
 
-    /**
-     * @param $path
-     * @param $type
-     * @return array|string
-     * @throws \Exception
-     */
-    protected function loadFromFile($path, $type)
-    {
-        if (($type & Configuration::ENTITY_INFO_CONF_ARRAY) !== 0) {
-            return require $path;
-        }
-        return file_get_contents($path);
+        return $array;
     }
 }
