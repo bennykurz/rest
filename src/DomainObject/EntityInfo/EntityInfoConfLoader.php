@@ -31,12 +31,12 @@ class EntityInfoConfLoader implements Singleton
      * @inject
      * @var Configuration
      */
-    private $configuration;
+    protected $configuration;
 
     /**
      * @var array
      */
-    private $loadedConf;
+    protected $loadedConf;
 
     /**
      * @var array
@@ -83,6 +83,10 @@ class EntityInfoConfLoader implements Singleton
         'properties'   => [
             'type'       => 'conf-list',
             'definition' => [
+                'uid'                  => [
+                    'type'    => 'bool',
+                    'default' => false
+                ],
                 'resourceId'           => [
                     'type'    => 'bool',
                     'default' => false
@@ -113,7 +117,7 @@ class EntityInfoConfLoader implements Singleton
                 'resourcePropertyName' => [
                     'type' => '?string'
                 ],
-                'sqlExpression'        => [
+                'sql'                  => [
                     'type' => '?string'
                 ]
             ]
@@ -128,13 +132,15 @@ class EntityInfoConfLoader implements Singleton
      */
     public function loadSingle(string $className, array $parentClassNames = []): array
     {
-        $this->loadAll();
         $definition = [
             'type'       => 'conf',
             'definition' => $this->modelDefinition
         ];
         $configuration = new \N86io\ArrayConf\Configuration($definition);
         foreach ($parentClassNames as $parentClassName) {
+            if (empty($this->loadedConf[$parentClassName])) {
+                continue;
+            }
             $configuration->add($this->loadedConf[$parentClassName]);
         }
         $configuration->add($this->loadedConf[$className]);
