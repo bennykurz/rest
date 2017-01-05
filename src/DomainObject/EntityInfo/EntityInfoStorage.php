@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -24,9 +24,8 @@ use N86io\Rest\Cache\EntityInfoStorageCacheInterface;
 use Webmozart\Assert\Assert;
 
 /**
- * Class EntityInfoStorage
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class EntityInfoStorage implements Singleton
 {
@@ -50,40 +49,46 @@ class EntityInfoStorage implements Singleton
 
     /**
      * @param string $modelClassName
+     *
      * @return EntityInfoInterface
      */
-    public function get($modelClassName)
+    public function get(string $modelClassName): EntityInfoInterface
     {
-        Assert::string($modelClassName);
         $cacheId = $this->getCacheId($modelClassName);
         if (!$this->arrayCache->contains($cacheId)) {
             $entityInfo = $this->getFromCache($modelClassName);
             $this->arrayCache->save($cacheId, $entityInfo);
+
             return $entityInfo;
         }
+
         return $this->arrayCache->fetch($cacheId);
     }
 
     /**
-     * @param $modelClassName
+     * @param string $modelClassName
+     *
      * @return EntityInfoInterface
      */
-    protected function getFromCache($modelClassName)
+    protected function getFromCache(string $modelClassName): EntityInfoInterface
     {
         $cacheId = $this->getCacheId($modelClassName);
         if (!$this->cache->contains($cacheId)) {
             $entityInfo = $this->entityInfoFactory->buildEntityInfoFromClassName($modelClassName);
             $this->cache->save($cacheId, $entityInfo);
+
             return $entityInfo;
         }
+
         return $this->cache->fetch($cacheId);
     }
 
     /**
      * @param string $string
+     *
      * @return string
      */
-    protected function getCacheId($string)
+    protected function getCacheId(string $string): string
     {
         return md5($string);
     }
