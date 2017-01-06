@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -22,9 +22,8 @@ use N86io\Reflection\ReflectionClass;
 use N86io\Rest\DomainObject\AbstractEntity;
 
 /**
- * Class EntityClassReflection
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class EntityClassReflection
 {
@@ -61,10 +60,12 @@ class EntityClassReflection
 
     /**
      * EntityClassReflection constructor.
+     *
      * @param string $className
-     * @throws \Exception
+     *
+     * @throws \InvalidArgumentException
      */
-    public function __construct($className)
+    public function __construct(string $className)
     {
         if (!is_subclass_of($className, AbstractEntity::class)) {
             throw new \InvalidArgumentException(
@@ -77,36 +78,40 @@ class EntityClassReflection
     /**
      * @return string
      */
-    public function getClassSummary()
+    public function getClassSummary(): string
     {
         $this->load();
+
         return $this->classSummary;
     }
 
     /**
      * @return string
      */
-    public function getClassDescription()
+    public function getClassDescription(): string
     {
         $this->load();
+
         return $this->classDescription;
     }
 
     /**
      * @return array
      */
-    public function getProperties()
+    public function getProperties(): array
     {
         $this->load();
+
         return $this->properties;
     }
 
     /**
      * @return array
      */
-    public function getParentClasses()
+    public function getParentClasses(): array
     {
         $this->load();
+
         return $this->parentClasses;
     }
 
@@ -167,7 +172,7 @@ class EntityClassReflection
     /**
      * @return array
      */
-    protected function getMethodsAttributes()
+    protected function getMethodsAttributes(): array
     {
         $methodsAttr = [];
         $methods = $this->reflectionClass->getMethods();
@@ -187,13 +192,14 @@ class EntityClassReflection
                 continue;
             }
         }
+
         return $methodsAttr;
     }
 
     /**
      * @return array
      */
-    protected function getPropertiesAttributes()
+    protected function getPropertiesAttributes(): array
     {
         $propertiesAttr = [];
         $properties = $this->reflectionClass->getProperties();
@@ -214,14 +220,16 @@ class EntityClassReflection
                 $attr['setter'] = $property->getSetter()->getName();
             }
         }
+
         return $propertiesAttr;
     }
 
     /**
      * @param string $className
+     *
      * @return bool
      */
-    protected function classExists($className)
+    protected function classExists(string $className): bool
     {
         return class_exists(substr($className, 0, strlen($className) - 2)) || class_exists($className);
     }

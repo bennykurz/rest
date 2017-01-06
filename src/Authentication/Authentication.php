@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -24,9 +24,8 @@ use N86io\Di\Container;
 use N86io\Rest\Authorization\AuthorizationInterface;
 
 /**
- * Class Authentication
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class Authentication implements AuthenticationInterface
 {
@@ -47,9 +46,9 @@ class Authentication implements AuthenticationInterface
     protected $token;
 
     /**
-     * @return boolean
+     * @return bool
      */
-    public function isAuthenticationSuccessful()
+    public function isAuthenticationSuccessful(): bool
     {
         return $this->authSuccessful;
     }
@@ -57,7 +56,7 @@ class Authentication implements AuthenticationInterface
     /**
      * @return Token
      */
-    public function getToken()
+    public function getToken(): Token
     {
         return $this->token;
     }
@@ -67,7 +66,7 @@ class Authentication implements AuthenticationInterface
      */
     public function load()
     {
-        $headerAuthorization = getallheaders()['Authorization'];
+        $headerAuthorization = getallheaders()['Authorization'] ?: '';
         if (substr($headerAuthorization, 0, 6) !== 'Bearer') {
             return;
         }

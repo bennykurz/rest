@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -22,18 +22,17 @@ use N86io\Di\Singleton;
 use N86io\Rest\DomainObject\AbstractEntity;
 
 /**
- * Class PropertyInfoUtility
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class PropertyInfoUtility implements Singleton
 {
     /**
      * @param string $className
+     *
      * @return bool
-     * @throws \Exception
      */
-    public function checkForAbstractEntitySubclass($className)
+    public function checkForAbstractEntitySubclass(string $className): bool
     {
         return is_subclass_of($className, AbstractEntity::class);
     }

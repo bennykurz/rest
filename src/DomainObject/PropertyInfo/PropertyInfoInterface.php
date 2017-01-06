@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -18,62 +18,63 @@
 
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
-use N86io\Rest\DomainObject\EntityInfo\EntityInfo;
+use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
 use N86io\Rest\DomainObject\EntityInterface;
 
 /**
- * Interface PropertyInfoInterface
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 interface PropertyInfoInterface
 {
     /**
      * @param string $name
-     * @param array $attributes
+     * @param string $type
+     * @param array  $attributes
      */
-    public function __construct($name, array $attributes);
+    public function __construct(string $name, string $type, array $attributes);
 
     /**
-     * @return EntityInfo
+     * @return EntityInfoInterface
      */
-    public function getEntityInfo();
-
-    /**
-     * @return string
-     */
-    public function getName();
+    public function getEntityInfo(): EntityInfoInterface;
 
     /**
      * @return string
      */
-    public function getType();
+    public function getName(): string;
+
+    /**
+     * @return string
+     */
+    public function getType(): string;
 
     /**
      * @return int
      */
-    public function getPosition();
+    public function getPosition(): int;
 
     /**
      * @return string
      */
-    public function getGetter();
+    public function getGetter(): string;
 
     /**
      * @return string
      */
-    public function getSetter();
+    public function getSetter(): string;
 
     /**
      * @return array
      */
-    public function getRawAttributes();
+    public function getRawAttributes(): array;
 
     /**
      * @param int $outputLevel
-     * @return boolean
+     *
+     * @return bool
      */
-    public function shouldShow($outputLevel);
+    public function shouldShow(int $outputLevel): bool;
 
     /**
      * @param EntityInterface $entity
@@ -81,8 +82,10 @@ interface PropertyInfoInterface
     public function castValue(EntityInterface $entity);
 
     /**
-     * @param array $attributes
-     * @return boolean
+     * @param string $type
+     * @param array  $attributes
+     *
+     * @return bool
      */
-    public static function verifyAttributes(array $attributes);
+    public static function checkAttributes(string $type, array $attributes = []): bool;
 }

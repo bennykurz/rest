@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -24,58 +24,61 @@ use N86io\Rest\Persistence\Constraint\ConstraintInterface;
 use N86io\Rest\Persistence\Ordering\OrderingInterface;
 
 /**
- * Interface ConnectorInterface
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 interface ConnectorInterface
 {
     /**
      * ConnectorInterface constructor.
+     *
      * @param EntityInfoInterface $entityInfo
      */
     public function __construct(EntityInfoInterface $entityInfo);
 
     /**
      * @param ConstraintInterface $constraint
+     *
      * @return ConnectorInterface
      */
-    public function setConstraints(ConstraintInterface $constraint);
+    public function setConstraints(ConstraintInterface $constraint): ConnectorInterface;
 
     /**
      * @param OrderingInterface $ordering
+     *
      * @return ConnectorInterface
      */
-    public function setOrdering(OrderingInterface $ordering);
+    public function setOrdering(OrderingInterface $ordering): ConnectorInterface;
 
     /**
      * @param LimitInterface $limit
+     *
      * @return ConnectorInterface
      */
-    public function setLimit(LimitInterface $limit);
+    public function setLimit(LimitInterface $limit): ConnectorInterface;
 
     /**
      * @return EntityInterface[]
      */
-    public function read();
+    public function read(): array;
 
     /**
      * @return array
      */
-    public function readRaw();
+    public function readRaw(): array;
 
     /**
      * @return array
      */
-    public function create();
+    public function create(): array;
 
     /**
      * @return array
      */
-    public function update();
+    public function update(): array;
 
     /**
      * @return array
      */
-    public function delete();
+    public function delete(): array;
 }

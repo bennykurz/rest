@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -19,70 +19,71 @@
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
 /**
- * Class Common
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class Common extends AbstractStatic implements CommonInterface
 {
     /**
-     * @var boolean
+     * @var bool
      */
     protected $resourceId;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $ordering;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $constraint;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $uid;
 
     /**
-     * @return boolean
-     */
-    public function isResourceId()
-    {
-        return $this->resourceId === true;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isConstraint()
-    {
-        return $this->constraint === true;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isOrdering()
-    {
-        return $this->ordering === true;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isUid()
-    {
-        return $this->uid === true;
-    }
-
-    /**
-     * @param array $attributes
      * @return bool
      */
-    public static function verifyAttributes(array $attributes)
+    public function isResourceId(): bool
     {
-        return isset($attributes['type']) && isset($attributes['resourcePropertyName']);
+        return $this->resourceId;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isConstraint(): bool
+    {
+        return $this->constraint;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOrdering(): bool
+    {
+        return $this->ordering;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUid(): bool
+    {
+        return $this->uid;
+    }
+
+    /**
+     * @param string $type
+     * @param array  $attributes
+     *
+     * @return bool
+     */
+    public static function checkAttributes(string $type, array $attributes = []): bool
+    {
+        return isset($attributes['resourcePropertyName']);
     }
 }

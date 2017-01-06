@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -18,14 +18,12 @@
 
 namespace N86io\Rest\Tests\Unit\DomainObject\PropertyInfo;
 
+use N86io\Di\Container;
 use N86io\Rest\DomainObject\AbstractEntity;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoUtility;
-use N86io\Rest\Object\Container;
 use N86io\Rest\UnitTestCase;
 
 /**
- * Class PropertyInfoUtilityTest
- *
  * @author Viktor Firus <v@n86.io>
  */
 class PropertyInfoUtilityTest extends UnitTestCase

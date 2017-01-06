@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -23,9 +23,8 @@ use N86io\Rest\Persistence\LimitInterface;
 use N86io\Rest\Persistence\Ordering\OrderingInterface;
 
 /**
- * Interface RequestInterface
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 interface RequestInterface
 {
@@ -38,121 +37,142 @@ interface RequestInterface
     /**
      * @return array
      */
-    public function getRoute();
+    public function getRoute(): array;
 
     /**
      * @param array $route
+     *
      * @return RequestInterface
      */
-    public function setRoute(array $route);
-
-    /**
-     * @return string
-     */
-    public function getVersion();
-
-    /**
-     * @param int $version
-     * @return RequestInterface
-     */
-    public function setVersion($version);
-
-    /**
-     * @return string
-     */
-    public function getApiIdentifier();
-
-    /**
-     * @param string $apiIdentifier
-     * @return RequestInterface
-     */
-    public function setApiIdentifier($apiIdentifier);
-
-    /**
-     * @return array
-     */
-    public function getResourceIds();
-
-    /**
-     * @param array $resourceIds
-     * @return RequestInterface
-     */
-    public function setResourceIds(array $resourceIds);
-
-    /**
-     * @return ConstraintInterface[]
-     */
-    public function getConstraints();
-
-    /**
-     * @param ConstraintInterface[] $constraints
-     * @return RequestInterface
-     */
-    public function setConstraints(array $constraints);
-
-    /**
-     * @return OrderingInterface
-     */
-    public function getOrdering();
-
-    /**
-     * @param OrderingInterface $ordering
-     * @return RequestInterface
-     */
-    public function setOrdering(OrderingInterface $ordering);
-
-    /**
-     * @return LimitInterface
-     */
-    public function getLimit();
-
-    /**
-     * @param LimitInterface $limit
-     * @return RequestInterface
-     */
-    public function setLimit(LimitInterface $limit);
+    public function setRoute(array $route): RequestInterface;
 
     /**
      * @return int
      */
-    public function getOutputLevel();
+    public function getVersion(): int;
+
+    /**
+     * @param int $version
+     *
+     * @return RequestInterface
+     */
+    public function setVersion(int $version): RequestInterface;
+
+    /**
+     * @return string
+     */
+    public function getApiIdentifier(): string;
+
+    /**
+     * @param string $apiIdentifier
+     *
+     * @return RequestInterface
+     */
+    public function setApiIdentifier(string $apiIdentifier): RequestInterface;
+
+    /**
+     * @return array
+     */
+    public function getResourceIds(): array;
+
+    /**
+     * @param array $resourceIds
+     *
+     * @return RequestInterface
+     */
+    public function setResourceIds(array $resourceIds): RequestInterface;
+
+    /**
+     * @return ConstraintInterface[]
+     */
+    public function getConstraints(): array;
+
+    /**
+     * @param ConstraintInterface[] $constraints
+     *
+     * @return RequestInterface
+     */
+    public function setConstraints(array $constraints): RequestInterface;
+
+    /**
+     * @return bool
+     */
+    public function hasOrdering(): bool;
+
+    /**
+     * @return OrderingInterface
+     */
+    public function getOrdering(): OrderingInterface;
+
+    /**
+     * @param OrderingInterface $ordering
+     *
+     * @return RequestInterface
+     */
+    public function setOrdering(OrderingInterface $ordering): RequestInterface;
+
+    /**
+     * @return bool
+     */
+    public function hasLimit(): bool;
+
+    /**
+     * @return LimitInterface
+     */
+    public function getLimit(): LimitInterface;
+
+    /**
+     * @param LimitInterface $limit
+     *
+     * @return RequestInterface
+     */
+    public function setLimit(LimitInterface $limit): RequestInterface;
+
+    /**
+     * @return int
+     */
+    public function getOutputLevel(): int;
 
     /**
      * @param int $outputLevel
+     *
      * @return RequestInterface
      */
-    public function setOutputLevel($outputLevel);
+    public function setOutputLevel(int $outputLevel): RequestInterface;
+
+    /**
+     * @return int
+     */
+    public function getMode(): int;
+
+    /**
+     * @param int $mode
+     *
+     * @return RequestInterface
+     */
+    public function setMode(int $mode): RequestInterface;
 
     /**
      * @return string
      */
-    public function getMode();
-
-    /**
-     * @param string $mode
-     * @return RequestInterface
-     */
-    public function setMode($mode);
-
-    /**
-     * @return string
-     */
-    public function getModelClassName();
+    public function getModelClassName(): string;
 
     /**
      * @param string $modelClassName
+     *
      * @return RequestInterface
      */
-    public function setModelClassName($modelClassName);
+    public function setModelClassName(string $modelClassName): RequestInterface;
 
     /**
      * @return string
      */
-    public function getControllerClassName();
+    public function getControllerClassName(): string;
 
     /**
      * @param string $controllerClassName
+     *
      * @return RequestInterface
      */
-    public function setControllerClassName($controllerClassName);
+    public function setControllerClassName(string $controllerClassName): RequestInterface;
 }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -18,18 +18,16 @@
 
 namespace N86io\Rest\Tests\Unit\Http;
 
+use N86io\Di\Container;
 use N86io\Rest\ContentConverter\ConverterFactory;
 use N86io\Rest\ContentConverter\ConverterInterface;
 use N86io\Rest\Http\ResponseFactory;
-use N86io\Rest\Object\Container;
 use N86io\Rest\UnitTestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 
 /**
- * Class ResponseFactoryTest
- *
  * @author Viktor Firus <v@n86.io>
  */
 class ResponseFactoryTest extends UnitTestCase
@@ -52,11 +50,11 @@ class ResponseFactoryTest extends UnitTestCase
         $this->assertTrue($responseFactory->internalServerError() instanceof ResponseInterface);
         $this->assertTrue($responseFactory->createResponse(200, []) instanceof ResponseInterface);
 
-        $this->assertTrue($responseFactory->errorRequest(400) instanceof ResponseInterface);
-        $this->assertTrue($responseFactory->errorRequest(401) instanceof ResponseInterface);
-        $this->assertTrue($responseFactory->errorRequest(404) instanceof ResponseInterface);
-        $this->assertTrue($responseFactory->errorRequest(405) instanceof ResponseInterface);
-        $this->assertTrue($responseFactory->errorRequest(500) instanceof ResponseInterface);
+        $this->assertTrue($responseFactory->errorCode(400) instanceof ResponseInterface);
+        $this->assertTrue($responseFactory->errorCode(401) instanceof ResponseInterface);
+        $this->assertTrue($responseFactory->errorCode(404) instanceof ResponseInterface);
+        $this->assertTrue($responseFactory->errorCode(405) instanceof ResponseInterface);
+        $this->assertTrue($responseFactory->errorCode(500) instanceof ResponseInterface);
     }
 
     protected function createConverterFactory()

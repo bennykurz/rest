@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -24,8 +24,6 @@ use N86io\Rest\Persistence\Ordering\OrderingInterface;
 use N86io\Rest\UnitTestCase;
 
 /**
- * Class OrderingTest
- *
  * @author Viktor Firus <v@n86.io>
  */
 class OrderingTest extends UnitTestCase
@@ -39,25 +37,25 @@ class OrderingTest extends UnitTestCase
     {
         parent::setUp();
         $this->ordering = new Ordering(
-            new Common('name', ['type' => 'int']),
+            new Common('name', 'int', []),
             OrderingInterface::ASCENDING
         );
     }
 
     public function testException1()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->ordering = new Ordering(
-            new Common('name', ['type' => 'int']),
+            new Common('name', 'int', []),
             0
         );
     }
 
     public function testException2()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->ordering = new Ordering(
-            new Common('name', ['type' => 'int']),
+            new Common('name', 'int', []),
             3
         );
     }

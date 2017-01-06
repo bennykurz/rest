@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -21,19 +21,19 @@ namespace N86io\Rest\Authorization;
 use N86io\Rest\Http\RequestInterface;
 
 /**
- * Class Utility
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class Utility
 {
     /**
-     * @param int $mode
+     * @param int  $mode
      * @param bool $allowedRead
      * @param bool $allowedWrite
+     *
      * @return bool
      */
-    public static function canAccess($mode, $allowedRead, $allowedWrite)
+    public static function canAccess(int $mode, bool $allowedRead, bool $allowedWrite): bool
     {
         return (
             $mode === RequestInterface::REQUEST_MODE_READ && $allowedRead ||
@@ -43,12 +43,13 @@ class Utility
     }
 
     /**
-     * @param int $mode
+     * @param int  $mode
      * @param bool $allowedRead
      * @param bool $allowedWrite
+     *
      * @return bool
      */
-    protected static function canReadAndWrite($mode, $allowedRead, $allowedWrite)
+    protected static function canReadAndWrite(int $mode, bool $allowedRead, bool $allowedWrite): bool
     {
         return (
             $mode === RequestInterface::REQUEST_MODE_UPDATE && $allowedRead && $allowedWrite ||

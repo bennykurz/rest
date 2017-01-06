@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -25,8 +25,6 @@ use N86io\Rest\DomainObject\PropertyInfo\AbstractPropertyInfo;
 use N86io\Rest\UnitTestCase;
 
 /**
- * Class AbstractPropertyInfoTest
- *
  * @author Viktor Firus <v@n86.io>
  */
 class AbstractPropertyInfoTest extends UnitTestCase
@@ -34,15 +32,18 @@ class AbstractPropertyInfoTest extends UnitTestCase
     public function test()
     {
         $attributes = [
-            'hide' => false,
-            'position' => 3,
+            'hide'        => false,
+            'position'    => 3,
             'outputLevel' => 2,
-            'getter' => 'getTest'
+            'getter'      => 'getTest'
         ];
-        $attributesInt = array_merge($attributes, ['type' => 'int']);
 
         /** @var \PHPUnit_Framework_MockObject_MockObject|AbstractPropertyInfo $abstrPropertyInfoInt */
-        $abstrPropertyInfoInt = $this->getMockForAbstractClass(AbstractPropertyInfo::class, ['test', $attributesInt]);
+        $abstrPropertyInfoInt = $this->getMockForAbstractClass(
+            AbstractPropertyInfo::class,
+            ['test', 'int', $attributes]
+        );
+        $this->inject($abstrPropertyInfoInt, 'entityClassName', 'ClassName');
         $this->inject($abstrPropertyInfoInt, 'entityInfoStorage', $this->createEntityInfoStorageMock());
 
 
@@ -72,11 +73,10 @@ class AbstractPropertyInfoTest extends UnitTestCase
 
 
         $isFloat = false;
-        $attributesFloat = array_merge($attributes, ['type' => 'float']);
         /** @var \PHPUnit_Framework_MockObject_MockObject|AbstractPropertyInfo $abstrPropertyInfoFloat */
         $abstrPropertyInfoFloat = $this->getMockForAbstractClass(
             AbstractPropertyInfo::class,
-            ['test', $attributesFloat]
+            ['test', 'float', $attributes]
         );
         $entity = \Mockery::mock(EntityInterface::class);
         $entity->shouldReceive('getProperty')->with('test')->andReturn('10');
@@ -90,11 +90,10 @@ class AbstractPropertyInfoTest extends UnitTestCase
 
 
         $isBoolean = false;
-        $attributesBool = array_merge($attributes, ['type' => 'bool']);
         /** @var \PHPUnit_Framework_MockObject_MockObject|AbstractPropertyInfo $abstrPropertyInfoBool */
         $abstrPropertyInfoBool = $this->getMockForAbstractClass(
             AbstractPropertyInfo::class,
-            ['test', $attributesBool]
+            ['test', 'bool', $attributes]
         );
         $entity = \Mockery::mock(EntityInterface::class);
         $entity->shouldReceive('getProperty')->with('test')->andReturn('true');
@@ -108,11 +107,10 @@ class AbstractPropertyInfoTest extends UnitTestCase
 
 
         $isDateTime = false;
-        $attributesDate = array_merge($attributes, ['type' => 'DateTime']);
         /** @var \PHPUnit_Framework_MockObject_MockObject|AbstractPropertyInfo $abstrPropertyInfoDate */
         $abstrPropertyInfoDate = $this->getMockForAbstractClass(
             AbstractPropertyInfo::class,
-            ['test', $attributesDate]
+            ['test', 'DateTime', $attributes]
         );
         $entity = \Mockery::mock(EntityInterface::class);
         $entity->shouldReceive('getProperty')->with('test')->andReturn('2016-11-16 10:30:39');
@@ -134,12 +132,6 @@ class AbstractPropertyInfoTest extends UnitTestCase
         );
         $abstrPropertyInfoDate->castValue($entity);
         $this->assertTrue($isDateTime);
-    }
-
-    public function testConstructor()
-    {
-        $this->setExpectedException(\InvalidArgumentException::class);
-        $this->getMockForAbstractClass(AbstractPropertyInfo::class, ['test', []]);
     }
 
     protected function createEntityInfoStorageMock()

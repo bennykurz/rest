@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -23,9 +23,8 @@ use N86io\Di\Singleton;
 use Webmozart\Assert\Assert;
 
 /**
- * Class PropertyInfoFactory
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class PropertyInfoFactory implements Singleton
 {
@@ -47,26 +46,29 @@ class PropertyInfoFactory implements Singleton
 
     /**
      * @param string $name
-     * @param array $attributes
+     * @param string $type
+     * @param array  $attributes
+     *
      * @return PropertyInfoInterface
      */
-    public function build($name, array $attributes)
+    public function build(string $name, string $type, array $attributes): PropertyInfoInterface
     {
-        Assert::string($name);
         foreach ($this->propertyInfoClasses as $propertyInfoClass) {
-            if (call_user_func([$propertyInfoClass, 'verifyAttributes'], $attributes)) {
+            if (call_user_func([$propertyInfoClass, 'checkAttributes'], $type, $attributes)) {
                 /** @var PropertyInfoInterface $propertyInfo */
-                $propertyInfo = $this->container->get($propertyInfoClass, $name, $attributes);
+                $propertyInfo = $this->container->get($propertyInfoClass, $name, $type, $attributes);
+
                 return $propertyInfo;
             }
         }
-        return $this->container->get(Common::class, $name, $attributes);
+
+        return $this->container->get(Common::class, $name, $type, $attributes);
     }
 
     /**
      * @param string $propertyInfoClass
      */
-    public function registerPropertyInfoClass($propertyInfoClass)
+    public function registerPropertyInfoClass(string $propertyInfoClass)
     {
         Assert::subclassOf($propertyInfoClass, PropertyInfoInterface::class);
         $this->propertyInfoClasses[] = $propertyInfoClass;
@@ -76,18 +78,23 @@ class PropertyInfoFactory implements Singleton
      * @param string $type
      * @param string $resourcePropertyName
      * @param string $entityClassName
+     *
      * @return PropertyInfoInterface
      */
-    public function buildEnableField($type, $resourcePropertyName, $entityClassName)
-    {
+    public function buildEnableField(
+        string $type,
+        string $resourcePropertyName,
+        string $entityClassName
+    ): PropertyInfoInterface {
         Assert::oneOf($type, ['deleted', 'disabled', 'startTime', 'endTime']);
+
         return $this->build(
             $type,
+            'int',
             [
-                'type' => 'int',
-                'hide' => true,
+                'hide'                 => true,
                 'resourcePropertyName' => $resourcePropertyName,
-                'entityClassName' => $entityClassName
+                'entityClassName'      => $entityClassName
             ]
         );
     }

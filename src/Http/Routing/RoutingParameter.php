@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -21,9 +21,8 @@ namespace N86io\Rest\Http\Routing;
 use Webmozart\Assert\Assert;
 
 /**
- * Class RoutingParameter
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class RoutingParameter implements RoutingParameterInterface
 {
@@ -38,7 +37,7 @@ class RoutingParameter implements RoutingParameterInterface
     protected $expression;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $optional;
 
@@ -49,26 +48,25 @@ class RoutingParameter implements RoutingParameterInterface
 
     /**
      * RoutingParameter constructor.
+     *
      * @param string $name
      * @param string $expression
-     * @param boolean $optional
-     * @param int $takeResult
+     * @param bool   $optional
+     * @param int    $takeResult
      */
-    public function __construct($name, $expression, $optional, $takeResult = 1)
+    public function __construct(string $name, string $expression, bool $optional, int $takeResult = 1)
     {
-        Assert::allString([$name, $expression]);
-        Assert::boolean($optional);
-        Assert::integer($takeResult);
+        Assert::greaterThanEq($takeResult, 1);
         $this->name = $name;
         $this->expression = $expression;
-        $this->optional = $optional === true;
+        $this->optional = $optional;
         $this->takeResult = $takeResult;
     }
 
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -76,15 +74,15 @@ class RoutingParameter implements RoutingParameterInterface
     /**
      * @return string
      */
-    public function getExpression()
+    public function getExpression(): string
     {
         return $this->expression;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
-    public function isOptional()
+    public function isOptional(): bool
     {
         return $this->optional;
     }
@@ -92,7 +90,7 @@ class RoutingParameter implements RoutingParameterInterface
     /**
      * @return int
      */
-    public function getTakeResult()
+    public function getTakeResult(): int
     {
         return $this->takeResult;
     }

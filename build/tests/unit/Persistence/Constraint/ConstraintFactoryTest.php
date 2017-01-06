@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -18,16 +18,14 @@
 
 namespace N86io\Rest\Tests\Unit\Persistence\Constraint;
 
+use N86io\Di\Container;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
-use N86io\Rest\Object\Container;
 use N86io\Rest\Persistence\Constraint\ComparisonInterface;
 use N86io\Rest\Persistence\Constraint\ConstraintFactory;
 use N86io\Rest\Persistence\Constraint\LogicalInterface;
 use N86io\Rest\UnitTestCase;
 
 /**
- * Class ConstraintFactoryTest
- *
  * @author Viktor Firus <v@n86.io>
  */
 class ConstraintFactoryTest extends UnitTestCase

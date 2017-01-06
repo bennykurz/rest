@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -18,12 +18,13 @@
 
 namespace N86io\Rest;
 
+use PHPUnit\Framework\TestCase;
+
 /**
- * Class UnitTestCase
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
-abstract class UnitTestCase extends \PHPUnit_Framework_TestCase
+abstract class UnitTestCase extends TestCase
 {
     public function tearDown()
     {
@@ -35,7 +36,7 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase
      * @param string $propertyName
      * @param mixed $value
      */
-    public function inject($object, $propertyName, $value)
+    public function inject($object, string $propertyName, $value)
     {
         $reflectionClass = new \ReflectionClass($object);
         $reflectionProperty = $reflectionClass->getProperty($propertyName);

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -21,9 +21,8 @@ namespace N86io\Rest\Http\Routing;
 use N86io\Di\Singleton;
 
 /**
- * Interface RoutingFactoryInterface
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 interface RoutingFactoryInterface extends Singleton
 {
@@ -31,5 +30,5 @@ interface RoutingFactoryInterface extends Singleton
      * @param array $apiIdentifiers
      * @return RoutingInterface
      */
-    public function build(array $apiIdentifiers);
+    public function build(array $apiIdentifiers): RoutingInterface;
 }

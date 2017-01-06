@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -22,9 +22,8 @@ use N86io\Rest\Service\Configuration;
 use Psr\Http\Message\UriInterface;
 
 /**
- * Class Routing
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class Routing implements RoutingInterface
 {
@@ -49,9 +48,10 @@ class Routing implements RoutingInterface
 
     /**
      * @param UriInterface $uri
+     *
      * @return array
      */
-    public function getRoute(UriInterface $uri)
+    public function getRoute(UriInterface $uri): array
     {
         $patternPart = [];
         foreach ($this->parameters as $parameter) {
@@ -87,12 +87,14 @@ class Routing implements RoutingInterface
 
     /**
      * @param UriInterface $uri
+     *
      * @return string
      */
-    protected function getApiPath(UriInterface $uri)
+    protected function getApiPath(UriInterface $uri): string
     {
         $apiBaseUrl = $this->configuration->getApiBaseUrl();
         $url = $uri->getScheme() . '://' . $uri->getHost() . $uri->getPath();
+
         return substr($url, strlen($apiBaseUrl));
     }
 }

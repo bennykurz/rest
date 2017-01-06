@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -23,9 +23,8 @@ use N86io\Di\Singleton;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 
 /**
- * Class OrderingFactory
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class OrderingFactory implements Singleton
 {
@@ -40,7 +39,7 @@ class OrderingFactory implements Singleton
      *
      * @return OrderingInterface
      */
-    public function ascending(PropertyInfoInterface $propertyInfo)
+    public function ascending(PropertyInfoInterface $propertyInfo): OrderingInterface
     {
         return $this->container->get(
             Ordering::class,
@@ -54,7 +53,7 @@ class OrderingFactory implements Singleton
      *
      * @return OrderingInterface
      */
-    public function descending(PropertyInfoInterface $propertyInfo)
+    public function descending(PropertyInfoInterface $propertyInfo): OrderingInterface
     {
         return $this->container->get(
             Ordering::class,

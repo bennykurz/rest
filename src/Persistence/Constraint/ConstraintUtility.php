@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -24,9 +24,8 @@ use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 use N86io\Rest\Exception\NoEnableFieldsException;
 
 /**
- * Class ConstraintUtility
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class ConstraintUtility implements Singleton
 {
@@ -38,24 +37,29 @@ class ConstraintUtility implements Singleton
 
     /**
      * @param PropertyInfoInterface $propertyInfo
-     * @param array $resourceIds
+     * @param array                 $resourceIds
+     *
      * @return LogicalInterface
      */
-    public function createResourceIdsConstraints(PropertyInfoInterface $propertyInfo, array $resourceIds)
-    {
+    public function createResourceIdsConstraints(
+        PropertyInfoInterface $propertyInfo,
+        array $resourceIds
+    ): LogicalInterface {
         $constraints = [];
         foreach ($resourceIds as $resourceId) {
             $constraints[] = $this->constraintFactory->equalTo($propertyInfo, $resourceId, false);
         }
+
         return $this->constraintFactory->logicalOr($constraints);
     }
 
     /**
      * @param EntityInfoInterface $entityInfo
+     *
      * @return LogicalInterface
      * @throws NoEnableFieldsException
      */
-    public function createEnableFieldsConstraints(EntityInfoInterface $entityInfo)
+    public function createEnableFieldsConstraints(EntityInfoInterface $entityInfo): LogicalInterface
     {
         $constraints = [];
         $accessTime = time();

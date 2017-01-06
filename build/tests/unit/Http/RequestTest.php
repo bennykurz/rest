@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -19,28 +19,24 @@
 namespace N86io\Rest\Tests\Unit\Http;
 
 use N86io\Rest\Http\Request;
-use N86io\Rest\Persistence\Constraint\ConstraintInterface;
 use N86io\Rest\Persistence\LimitInterface;
 use N86io\Rest\Persistence\Ordering\OrderingInterface;
 use N86io\Rest\UnitTestCase;
 
 /**
- * Class RequestTest
- *
  * @author Viktor Firus <v@n86.io>
  */
 class RequestTest extends UnitTestCase
 {
     public function test()
     {
-        $constraint = \Mockery::mock(ConstraintInterface::class);
         $ordering = \Mockery::mock(OrderingInterface::class);
         $limit = \Mockery::mock(LimitInterface::class);
         $request = (new Request)
-            ->setVersion('1')
+            ->setVersion(1)
             ->setApiIdentifier('test')
             ->setResourceIds([1, 2, 3])
-            ->setConstraints($constraint)
+            ->setConstraints([])
             ->setOrdering($ordering)
             ->setLimit($limit)
             ->setOutputLevel(4)
@@ -51,7 +47,7 @@ class RequestTest extends UnitTestCase
         $this->assertEquals(1, $request->getVersion());
         $this->assertEquals('test', $request->getApiIdentifier());
         $this->assertEquals([1, 2, 3], $request->getResourceIds());
-        $this->assertSame($constraint, $request->getConstraints());
+        $this->assertSame([], $request->getConstraints());
         $this->assertSame($ordering, $request->getOrdering());
         $this->assertSame($limit, $request->getLimit());
         $this->assertEquals(4, $request->getOutputLevel());

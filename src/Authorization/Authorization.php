@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -18,12 +18,9 @@
 
 namespace N86io\Rest\Authorization;
 
-use Webmozart\Assert\Assert;
-
 /**
- * Class Authorization
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class Authorization implements AuthorizationInterface
 {
@@ -41,9 +38,8 @@ class Authorization implements AuthorizationInterface
     /**
      * @param int $userGroup
      */
-    public function addUserGroup($userGroup)
+    public function addUserGroup(int $userGroup)
     {
-        Assert::integer($userGroup);
         $this->userGroups[] = $userGroup;
     }
 
@@ -57,10 +53,11 @@ class Authorization implements AuthorizationInterface
 
     /**
      * @param string $model
-     * @param int $requestMode
-     * @return boolean
+     * @param int    $requestMode
+     *
+     * @return bool
      */
-    public function hasApiAccess($model, $requestMode)
+    public function hasApiAccess(string $model, int $requestMode): bool
     {
         $allowedRead = false;
         $allowedWrite = false;
@@ -81,15 +78,17 @@ class Authorization implements AuthorizationInterface
                 $allowedWrite = true;
             }
         }
+
         return Utility::canAccess($requestMode, $allowedRead, $allowedWrite);
     }
 
     /**
      * @param string $model
      * @param string $propertyName
+     *
      * @return bool
      */
-    public function hasPropertyReadAuthorization($model, $propertyName)
+    public function hasPropertyReadAuthorization(string $model, string $propertyName): bool
     {
         return $this->hasPropertyAuthorization($model, $propertyName)[0];
     }
@@ -97,9 +96,10 @@ class Authorization implements AuthorizationInterface
     /**
      * @param string $model
      * @param string $propertyName
+     *
      * @return bool[]
      */
-    protected function hasPropertyAuthorization($model, $propertyName)
+    protected function hasPropertyAuthorization(string $model, string $propertyName): array
     {
         $allowedRead = false;
         $allowedWrite = false;

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -22,8 +22,6 @@ use N86io\Rest\DomainObject\PropertyInfo\DynamicSelect;
 use N86io\Rest\UnitTestCase;
 
 /**
- * Class DynamicSelectTest
- *
  * @author Viktor Firus <v@n86.io>
  */
 class DynamicSelectTest extends UnitTestCase
@@ -31,25 +29,24 @@ class DynamicSelectTest extends UnitTestCase
     public function test()
     {
         $attributes = [
-            'type' => 'int',
-            'ordering' => true,
+            'ordering'   => true,
             'constraint' => false,
-            'sql' => 'thisIsNotRealSqlExpression',
+            'select'     => 'thisIsNotRealSqlExpression',
         ];
-        $propertyInfo = new DynamicSelect('testSomething', $attributes);
+        $propertyInfo = new DynamicSelect('testSomething', 'int', $attributes);
 
         $this->assertTrue($propertyInfo->isOrdering());
         $this->assertFalse($propertyInfo->isConstraint());
         $this->assertEquals('thisIsNotRealSqlExpression', $propertyInfo->getSelect());
 
-        $this->assertTrue(DynamicSelect::verifyAttributes($attributes));
-        unset($attributes['sql']);
-        $this->assertFalse(DynamicSelect::verifyAttributes($attributes));
+        $this->assertTrue(DynamicSelect::checkAttributes('int', $attributes));
+        unset($attributes['select']);
+        $this->assertFalse(DynamicSelect::checkAttributes('int', $attributes));
     }
 
     public function testConstructor()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
-        new DynamicSelect('testSomething', []);
+        $this->expectException(\InvalidArgumentException::class);
+        new DynamicSelect('testSomething', '', []);
     }
 }

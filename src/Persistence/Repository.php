@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -28,9 +28,8 @@ use N86io\Rest\Persistence\Constraint\ConstraintUtility;
 use N86io\Rest\Persistence\Ordering\OrderingInterface;
 
 /**
- * Class Repository
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class Repository implements RepositoryInterface
 {
@@ -64,6 +63,7 @@ class Repository implements RepositoryInterface
 
     /**
      * RepositoryInterface constructor.
+     *
      * @param EntityInfoInterface $entityInfo
      */
     public function __construct(EntityInfoInterface $entityInfo)
@@ -80,41 +80,47 @@ class Repository implements RepositoryInterface
 
     /**
      * @param ConstraintInterface $constraints
+     *
      * @return RepositoryInterface
      */
-    public function setConstraints(ConstraintInterface $constraints)
+    public function setConstraints(ConstraintInterface $constraints): RepositoryInterface
     {
         $constraints = [$constraints];
         $constraints = array_merge($constraints, $this->getDefaultConstraints());
         $constraints = $this->constraintFactory->logicalAnd($constraints);
         $this->connector->setConstraints($constraints);
+
         return $this;
     }
 
     /**
      * @param OrderingInterface $ordering
+     *
      * @return RepositoryInterface
      */
-    public function setOrdering(OrderingInterface $ordering)
+    public function setOrdering(OrderingInterface $ordering): RepositoryInterface
     {
         $this->connector->setOrdering($ordering);
+
         return $this;
     }
 
     /**
      * @param LimitInterface $limit
+     *
      * @return RepositoryInterface
      */
-    public function setLimit(LimitInterface $limit)
+    public function setLimit(LimitInterface $limit): RepositoryInterface
     {
         $this->connector->setLimit($limit);
+
         return $this;
     }
 
     /**
      * @return EntityInterface[]
      */
-    public function read()
+    public function read(): array
     {
         return $this->connector->read();
     }
@@ -122,7 +128,7 @@ class Repository implements RepositoryInterface
     /**
      * @return array
      */
-    public function readRaw()
+    public function readRaw(): array
     {
         return $this->connector->readRaw();
     }
@@ -130,7 +136,7 @@ class Repository implements RepositoryInterface
     /**
      * @return array
      */
-    public function create()
+    public function create(): array
     {
         return $this->connector->create();
     }
@@ -138,7 +144,7 @@ class Repository implements RepositoryInterface
     /**
      * @return array
      */
-    public function update()
+    public function update(): array
     {
         return $this->connector->update();
     }
@@ -146,7 +152,7 @@ class Repository implements RepositoryInterface
     /**
      * @return array
      */
-    public function delete()
+    public function delete(): array
     {
         return $this->connector->delete();
     }
@@ -154,7 +160,7 @@ class Repository implements RepositoryInterface
     /**
      * @return array
      */
-    protected function getDefaultConstraints()
+    protected function getDefaultConstraints(): array
     {
         $result = [];
         try {
@@ -162,6 +168,7 @@ class Repository implements RepositoryInterface
         } catch (NoEnableFieldsException $e) {
             // Nothing to do
         }
+
         return $result;
     }
 }

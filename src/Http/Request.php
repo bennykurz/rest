@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -24,9 +24,8 @@ use N86io\Rest\Persistence\Ordering\OrderingInterface;
 use Webmozart\Assert\Assert;
 
 /**
- * Class Request
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class Request implements RequestInterface
 {
@@ -36,7 +35,7 @@ class Request implements RequestInterface
     protected $route;
 
     /**
-     * @var string
+     * @var int
      */
     protected $version;
 
@@ -53,7 +52,7 @@ class Request implements RequestInterface
     /**
      * @var ConstraintInterface[]
      */
-    protected $constraints;
+    protected $constraints = [];
 
     /**
      * @var OrderingInterface
@@ -93,205 +92,237 @@ class Request implements RequestInterface
     /**
      * @return array
      */
-    public function getRoute()
+    public function getRoute(): array
     {
         return $this->route;
     }
 
     /**
      * @param array $route
+     *
      * @return RequestInterface
      */
-    public function setRoute(array $route)
+    public function setRoute(array $route): RequestInterface
     {
         $this->route = $route;
+
         return $this;
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getVersion()
+    public function getVersion(): int
     {
         return $this->version;
     }
 
     /**
-     * @param string $version
+     * @param int $version
+     *
      * @return RequestInterface
      */
-    public function setVersion($version)
+    public function setVersion(int $version): RequestInterface
     {
-        Assert::string($version);
         $this->version = $version;
+
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getApiIdentifier()
+    public function getApiIdentifier(): string
     {
         return $this->apiIdentifier;
     }
 
     /**
      * @param string $apiIdentifier
+     *
      * @return RequestInterface
      */
-    public function setApiIdentifier($apiIdentifier)
+    public function setApiIdentifier(string $apiIdentifier): RequestInterface
     {
-        Assert::string($apiIdentifier);
         $this->apiIdentifier = $apiIdentifier;
+
         return $this;
     }
 
     /**
      * @return array
      */
-    public function getResourceIds()
+    public function getResourceIds(): array
     {
         return $this->resourceIds;
     }
 
     /**
      * @param array $resourceIds
+     *
      * @return RequestInterface
      */
-    public function setResourceIds(array $resourceIds)
+    public function setResourceIds(array $resourceIds): RequestInterface
     {
         $this->resourceIds = $resourceIds;
+
         return $this;
     }
 
     /**
      * @return ConstraintInterface[]
      */
-    public function getConstraints()
+    public function getConstraints(): array
     {
         return $this->constraints;
     }
 
     /**
      * @param ConstraintInterface[] $constraints
+     *
      * @return RequestInterface
      */
-    public function setConstraints(array $constraints)
+    public function setConstraints(array $constraints): RequestInterface
     {
         $this->constraints = $constraints;
+
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasOrdering(): bool
+    {
+        return $this->ordering instanceof OrderingInterface;
     }
 
     /**
      * @return OrderingInterface
      */
-    public function getOrdering()
+    public function getOrdering(): OrderingInterface
     {
         return $this->ordering;
     }
 
     /**
      * @param OrderingInterface $ordering
+     *
      * @return RequestInterface
      */
-    public function setOrdering(OrderingInterface $ordering)
+    public function setOrdering(OrderingInterface $ordering): RequestInterface
     {
         $this->ordering = $ordering;
+
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasLimit(): bool
+    {
+        return $this->limit instanceof LimitInterface;
     }
 
     /**
      * @return LimitInterface
      */
-    public function getLimit()
+    public function getLimit(): LimitInterface
     {
         return $this->limit;
     }
 
     /**
      * @param LimitInterface $limit
+     *
      * @return RequestInterface
      */
-    public function setLimit(LimitInterface $limit)
+    public function setLimit(LimitInterface $limit): RequestInterface
     {
         $this->limit = $limit;
+
         return $this;
     }
 
     /**
      * @return int
      */
-    public function getOutputLevel()
+    public function getOutputLevel(): int
     {
         return $this->outputLevel;
     }
 
     /**
      * @param int $outputLevel
+     *
      * @return RequestInterface
      */
-    public function setOutputLevel($outputLevel)
+    public function setOutputLevel(int $outputLevel): RequestInterface
     {
-        Assert::integer($outputLevel);
         Assert::greaterThanEq($outputLevel, 0);
         $this->outputLevel = $outputLevel;
+
         return $this;
     }
 
     /**
      * @return int
      */
-    public function getMode()
+    public function getMode(): int
     {
         return $this->mode;
     }
 
     /**
      * @param int $mode
+     *
      * @return RequestInterface
      */
-    public function setMode($mode)
+    public function setMode(int $mode): RequestInterface
     {
-        Assert::integer($mode);
         $this->mode = $mode;
+
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getModelClassName()
+    public function getModelClassName(): string
     {
         return $this->modelClassName;
     }
 
     /**
      * @param string $modelClassName
+     *
      * @return RequestInterface
      */
-    public function setModelClassName($modelClassName)
+    public function setModelClassName(string $modelClassName): RequestInterface
     {
-        Assert::string($modelClassName);
         $this->modelClassName = $modelClassName;
+
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getControllerClassName()
+    public function getControllerClassName(): string
     {
         return $this->controllerClassName;
     }
 
     /**
      * @param string $controllerClassName
+     *
      * @return RequestInterface
      */
-    public function setControllerClassName($controllerClassName)
+    public function setControllerClassName(string $controllerClassName): RequestInterface
     {
-        Assert::string($controllerClassName);
         $this->controllerClassName = $controllerClassName;
+
         return $this;
     }
 }

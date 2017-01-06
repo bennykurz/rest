@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -19,9 +19,8 @@
 namespace N86io\Rest\Persistence;
 
 /**
- * Class Limit
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class Limit implements LimitInterface
 {
@@ -36,11 +35,10 @@ class Limit implements LimitInterface
     protected $rowCount;
 
     /**
-     * Limit constructor.
      * @param int $offset
      * @param int $rowCount
      */
-    public function __construct($offset, $rowCount)
+    public function __construct(int $offset, int $rowCount)
     {
         $this->offset = $offset;
         $this->rowCount = $rowCount;
@@ -49,7 +47,7 @@ class Limit implements LimitInterface
     /**
      * @return int
      */
-    public function getOffset()
+    public function getOffset(): int
     {
         return $this->offset;
     }
@@ -57,7 +55,7 @@ class Limit implements LimitInterface
     /**
      * @return int
      */
-    public function getRowCount()
+    public function getRowCount(): int
     {
         return $this->rowCount;
     }

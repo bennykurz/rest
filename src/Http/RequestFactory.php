@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -32,9 +32,8 @@ use N86io\Rest\Service\Configuration;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class RequestFactory
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class RequestFactory implements RequestFactoryInterface
 {
@@ -70,16 +69,17 @@ class RequestFactory implements RequestFactoryInterface
 
     /**
      * @param ServerRequestInterface $serverRequest
+     *
      * @return RequestInterface
      */
-    public function fromServerRequest(ServerRequestInterface $serverRequest)
+    public function fromServerRequest(ServerRequestInterface $serverRequest): RequestInterface
     {
         $routing = $this->routingFactory->build($this->configuration->getApiIdentifiers());
 
         $route = $routing->getRoute($serverRequest->getUri());
         $this->checkRoute($route);
 
-        $version = isset($route['version']) ? $route['version'] : '';
+        $version = isset($route['version']) ? $route['version'] : 0;
         list($modelClassName, $controllerClassName) = $this->resolveClasses(
             $route['apiIdentifier'],
             $version
@@ -111,7 +111,7 @@ class RequestFactory implements RequestFactoryInterface
 
     /**
      * @param RequestInterface $request
-     * @param array $queryParams
+     * @param array            $queryParams
      */
     protected function setOrdering(RequestInterface $request, array $queryParams)
     {
@@ -124,7 +124,7 @@ class RequestFactory implements RequestFactoryInterface
 
     /**
      * @param RequestInterface $request
-     * @param array $queryParams
+     * @param array            $queryParams
      */
     protected function setConstraints(RequestInterface $request, array $queryParams)
     {
@@ -135,7 +135,7 @@ class RequestFactory implements RequestFactoryInterface
 
     /**
      * @param RequestInterface $request
-     * @param array $queryParams
+     * @param array            $queryParams
      */
     protected function setLimit(RequestInterface $request, array $queryParams)
     {
@@ -146,8 +146,9 @@ class RequestFactory implements RequestFactoryInterface
     }
 
     /**
-     * @param EntityInfoInterface $entityInfo
+     * @param EntityInfoInterface    $entityInfo
      * @param ServerRequestInterface $serverRequest
+     *
      * @throws MethodNotAllowedException
      */
     protected function checkEntityInfo(EntityInfoInterface $entityInfo, ServerRequestInterface $serverRequest)
@@ -159,6 +160,7 @@ class RequestFactory implements RequestFactoryInterface
 
     /**
      * @param array $route
+     *
      * @throws RequestNotFoundException
      */
     protected function checkRoute(array $route)
@@ -170,9 +172,10 @@ class RequestFactory implements RequestFactoryInterface
 
     /**
      * @param ServerRequestInterface $serverRequest
+     *
      * @return int
      */
-    protected function getRequestMode(ServerRequestInterface $serverRequest)
+    protected function getRequestMode(ServerRequestInterface $serverRequest): int
     {
         switch ($serverRequest->getMethod()) {
             case 'POST':
@@ -184,23 +187,26 @@ class RequestFactory implements RequestFactoryInterface
             case 'DELETE':
                 return RequestInterface::REQUEST_MODE_DELETE;
         }
+
         // GET or some other
         return RequestInterface::REQUEST_MODE_READ;
     }
 
     /**
      * @param string $apiIdentifier
-     * @param string $version
+     * @param int $version
+     *
      * @return array
      * @throws RequestNotFoundException
      */
-    protected function resolveClasses($apiIdentifier, $version = '')
+    protected function resolveClasses(string $apiIdentifier, int $version = 0): array
     {
         $apiConf = $this->configuration->getApiConfiguration($apiIdentifier);
 
         if (empty($version)) {
             $first = current($apiConf);
             $controller = isset($first['controller']) ? $first['controller'] : ControllerInterface::class;
+
             return [
                 $first['model'],
                 $controller
@@ -213,6 +219,7 @@ class RequestFactory implements RequestFactoryInterface
 
         $controller = isset($apiConf[$version]['controller']) ? $apiConf[$version]['controller'] :
             ControllerInterface::class;
+
         return [
             $apiConf[$version]['model'],
             $controller

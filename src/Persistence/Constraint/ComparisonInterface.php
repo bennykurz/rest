@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -21,9 +21,8 @@ namespace N86io\Rest\Persistence\Constraint;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 
 /**
- * Interface ComparisonInterface
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 interface ComparisonInterface extends ConstraintInterface
 {
@@ -40,7 +39,7 @@ interface ComparisonInterface extends ConstraintInterface
     /**
      * @return PropertyInfoInterface
      */
-    public function getLeftOperand();
+    public function getLeftOperand(): PropertyInfoInterface;
 
     /**
      * @return mixed
@@ -50,10 +49,10 @@ interface ComparisonInterface extends ConstraintInterface
     /**
      * @return int
      */
-    public function getType();
+    public function getType(): int;
 
     /**
-     * @return boolean
+     * @return bool
      */
-    public function isSave();
+    public function isSave(): bool;
 }

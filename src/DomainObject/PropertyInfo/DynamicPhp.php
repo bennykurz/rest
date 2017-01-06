@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -19,18 +19,18 @@
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
 /**
- * Class DynamicPhp
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class DynamicPhp extends AbstractPropertyInfo implements DynamicPhpInterface
 {
     /**
      * @param array $attributes
-     * @return boolean
+     *
+     * @return bool
      */
-    public static function verifyAttributes(array $attributes)
+    public static function checkAttributes(string $type, array $attributes = []): bool
     {
-        return $attributes['type'] === '__dynamic';
+        return $type === '__dynamic';
     }
 }

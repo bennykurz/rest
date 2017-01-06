@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -19,14 +19,13 @@
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
 /**
- * Interface RestrictableInterface
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 interface RestrictableInterface
 {
     /**
-     * @return boolean
+     * @return bool
      */
-    public function isConstraint();
+    public function isConstraint(): bool;
 }

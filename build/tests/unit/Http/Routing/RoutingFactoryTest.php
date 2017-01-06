@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -18,16 +18,14 @@
 
 namespace N86io\Rest\Tests\Unit\Http\Routing;
 
+use N86io\Di\Container;
 use N86io\Rest\Http\Routing\Routing;
 use N86io\Rest\Http\Routing\RoutingFactory;
 use N86io\Rest\Http\Routing\RoutingInterface;
 use N86io\Rest\Http\Routing\RoutingParameterInterface;
-use N86io\Rest\Object\Container;
 use N86io\Rest\UnitTestCase;
 
 /**
- * Class RoutingFactoryTest
- *
  * @author Viktor Firus <v@n86.io>
  */
 class RoutingFactoryTest extends UnitTestCase
@@ -46,18 +44,12 @@ class RoutingFactoryTest extends UnitTestCase
         $mock->shouldReceive('get')->with(RoutingInterface::class)->andReturn(
             \Mockery::mock(Routing::class)->shouldReceive('addParameter')->withAnyArgs()->getMock()
         );
-        $mock->shouldReceive('get')->with(
-            RoutingParameterInterface::class,
-            ['version', '[\w\d]+', true]
-        )->andReturn(\Mockery::mock(RoutingParameterInterface::class));
-        $mock->shouldReceive('get')->with(
-            RoutingParameterInterface::class,
-            ['apiIdentifier', '(api1|api2)', false, 2]
-        )->andReturn(\Mockery::mock(RoutingParameterInterface::class));
-        $mock->shouldReceive('get')->with(
-            RoutingParameterInterface::class,
-            ['resourceId', '.+', true]
-        )->andReturn(\Mockery::mock(RoutingParameterInterface::class));
+        $mock->shouldReceive('get')->with(RoutingParameterInterface::class, 'version', '[\w\d]+', true)
+            ->andReturn(\Mockery::mock(RoutingParameterInterface::class));
+        $mock->shouldReceive('get')->with(RoutingParameterInterface::class, 'apiIdentifier', '(api1|api2)', false, 2)
+            ->andReturn(\Mockery::mock(RoutingParameterInterface::class));
+        $mock->shouldReceive('get')->with(RoutingParameterInterface::class, 'resourceId', '.+', true)
+            ->andReturn(\Mockery::mock(RoutingParameterInterface::class));
 
         return $mock;
     }

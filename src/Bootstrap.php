@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -37,9 +37,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class Bootstrap
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class Bootstrap
 {
@@ -74,7 +73,7 @@ class Bootstrap
     protected $authentication;
 
     /**
-     * @var Authorization
+     * @var AuthorizationInterface
      */
     protected $authorization;
 
@@ -91,7 +90,7 @@ class Bootstrap
     /**
      * @return ResponseFactory
      */
-    public function getResponseFactory()
+    public function getResponseFactory(): ResponseFactory
     {
         return $this->responseFactory;
     }
@@ -99,7 +98,7 @@ class Bootstrap
     /**
      * @return RequestInterface
      */
-    public function getRequest()
+    public function getRequest(): RequestInterface
     {
         return $this->request;
     }
@@ -107,15 +106,15 @@ class Bootstrap
     /**
      * @return AuthenticationInterface
      */
-    public function getAuthentication()
+    public function getAuthentication(): AuthenticationInterface
     {
         return $this->authentication;
     }
 
     /**
-     * @return Authorization
+     * @return AuthorizationInterface
      */
-    public function getAuthorization()
+    public function getAuthorization(): AuthorizationInterface
     {
         if (!$this->authorization) {
             $this->authorization = Container::getInstance()->get(AuthorizationInterface::class);
@@ -202,7 +201,7 @@ class Bootstrap
      * @return AuthenticationInterface
      * @throws BootstrapException
      */
-    public function initializeAuthentication()
+    public function initializeAuthentication(): AuthenticationInterface
     {
         if (!$this->request) {
             throw new BootstrapException('Request should be initialized before.');
@@ -238,7 +237,7 @@ class Bootstrap
      * @return ResponseInterface
      * @throws BootstrapException
      */
-    public function createResult()
+    public function createResult(): ResponseInterface
     {
         if (!$this->authorization) {
             throw new BootstrapException('Authorization check should be done before.');

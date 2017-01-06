@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -22,9 +22,8 @@ use N86io\Di\Singleton;
 use Webmozart\Assert\Assert;
 
 /**
- * Class Configuration
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class Configuration implements Singleton
 {
@@ -36,7 +35,7 @@ class Configuration implements Singleton
     /**
      * @return array
      */
-    public function getAccessConf()
+    public function getAccessConf(): array
     {
         return $this->accessConf;
     }
@@ -48,6 +47,7 @@ class Configuration implements Singleton
     {
         if (is_array($content)) {
             $this->accessConf = $content;
+
             return;
         }
         Assert::string($content, 'Access conf should be array, valid json-string or file with valid json.');
@@ -59,14 +59,16 @@ class Configuration implements Singleton
 
     /**
      * @param string $content
+     *
      * @return string
      */
-    protected function readFile($content)
+    protected function readFile(string $content): string
     {
         if (strpos($content, 'file://') === 0) {
             Assert::readable($content);
             $content = file_get_contents($content);
         }
+
         return $content;
     }
 }

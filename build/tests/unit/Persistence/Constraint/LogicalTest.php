@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -26,8 +26,6 @@ use N86io\Rest\Persistence\Constraint\LogicalInterface;
 use N86io\Rest\UnitTestCase;
 
 /**
- * Class LogicalTest
- *
  * @author Viktor Firus <v@n86.io>
  */
 class LogicalTest extends UnitTestCase
@@ -42,14 +40,16 @@ class LogicalTest extends UnitTestCase
         parent::setUp();
         $compConstraints = [
             new Comparison(
-                new Common('name1', ['type' => 'int']),
+                new Common('name1', 'int', []),
                 ComparisonInterface::GREATER_THAN,
-                '100'
+                '100',
+                true
             ),
             new Comparison(
-                new Common('name2', ['type' => 'int']),
+                new Common('name2', 'int', []),
                 ComparisonInterface::GREATER_THAN,
-                '100'
+                '100',
+                true
             )
         ];
         $this->logical = new Logical($compConstraints, LogicalInterface::OPERATOR_AND);
@@ -57,12 +57,13 @@ class LogicalTest extends UnitTestCase
 
     public function testException1()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $compConstraints = [
             new Comparison(
-                new Common('name1', ['type' => 'int']),
+                new Common('name1', 'int', []),
                 ComparisonInterface::GREATER_THAN,
-                '100'
+                '100',
+                true
             )
         ];
         $this->logical = new Logical($compConstraints, 0);
@@ -71,12 +72,13 @@ class LogicalTest extends UnitTestCase
 
     public function testException2()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $compConstraints = [
             new Comparison(
-                new Common('name1', ['type' => 'int']),
+                new Common('name1', 'int', []),
                 ComparisonInterface::GREATER_THAN,
-                '100'
+                '100',
+                true
             )
         ];
         $this->logical = new Logical($compConstraints, 3);
@@ -84,18 +86,19 @@ class LogicalTest extends UnitTestCase
 
     public function testException3()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         new Logical([], LogicalInterface::OPERATOR_AND);
     }
 
     public function testException4()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $compConstraints = [
             new Comparison(
-                new Common('name1', ['type' => 'int']),
+                new Common('name1', 'int', []),
                 ComparisonInterface::GREATER_THAN,
-                '100'
+                '100',
+                true
             ),
             [
                 'something_wrong'

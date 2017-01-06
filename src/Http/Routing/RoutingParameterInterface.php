@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -19,9 +19,8 @@
 namespace N86io\Rest\Http\Routing;
 
 /**
- * Interface RoutingParameterInterface
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 interface RoutingParameterInterface
 {
@@ -29,28 +28,28 @@ interface RoutingParameterInterface
      * RoutingParameter constructor.
      * @param string $name
      * @param string $expression
+     * @param bool $optional
      * @param int $takeResult
-     * @param boolean $optional
      */
-    public function __construct($name, $expression, $optional, $takeResult = 1);
+    public function __construct(string $name, string $expression, bool $optional, int $takeResult = 1);
 
     /**
      * @return string
      */
-    public function getName();
+    public function getName(): string;
 
     /**
      * @return string
      */
-    public function getExpression();
+    public function getExpression(): string;
 
     /**
-     * @return boolean
+     * @return bool
      */
-    public function isOptional();
+    public function isOptional(): bool;
 
     /**
      * @return int
      */
-    public function getTakeResult();
+    public function getTakeResult(): int;
 }

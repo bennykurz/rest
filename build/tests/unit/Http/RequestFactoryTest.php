@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -19,6 +19,7 @@
 namespace N86io\Rest\Tests\Unit\Http;
 
 use Mockery\MockInterface;
+use N86io\Di\Container;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfo;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
 use N86io\Rest\Exception\MethodNotAllowedException;
@@ -28,8 +29,6 @@ use N86io\Rest\Http\RequestInterface;
 use N86io\Rest\Http\Routing\Routing;
 use N86io\Rest\Http\Routing\RoutingFactory;
 use N86io\Rest\Http\Utility\QueryUtility;
-use N86io\Rest\Object\Container;
-use N86io\Rest\Persistence\Constraint\LogicalInterface;
 use N86io\Rest\Persistence\LimitInterface;
 use N86io\Rest\Persistence\Ordering\OrderingInterface;
 use N86io\Rest\Service\Configuration;
@@ -38,8 +37,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 
 /**
- * Class RequestFactoryTest
- *
  * @author Viktor Firus <v@n86.io>
  */
 class RequestFactoryTest extends UnitTestCase
@@ -158,7 +155,7 @@ class RequestFactoryTest extends UnitTestCase
                 ->shouldReceive('setConstraints')->withAnyArgs()->andReturnSelf()->getMock()
                 ->shouldReceive('setRoute')->withAnyArgs()->andReturnSelf()->getMock()
         );
-        $mock->shouldReceive('get')->with(LimitInterface::class, [2, 10])->andReturn(
+        $mock->shouldReceive('get')->with(LimitInterface::class, 2, 10)->andReturn(
             \Mockery::mock(LimitInterface::class)
         );
 
@@ -167,6 +164,7 @@ class RequestFactoryTest extends UnitTestCase
 
     /**
      * @param string $method
+     *
      * @return array
      */
     protected function createMocksWithoutQuery($method)
@@ -176,6 +174,7 @@ class RequestFactoryTest extends UnitTestCase
 
     /**
      * @param string $method
+     *
      * @return array
      */
     protected function createMocksWithQuery($method)
@@ -183,9 +182,9 @@ class RequestFactoryTest extends UnitTestCase
         return $this->createServerRequestAndRoutingFactoryMocks(
             $method,
             [
-                'version' => 1,
+                'version'       => 1,
                 'apiIdentifier' => 'api1',
-                'resourceId' => 'res1,res2'
+                'resourceId'    => 'res1,res2'
             ],
             'integer.gt=123&sort=string.asc&limit=10&offset=2&level=5'
         );
@@ -193,8 +192,9 @@ class RequestFactoryTest extends UnitTestCase
 
     /**
      * @param string $method
-     * @param array $route
+     * @param array  $route
      * @param string $query
+     *
      * @return array
      */
     protected function createServerRequestAndRoutingFactoryMocks($method, array $route, $query = '')
@@ -213,33 +213,34 @@ class RequestFactoryTest extends UnitTestCase
         );
 
         return [
-            'serverRequest' => $serverRequestMock,
+            'serverRequest'  => $serverRequestMock,
             'routingFactory' => $routingFactoryMock
         ];
     }
 
     /**
      * @param EntityInfo $entityInfo
+     *
      * @return MockInterface|QueryUtility
      */
     protected function createQueryUtilityMock(EntityInfo $entityInfo)
     {
         $mock = \Mockery::mock(QueryUtility::class);
         $mock->shouldReceive('resolveQueryParams')->with('', $entityInfo)->andReturn([
-            'ordering' => null,
-            'rowCount' => null,
-            'offset' => null,
-            'outputLevel' => null
+            'ordering'    => null,
+            'rowCount'    => null,
+            'offset'      => null,
+            'outputLevel' => 0
         ]);
         $mock->shouldReceive('resolveQueryParams')->with(
             'integer.gt=123&sort=string.asc&limit=10&offset=2&level=5',
             $entityInfo
         )->andReturn([
-            'ordering' => \Mockery::mock(OrderingInterface::class),
-            'rowCount' => 10,
-            'offset' => 2,
+            'ordering'    => \Mockery::mock(OrderingInterface::class),
+            'rowCount'    => 10,
+            'offset'      => 2,
             'outputLevel' => 5,
-            'constraints' => \Mockery::mock(LogicalInterface::class)
+            'constraints' => []
         ]);
 
         return $mock;

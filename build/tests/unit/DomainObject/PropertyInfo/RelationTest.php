@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -21,60 +21,89 @@ namespace N86io\Rest\Tests\Unit\DomainObject\PropertyInfo;
 use Mockery\MockInterface;
 use N86io\Rest\DomainObject\AbstractEntity;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfo;
+use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
+use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
 use N86io\Rest\DomainObject\EntityInterface;
+use N86io\Rest\DomainObject\PropertyInfo\AbstractStatic;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 use N86io\Rest\DomainObject\PropertyInfo\Relation;
 use N86io\Rest\Persistence\ConnectorInterface;
 use N86io\Rest\Persistence\Constraint\ConstraintUtility;
+use N86io\Rest\Persistence\Constraint\LogicalInterface;
+use N86io\Rest\Persistence\RepositoryInterface;
 use N86io\Rest\UnitTestCase;
 
 /**
- * Class RelationTest
- *
  * @author Viktor Firus <v@n86.io>
  */
 class RelationTest extends UnitTestCase
 {
     public function test()
     {
+        $type = get_class(\Mockery::mock(AbstractEntity::class));
         $attributes = [
-            'type' => get_class(\Mockery::mock(AbstractEntity::class)),
             'constraint' => true,
         ];
-        $propertyInfo = $this->createPropertyInfoMock($attributes);
+        $propertyInfo = $this->createPropertyInfoMock($type, $attributes);
         $this->assertTrue($propertyInfo->isConstraint());
         $propertyInfo->castValue($this->createEntityMock('1,2'));
         $this->assertNull($propertyInfo->castValue($this->createEntityMock('')));
 
-        $this->assertTrue(Relation::verifyAttributes($attributes));
-        $attributes['type'] .= '[]';
-        $this->assertTrue(Relation::verifyAttributes($attributes));
+        $this->assertTrue(Relation::checkAttributes($type, $attributes));
+        $type .= '[]';
+        $this->assertTrue(Relation::checkAttributes($type, $attributes));
         $attributes['foreignField'] = 'test';
-        $this->assertFalse(Relation::verifyAttributes($attributes));
+        $this->assertFalse(Relation::checkAttributes($type, $attributes));
 
+//        $type .= '[]';
         $attributes = [
-            'type' => get_class(\Mockery::mock(AbstractEntity::class)) . '[]',
             'constraint' => true,
         ];
-        $propertyInfo = $this->createPropertyInfoMock($attributes);
+        $propertyInfo = $this->createPropertyInfoMock($type, $attributes);
         $propertyInfo->castValue($this->createEntityMock('1,2'));
         $this->assertNull($propertyInfo->castValue($this->createEntityMock('')));
     }
 
     /**
-     * @param array $attributes
+     * @param string $type
+     * @param array  $attributes
+     *
      * @return MockInterface|PropertyInfoInterface
      */
-    protected function createPropertyInfoMock(array $attributes)
+    protected function createPropertyInfoMock(string $type, array $attributes)
     {
-        $propertyInfo = \Mockery::mock(Relation::class . '[getEntityInfo]', ['testSomething', $attributes]);
+        $propertyInfo = \Mockery::mock(Relation::class . '[getEntityInfo]', ['testSomething', $type, $attributes]);
         $propertyInfo->shouldReceive('getEntityInfo')->andReturn($this->createEntityInfoMock());
         $this->inject($propertyInfo, 'constraintUtility', $this->createConstraintUtilityMock());
+        $this->inject($propertyInfo, 'entityInfoStorage', $this->createEntityInfoStorageMock());
+
         return $propertyInfo;
     }
 
     /**
+     * @return MockInterface|EntityInfoStorage
+     */
+    protected function createEntityInfoStorageMock()
+    {
+        $mock = \Mockery::mock(EntityInfoStorage::class);
+        $mock->shouldReceive('get')->withAnyArgs()->andReturn(
+            \Mockery::mock(EntityInfoInterface::class)
+                ->shouldReceive('createRepositoryInstance')->andReturn(
+                    \Mockery::mock(RepositoryInterface::class)
+                        ->shouldReceive('setConstraints')->getMock()
+                        ->shouldReceive('read')->andReturn([])->getMock()
+                )->getMock()
+                ->shouldReceive('getUidPropertyInfo')->andReturn(
+                    \Mockery::mock(AbstractStatic::class)
+                )->getMock()
+        );
+
+        return $mock;
+    }
+
+    /**
      * @param $value
+     *
      * @return MockInterface|EntityInterface
      */
     protected function createEntityMock($value)
@@ -103,7 +132,9 @@ class RelationTest extends UnitTestCase
     protected function createConstraintUtilityMock()
     {
         $mock = \Mockery::mock(ConstraintUtility::class);
-        $mock->shouldReceive('createResourceIdsConstraints')->withAnyArgs();
+        $mock->shouldReceive('createResourceIdsConstraints')->withAnyArgs()->andReturn(
+            \Mockery::mock(LogicalInterface::class)
+        );
         $mock->shouldReceive('createEnableFieldsConstraints')->withAnyArgs();
 
         return $mock;

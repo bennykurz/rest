@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -21,54 +21,58 @@ namespace N86io\Rest\Reflection;
 use N86io\Di\Singleton;
 
 /**
- * Class VarTypeUtility
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class VarTypeUtility implements Singleton
 {
     /**
      * @param string $type
+     *
      * @return bool
      */
-    public function isDefaultType($type)
+    public function isDefaultType(string $type): bool
     {
         return $this->isBoolean($type) || $this->isInteger($type) || $this->isFloatingPointNumber($type) ||
-        $this->isDateTime($type) || $type === 'string' || $type === 'array';
+            $this->isDateTime($type) || $type === 'string' || $type === 'array';
     }
 
     /**
-     * @param $type
+     * @param string $type
+     *
      * @return bool
      */
-    public function isDateTime($type)
+    public function isDateTime(string $type): bool
     {
         return $type === '\DateTime' || $type === 'DateTime';
     }
 
     /**
      * @param string $type
+     *
      * @return bool
      */
-    public function isBoolean($type)
+    public function isBoolean(string $type): bool
     {
         return $type === 'bool' || $type === 'boolean';
     }
 
     /**
      * @param string $type
+     *
      * @return bool
      */
-    public function isInteger($type)
+    public function isInteger(string $type): bool
     {
         return $type === 'int' || $type === 'integer';
     }
 
     /**
-     * @param $type
+     * @param string $type
+     *
      * @return bool
      */
-    public function isFloatingPointNumber($type)
+    public function isFloatingPointNumber(string $type): bool
     {
         return $type === 'float' || $type === 'double';
     }

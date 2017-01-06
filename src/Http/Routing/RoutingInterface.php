@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -21,9 +21,8 @@ namespace N86io\Rest\Http\Routing;
 use Psr\Http\Message\UriInterface;
 
 /**
- * Interface RoutingInterface
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 interface RoutingInterface
 {
@@ -36,5 +35,5 @@ interface RoutingInterface
      * @param UriInterface $uri
      * @return array
      */
-    public function getRoute(UriInterface $uri);
+    public function getRoute(UriInterface $uri): array;
 }

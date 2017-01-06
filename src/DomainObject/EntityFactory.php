@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -18,15 +18,13 @@
 
 namespace N86io\Rest\DomainObject;
 
-use N86io\Di\Container;
 use N86io\Di\ContainerInterface;
 use N86io\Di\Singleton;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
 
 /**
- * Class EntityFactory
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class EntityFactory implements Singleton
 {
@@ -43,24 +41,27 @@ class EntityFactory implements Singleton
 
     /**
      * @param EntityInfoInterface $entityInfo
-     * @param array $dbRows
+     * @param array               $dbRows
+     *
      * @return EntityInterface[]
      */
-    public function buildList(EntityInfoInterface $entityInfo, array $dbRows)
+    public function buildList(EntityInfoInterface $entityInfo, array $dbRows): array
     {
         $result = [];
         foreach ($dbRows as $dbRow) {
             $result[] = $this->build($entityInfo, $dbRow);
         }
+
         return $result;
     }
 
     /**
      * @param EntityInfoInterface $entityInfo
-     * @param array $dbRow
+     * @param array               $dbRow
+     *
      * @return EntityInterface
      */
-    public function build(EntityInfoInterface $entityInfo, array $dbRow)
+    public function build(EntityInfoInterface $entityInfo, array $dbRow): EntityInterface
     {
         $entityClassName = $entityInfo->getClassName();
         $entityUid = $dbRow[$entityInfo->getUidPropertyInfo()->getName()];
@@ -79,6 +80,7 @@ class EntityFactory implements Singleton
                 $propertyInfo->castValue($entity);
             }
         }
+
         return $entity;
     }
 }

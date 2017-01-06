@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -22,8 +22,6 @@ use N86io\Rest\Reflection\VarTypeUtility;
 use N86io\Rest\UnitTestCase;
 
 /**
- * Class VarTypeUtilityTest
- *
  * @author Viktor Firus <v@n86.io>
  */
 class VarTypeUtilityTest extends UnitTestCase

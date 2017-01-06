@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -18,10 +18,10 @@
 
 namespace N86io\Rest\Tests\Unit\Http\Utility;
 
+use N86io\Di\Container;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfo;
 use N86io\Rest\DomainObject\PropertyInfo\Common;
 use N86io\Rest\Http\Utility\QueryUtility;
-use N86io\Rest\Object\Container;
 use N86io\Rest\Persistence\Constraint\ConstraintFactory;
 use N86io\Rest\Persistence\Constraint\ConstraintInterface;
 use N86io\Rest\Persistence\Ordering\OrderingFactory;
@@ -29,8 +29,6 @@ use N86io\Rest\Persistence\Ordering\OrderingInterface;
 use N86io\Rest\UnitTestCase;
 
 /**
- * Class QueryUtilityTest
- *
  * @author Viktor Firus <v@n86.io>
  */
 class QueryUtilityTest extends UnitTestCase
@@ -64,7 +62,7 @@ class QueryUtilityTest extends UnitTestCase
         $this->assertEquals(2, $queryParams['offset']);
         $this->assertEquals(5, $queryParams['outputLevel']);
         $this->assertTrue($queryParams['ordering'] instanceof OrderingInterface);
-        $this->assertTrue($queryParams['constraints'] instanceof ConstraintInterface);
+        $this->assertTrue($queryParams['constraints'][0] instanceof ConstraintInterface);
 
 
         $queryParams = $this->queryUtility->resolveQueryParams(

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -22,21 +22,20 @@ use Lcobucci\JWT\Token;
 use N86io\Di\Singleton;
 
 /**
- * Interface AuthenticationInterface
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 interface AuthenticationInterface extends Singleton
 {
     /**
-     * @return boolean
+     * @return bool
      */
-    public function isAuthenticationSuccessful();
+    public function isAuthenticationSuccessful(): bool;
 
     /**
      * @return Token
      */
-    public function getToken();
+    public function getToken(): Token;
 
     /**
      * @return void

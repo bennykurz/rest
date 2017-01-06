@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -22,8 +22,6 @@ use N86io\Rest\DomainObject\PropertyInfo\AbstractStatic;
 use N86io\Rest\UnitTestCase;
 
 /**
- * Class AbstractStaticTest
- *
  * @author Viktor Firus <v@n86.io>
  */
 class AbstractStaticTest extends UnitTestCase
@@ -31,11 +29,10 @@ class AbstractStaticTest extends UnitTestCase
     public function test()
     {
         $attributes = [
-            'type' => 'int',
             'resourcePropertyName' => 'test_something'
         ];
         /** @var \PHPUnit_Framework_MockObject_MockObject|AbstractStatic $abstractStatic */
-        $abstractStatic = $this->getMockForAbstractClass(AbstractStatic::class, ['testSomething', $attributes]);
+        $abstractStatic = $this->getMockForAbstractClass(AbstractStatic::class, ['testSomething', 'int', $attributes]);
         $this->assertEquals('test_something', $abstractStatic->getResourcePropertyName());
     }
 }

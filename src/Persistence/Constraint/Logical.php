@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -19,9 +19,8 @@
 namespace N86io\Rest\Persistence\Constraint;
 
 /**
- * Class Logical
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class Logical implements LogicalInterface
 {
@@ -36,11 +35,10 @@ class Logical implements LogicalInterface
     protected $type;
 
     /**
-     * Logical constructor.
      * @param array $constraints
-     * @param int $type
+     * @param int   $type
      */
-    public function __construct(array $constraints, $type)
+    public function __construct(array $constraints, int $type)
     {
         $this->checkType($type);
         $this->checkConstraints($constraints);
@@ -51,7 +49,7 @@ class Logical implements LogicalInterface
     /**
      * @return int
      */
-    public function getType()
+    public function getType(): int
     {
         return $this->type;
     }
@@ -59,13 +57,15 @@ class Logical implements LogicalInterface
     /**
      * @return ConstraintInterface[]
      */
-    public function getConstraints()
+    public function getConstraints(): array
     {
         return $this->constraints;
     }
 
     /**
      * @param array $constraints
+     *
+     * @throws \InvalidArgumentException
      */
     protected function checkConstraints(array $constraints)
     {
@@ -80,9 +80,11 @@ class Logical implements LogicalInterface
     }
 
     /**
-     * @param $type
+     * @param int $type
+     *
+     * @throws \InvalidArgumentException
      */
-    protected function checkType($type)
+    protected function checkType(int $type)
     {
         if ($type < 1 || $type > 2) {
             throw new \InvalidArgumentException('Invalid type for logical operator.');

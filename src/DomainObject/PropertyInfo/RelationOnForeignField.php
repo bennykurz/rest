@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -21,11 +21,11 @@ namespace N86io\Rest\DomainObject\PropertyInfo;
 use N86io\Rest\DomainObject\EntityInterface;
 use N86io\Rest\Persistence\Constraint\Comparison;
 use N86io\Rest\Persistence\Constraint\ComparisonInterface;
+use N86io\Rest\Persistence\Constraint\ConstraintInterface;
 
 /**
- * Class RelationOnForeignField
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class RelationOnForeignField extends AbstractPropertyInfo implements RelationOnForeignFieldInterface
 {
@@ -38,20 +38,23 @@ class RelationOnForeignField extends AbstractPropertyInfo implements RelationOnF
      * RelationOnForeignFieldPropertyInfo constructor.
      *
      * @param string $name
+     * @param string $type
      * @param array  $attributes
+     *
+     * @throws \InvalidArgumentException
      */
-    public function __construct($name, array $attributes)
+    public function __construct(string $name, string $type, array $attributes)
     {
         if (empty($attributes['foreignField']) || empty(trim($attributes['foreignField']))) {
             throw new \InvalidArgumentException('ForeignField should not empty string.');
         }
-        parent::__construct($name, $attributes);
+        parent::__construct($name, $type, $attributes);
     }
 
     /**
      * @return string
      */
-    public function getForeignField()
+    public function getForeignField(): string
     {
         return $this->foreignField;
     }
@@ -69,6 +72,7 @@ class RelationOnForeignField extends AbstractPropertyInfo implements RelationOnF
         $foreignEntityInfo = $this->entityInfoStorage->get($type);
         $foreignPropertyInfo = $foreignEntityInfo->getPropertyInfo($this->getForeignField());
 
+        /** @var ConstraintInterface $constraints */
         $constraints = $this->container->get(
             Comparison::class,
             $foreignPropertyInfo,
@@ -93,25 +97,26 @@ class RelationOnForeignField extends AbstractPropertyInfo implements RelationOnF
     }
 
     /**
-     * @param array $attributes
+     * @param string $type
+     * @param array  $attributes
      *
-     * @return boolean
+     * @return bool
      */
-    public static function verifyAttributes(array $attributes)
+    public static function checkAttributes(string $type, array $attributes = []): bool
     {
         if (empty($attributes['foreignField'])) {
             return false;
         }
 
-        return self::checkForAbstractEntitySubclass($attributes['type']);
+        return self::checkForAbstractEntitySubclass($type);
     }
 
     /**
      * @param string $className
      *
-     * @return boolean
+     * @return bool
      */
-    protected static function checkForAbstractEntitySubclass($className)
+    protected static function checkForAbstractEntitySubclass(string $className)
     {
         $propertyInfoUtility = new PropertyInfoUtility;
 

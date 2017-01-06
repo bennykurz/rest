@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -22,17 +22,12 @@ use N86io\Rest\DomainObject\PropertyInfo\DynamicPhp;
 use N86io\Rest\UnitTestCase;
 
 /**
- * Class DynamicSqlTest
- *
  * @author Viktor Firus <v@n86.io>
  */
 class DynamicPhpTest extends UnitTestCase
 {
     public function test()
     {
-        $attributes = [
-            'type' => '__dynamic'
-        ];
-        $this->assertTrue(DynamicPhp::verifyAttributes($attributes));
+        $this->assertTrue(DynamicPhp::checkAttributes('__dynamic'));
     }
 }

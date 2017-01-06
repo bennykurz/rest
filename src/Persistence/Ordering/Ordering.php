@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -21,9 +21,8 @@ namespace N86io\Rest\Persistence\Ordering;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 
 /**
- * Class Ordering
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class Ordering implements OrderingInterface
 {
@@ -39,10 +38,11 @@ class Ordering implements OrderingInterface
 
     /**
      * Ordering constructor.
+     *
      * @param PropertyInfoInterface $propertyInfo
-     * @param int $direction
+     * @param int                   $direction
      */
-    public function __construct(PropertyInfoInterface $propertyInfo, $direction)
+    public function __construct(PropertyInfoInterface $propertyInfo, int $direction)
     {
         $this->checkDirection($direction);
         $this->propertyInfo = $propertyInfo;
@@ -52,7 +52,7 @@ class Ordering implements OrderingInterface
     /**
      * @return PropertyInfoInterface
      */
-    public function getPropertyInfo()
+    public function getPropertyInfo(): PropertyInfoInterface
     {
         return $this->propertyInfo;
     }
@@ -60,15 +60,17 @@ class Ordering implements OrderingInterface
     /**
      * @return int
      */
-    public function getDirection()
+    public function getDirection(): int
     {
         return $this->direction;
     }
 
     /**
      * @param int $direction
+     *
+     * @throws \InvalidArgumentException
      */
-    protected function checkDirection($direction)
+    protected function checkDirection(int $direction)
     {
         if ($direction < 1 || $direction > 2) {
             throw new \InvalidArgumentException('Invalid type for ordering.');

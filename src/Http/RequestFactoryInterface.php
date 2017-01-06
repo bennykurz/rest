@@ -32,5 +32,5 @@ interface RequestFactoryInterface extends Singleton
      * @param ServerRequestInterface $serverRequest
      * @return RequestInterface
      */
-    public function fromServerRequest(ServerRequestInterface $serverRequest);
+    public function fromServerRequest(ServerRequestInterface $serverRequest): RequestInterface;
 }

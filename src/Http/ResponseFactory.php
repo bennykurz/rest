@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -27,9 +27,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Webmozart\Assert\Assert;
 
 /**
- * Class ResponseFactory
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class ResponseFactory implements Singleton
 {
@@ -67,11 +66,11 @@ class ResponseFactory implements Singleton
 
     /**
      * @param int $status
+     *
      * @return ResponseInterface
      */
-    public function errorCode($status)
+    public function errorCode(int $status): ResponseInterface
     {
-        Assert::integer($status);
         switch ($status) {
             case 400:
                 return $this->badRequest();
@@ -82,78 +81,84 @@ class ResponseFactory implements Singleton
             case 405:
                 return $this->methodNotAllowed();
         }
+
         return $this->internalServerError();
     }
 
     /**
      * @return ResponseInterface
      */
-    public function badRequest()
+    public function badRequest(): ResponseInterface
     {
         $errorMessage = [
             '400. Error.',
             'Bad request.'
         ];
+
         return $this->createResponse(400, $errorMessage);
     }
 
     /**
      * @return ResponseInterface
      */
-    public function unauthorized()
+    public function unauthorized(): ResponseInterface
     {
         $errorMessage = [
             '401. Error.',
             'Unauthorized.'
         ];
+
         return $this->createResponse(401, $errorMessage);
     }
 
     /**
      * @return ResponseInterface
      */
-    public function notFound()
+    public function notFound(): ResponseInterface
     {
         $errorMessage = [
             '404. Error.',
             'The requested URL \'' . $this->serverRequest->getUri() . '\' has no match.'
         ];
+
         return $this->createResponse(404, $errorMessage);
     }
 
     /**
      * @return ResponseInterface
      */
-    public function methodNotAllowed()
+    public function methodNotAllowed(): ResponseInterface
     {
         $errorMessage = [
             '405. Error.',
             'Method not allowed.'
         ];
+
         return $this->createResponse(405, $errorMessage);
     }
 
     /**
      * @return ResponseInterface
      */
-    public function internalServerError()
+    public function internalServerError(): ResponseInterface
     {
         $errorMessage = [
             '500. Error.',
             'Internal server error.'
         ];
+
         return $this->createResponse(500, $errorMessage);
     }
 
     /**
-     * @param int $status
+     * @param int   $status
      * @param array $content
-     * @param int $outputLevel
+     * @param int   $outputLevel
+     *
      * @return ResponseInterface
      */
-    public function createResponse($status, array $content, $outputLevel = 0)
+    public function createResponse(int $status, array $content, int $outputLevel = 0): ResponseInterface
     {
-        Assert::allInteger([$status, $outputLevel]);
         Assert::greaterThanEq($outputLevel, 0);
         $response = $this->container->get(ResponseInterface::class);
         /** @var ResponseInterface $response */
@@ -164,6 +169,7 @@ class ResponseFactory implements Singleton
         $response = $response->withStatus($status);
         $body = $this->contentConverter->render($content, $outputLevel);
         $response->getBody()->write($body);
+
         return $response;
     }
 }

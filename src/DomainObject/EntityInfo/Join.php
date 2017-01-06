@@ -18,8 +18,6 @@
 
 namespace N86io\Rest\DomainObject\EntityInfo;
 
-use Webmozart\Assert\Assert;
-
 /**
  * @author Viktor Firus <v@n86.io>
  * @since  0.1.0

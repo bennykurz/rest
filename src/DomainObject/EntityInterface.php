@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -19,9 +19,8 @@
 namespace N86io\Rest\DomainObject;
 
 /**
- * Interface EntityInterface
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 interface EntityInterface
 {
@@ -30,18 +29,18 @@ interface EntityInterface
      * @param mixed $propertyValue
      * @internal
      */
-    public function setProperty($propertyName, $propertyValue);
+    public function setProperty(string $propertyName, $propertyValue);
 
     /**
-     * @param $propertyName
+     * @param string $propertyName
      * @return mixed
      * @internal
      */
-    public function getProperty($propertyName);
+    public function getProperty(string $propertyName);
 
     /**
      * @return array
      * @internal
      */
-    public function getProperties();
+    public function getProperties(): array;
 }

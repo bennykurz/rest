@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -26,8 +26,6 @@ use N86io\Rest\UnitTestCase;
 use Psr\Http\Message\UriInterface;
 
 /**
- * Class RoutingAndFactoryTest
- *
  * @author Viktor Firus <v@n86.io>
  */
 class RoutingTest extends UnitTestCase

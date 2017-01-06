@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -21,45 +21,49 @@ namespace N86io\Rest\Reflection;
 use N86io\Di\Singleton;
 
 /**
- * Class MethodNameUtility
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class MethodNameUtility implements Singleton
 {
     /**
      * @param string $methodName
+     *
      * @return string
      */
-    public function createPropertyNameFromMethod($methodName)
+    public function createPropertyNameFromMethod(string $methodName): string
     {
         preg_match('/^([a-z]+)([a-zA-Z]*)/', $methodName, $matches);
+
         return lcfirst($matches[2]);
     }
 
     /**
      * @param string $methodName
+     *
      * @return bool
      */
-    public function isGetterOrSetter($methodName)
+    public function isGetterOrSetter(string $methodName): bool
     {
         return $this->isGetter($methodName) || $this->isSetter($methodName);
     }
 
     /**
      * @param string $methodName
+     *
      * @return bool
      */
-    public function isGetter($methodName)
+    public function isGetter(string $methodName): bool
     {
         return preg_match('/^(is|get).*/', $methodName) === 1;
     }
 
     /**
      * @param string $methodName
+     *
      * @return bool
      */
-    public function isSetter($methodName)
+    public function isSetter(string $methodName): bool
     {
         return preg_match('/^(set).*/', $methodName) === 1;
     }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -23,9 +23,8 @@ use N86io\Di\Singleton;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 
 /**
- * Class ConstraintFactory
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class ConstraintFactory implements Singleton
 {
@@ -39,7 +38,7 @@ class ConstraintFactory implements Singleton
      * @param PropertyInfoInterface $leftOperand
      * @param string                $operator
      * @param                       $rightOperand
-     * @param boolean               $save
+     * @param bool                  $save
      *
      * @return ConstraintInterface
      */
@@ -48,7 +47,7 @@ class ConstraintFactory implements Singleton
         $operator,
         $rightOperand,
         $save = null
-    ) {
+    ): ConstraintInterface {
         switch ($operator) {
             case 'lt':
                 return $this->lessThan($leftOperand, $rightOperand, $save);
@@ -73,7 +72,7 @@ class ConstraintFactory implements Singleton
      *
      * @return LogicalInterface
      */
-    public function logicalAnd(array $constraints)
+    public function logicalAnd(array $constraints): LogicalInterface
     {
         return $this->container->get(
             Logical::class,
@@ -87,7 +86,7 @@ class ConstraintFactory implements Singleton
      *
      * @return LogicalInterface
      */
-    public function logicalOr(array $constraints)
+    public function logicalOr(array $constraints): LogicalInterface
     {
         return $this->container->get(
             Logical::class,
@@ -103,7 +102,7 @@ class ConstraintFactory implements Singleton
      *
      * @return ComparisonInterface
      */
-    public function lessThan(PropertyInfoInterface $leftOperand, $rightOperand, $save = null)
+    public function lessThan(PropertyInfoInterface $leftOperand, $rightOperand, $save = null): ComparisonInterface
     {
         return $this->container->get(
             Comparison::class,
@@ -121,8 +120,11 @@ class ConstraintFactory implements Singleton
      *
      * @return ComparisonInterface
      */
-    public function lessThanOrEqualTo(PropertyInfoInterface $leftOperand, $rightOperand, $save = null)
-    {
+    public function lessThanOrEqualTo(
+        PropertyInfoInterface $leftOperand,
+        $rightOperand,
+        $save = null
+    ): ComparisonInterface {
         return $this->container->get(
             Comparison::class,
             $leftOperand,
@@ -139,7 +141,7 @@ class ConstraintFactory implements Singleton
      *
      * @return ComparisonInterface
      */
-    public function greaterThan(PropertyInfoInterface $leftOperand, $rightOperand, $save = null)
+    public function greaterThan(PropertyInfoInterface $leftOperand, $rightOperand, $save = null): ComparisonInterface
     {
         return $this->container->get(
             Comparison::class,
@@ -157,8 +159,11 @@ class ConstraintFactory implements Singleton
      *
      * @return ComparisonInterface
      */
-    public function greaterThanOrEqualTo(PropertyInfoInterface $leftOperand, $rightOperand, $save = null)
-    {
+    public function greaterThanOrEqualTo(
+        PropertyInfoInterface $leftOperand,
+        $rightOperand,
+        $save = null
+    ): ComparisonInterface {
         return $this->container->get(
             Comparison::class,
             $leftOperand,
@@ -175,7 +180,7 @@ class ConstraintFactory implements Singleton
      *
      * @return ComparisonInterface
      */
-    public function equalTo(PropertyInfoInterface $leftOperand, $rightOperand, $save = null)
+    public function equalTo(PropertyInfoInterface $leftOperand, $rightOperand, $save = null): ComparisonInterface
     {
         return $this->container->get(
             Comparison::class,
@@ -193,7 +198,7 @@ class ConstraintFactory implements Singleton
      *
      * @return ComparisonInterface
      */
-    public function notEqualTo(PropertyInfoInterface $leftOperand, $rightOperand, $save = null)
+    public function notEqualTo(PropertyInfoInterface $leftOperand, $rightOperand, $save = null): ComparisonInterface
     {
         return $this->container->get(
             Comparison::class,
@@ -211,7 +216,7 @@ class ConstraintFactory implements Singleton
      *
      * @return ComparisonInterface
      */
-    public function contains(PropertyInfoInterface $leftOperand, $rightOperand, $save = null)
+    public function contains(PropertyInfoInterface $leftOperand, $rightOperand, $save = null): ComparisonInterface
     {
         return $this->container->get(
             Comparison::class,

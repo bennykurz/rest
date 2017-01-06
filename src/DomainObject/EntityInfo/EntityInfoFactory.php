@@ -80,7 +80,9 @@ class EntityInfoFactory implements EntityInfoFactoryInterface
 
         foreach ($properties as $name => $attributes) {
             $attributes['entityClassName'] = $entityInfo->getClassName();
-            $propertyInfo = $this->propertyInfoFactory->build($name, $attributes);
+            $type = $attributes['type'];
+            unset($attributes['type']);
+            $propertyInfo = $this->propertyInfoFactory->build($name, $type, $attributes);
             $entityInfo->addPropertyInfo($propertyInfo);
         }
 

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -25,8 +25,6 @@ use N86io\Rest\Persistence\Constraint\ComparisonInterface;
 use N86io\Rest\UnitTestCase;
 
 /**
- * Class ComparisonTest
- *
  * @author Viktor Firus <v@n86.io>
  */
 class ComparisonTest extends UnitTestCase
@@ -40,29 +38,32 @@ class ComparisonTest extends UnitTestCase
     {
         parent::setUp();
         $this->comparison = new Comparison(
-            new Common('name', ['type' => 'int']),
+            new Common('name', 'int', []),
             ComparisonInterface::GREATER_THAN,
-            '100'
+            '100',
+            false
         );
     }
 
     public function testTypeException1()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         new Comparison(
-            new Common('name', ['type' => 'int']),
+            new Common('name', 'int', []),
             0,
-            '100'
+            '100',
+            true
         );
     }
 
     public function testTypeException2()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         new Comparison(
-            new Common('name', ['type' => 'int']),
+            new Common('name', 'int', []),
             9,
-            '100'
+            '100',
+            true
         );
     }
 

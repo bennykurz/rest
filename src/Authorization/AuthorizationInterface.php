@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -21,16 +21,15 @@ namespace N86io\Rest\Authorization;
 use N86io\Di\Singleton;
 
 /**
- * Interface AuthorizationInterface
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 interface AuthorizationInterface extends Singleton
 {
     /**
      * @param int $userGroup
      */
-    public function addUserGroup($userGroup);
+    public function addUserGroup(int $userGroup);
 
     /**
      * @param array $userGroups
@@ -39,15 +38,17 @@ interface AuthorizationInterface extends Singleton
 
     /**
      * @param string $model
-     * @param int $requestMode
-     * @return boolean
+     * @param int    $requestMode
+     *
+     * @return bool
      */
-    public function hasApiAccess($model, $requestMode);
+    public function hasApiAccess(string $model, int $requestMode): bool;
 
     /**
      * @param string $model
      * @param string $propertyName
+     *
      * @return bool
      */
-    public function hasPropertyReadAuthorization($model, $propertyName);
+    public function hasPropertyReadAuthorization(string $model, string $propertyName): bool;
 }

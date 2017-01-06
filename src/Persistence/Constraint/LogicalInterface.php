@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -19,9 +19,8 @@
 namespace N86io\Rest\Persistence\Constraint;
 
 /**
- * Interface LogicalInterface
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 interface LogicalInterface extends ConstraintInterface, \Iterator
 {
@@ -31,10 +30,10 @@ interface LogicalInterface extends ConstraintInterface, \Iterator
     /**
      * @return int
      */
-    public function getType();
+    public function getType(): int;
 
     /**
      * @return array
      */
-    public function getConstraints();
+    public function getConstraints(): array;
 }

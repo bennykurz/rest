@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -19,41 +19,41 @@
 namespace N86io\Rest\Tests\Unit\DomainObject\PropertyInfo;
 
 use Mockery\MockInterface;
+use N86io\Di\Container;
 use N86io\Rest\DomainObject\AbstractEntity;
 use N86io\Rest\DomainObject\PropertyInfo\Common;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoFactory;
 use N86io\Rest\DomainObject\PropertyInfo\PropertyInfoInterface;
 use N86io\Rest\DomainObject\PropertyInfo\Relation;
-use N86io\Rest\Object\Container;
 use N86io\Rest\UnitTestCase;
 
 /**
- * Class PropertyInfoFactoryTest
- *
  * @author Viktor Firus <v@n86.io>
  */
 class PropertyInfoFactoryTest extends UnitTestCase
 {
     /**
      * @dataProvider buildPropertyInfoDataProvider
-     * @param $expectedClassName
-     * @param $data
+     *
+     * @param string    $expectedClassName
+     * @param string    $name
+     * @param string    $type
      * @param Container $containerMock
      */
-    public function testBuild($expectedClassName, $data, $containerMock = null)
+    public function testBuild(string $expectedClassName, string $name, string $type, $containerMock = null)
     {
         $propertyInfoFactory = new PropertyInfoFactory;
         $this->inject($propertyInfoFactory, 'container', $containerMock);
 
         $this->assertTrue(
-            is_a($propertyInfoFactory->build($data['name'], $data['attributes']), $expectedClassName)
+            is_a($propertyInfoFactory->build($name, $type, []), $expectedClassName)
         );
     }
 
     public function testRegisterPropertyInfoClass()
     {
         $factory = new PropertyInfoFactory;
-        $factory->registerPropertyInfoClass(\Mockery::mock(PropertyInfoInterface::class));
+        $factory->registerPropertyInfoClass(get_class(\Mockery::mock(PropertyInfoInterface::class)));
     }
 
     public function testBuildEnableField()
@@ -66,29 +66,22 @@ class PropertyInfoFactoryTest extends UnitTestCase
     /**
      * @return array
      */
-    public function buildPropertyInfoDataProvider()
+    public function buildPropertyInfoDataProvider(): array
     {
         $relationClassName = get_class(\Mockery::mock(AbstractEntity::class));
         $containerMock = $this->createContainerMock($relationClassName);
+
         return [
             [
                 Relation::class,
-                [
-                    'name' => 'somename',
-                    'attributes' => [
-                        'type' => get_class(\Mockery::mock(AbstractEntity::class))
-                    ]
-                ],
+                'somename',
+                get_class(\Mockery::mock(AbstractEntity::class)),
                 $containerMock
             ],
             [
                 Common::class,
-                [
-                    'name' => 'somename2',
-                    'attributes' => [
-                        'type' => 'string'
-                    ]
-                ],
+                'somename2',
+                'string',
                 $containerMock
             ]
         ];
@@ -96,6 +89,7 @@ class PropertyInfoFactoryTest extends UnitTestCase
 
     /**
      * @param string $relationClassName
+     *
      * @return MockInterface|Container
      */
     protected function createContainerMock($relationClassName)
@@ -103,21 +97,15 @@ class PropertyInfoFactoryTest extends UnitTestCase
         $mock = \Mockery::mock(Container::class);
         $mock->shouldReceive('get')->with(
             Relation::class,
-            [
-                'somename',
-                [
-                    'type' => $relationClassName
-                ]
-            ]
+            'somename',
+            $relationClassName,
+            []
         )->andReturn(\Mockery::mock(Relation::class));
         $mock->shouldReceive('get')->with(
             Common::class,
-            [
-                'somename2',
-                [
-                    'type' => 'string'
-                ]
-            ]
+            'somename2',
+            'string',
+            []
         )->andReturn(\Mockery::mock(Common::class));
 
         return $mock;

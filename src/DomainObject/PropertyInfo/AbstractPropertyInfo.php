@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -20,14 +20,14 @@ namespace N86io\Rest\DomainObject\PropertyInfo;
 
 use N86io\Di\ContainerInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfo;
+use N86io\Rest\DomainObject\EntityInfo\EntityInfoInterface;
 use N86io\Rest\DomainObject\EntityInfo\EntityInfoStorage;
 use N86io\Rest\DomainObject\EntityInterface;
 use Webmozart\Assert\Assert;
 
 /**
- * Class AbstractPropertyInfo
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 abstract class AbstractPropertyInfo implements PropertyInfoInterface
 {
@@ -59,7 +59,7 @@ abstract class AbstractPropertyInfo implements PropertyInfoInterface
     protected $type;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $hide;
 
@@ -89,39 +89,37 @@ abstract class AbstractPropertyInfo implements PropertyInfoInterface
     protected $rawAttributes = [];
 
     /**
-     * AbstractPropertyInfo constructor.
      * @param string $name
-     * @param array $attributes
+     * @param string $type
+     * @param array  $attributes
      */
-    public function __construct($name, array $attributes)
+    public function __construct(string $name, string $type, array $attributes)
     {
-        Assert::string($name);
-        if (empty($attributes['type']) || empty(trim($attributes['type']))) {
-            throw new \InvalidArgumentException('Missed type for PropertyInfo (' . $name . ').');
-        }
         foreach ($attributes as $key => $attribute) {
             if (property_exists($this, $key)) {
                 $this->{$key} = $attribute;
             }
         }
         $this->name = $name;
+        $this->type = $type;
         $this->rawAttributes = $attributes;
     }
 
     /**
-     * @return EntityInfo
+     * @return EntityInfoInterface
      */
-    public function getEntityInfo()
+    public function getEntityInfo(): EntityInfoInterface
     {
         /** @var EntityInfo $entityInfo */
         $entityInfo = $this->entityInfoStorage->get($this->entityClassName);
+
         return $entityInfo;
     }
 
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -129,7 +127,7 @@ abstract class AbstractPropertyInfo implements PropertyInfoInterface
     /**
      * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
@@ -137,7 +135,7 @@ abstract class AbstractPropertyInfo implements PropertyInfoInterface
     /**
      * @return int
      */
-    public function getPosition()
+    public function getPosition(): int
     {
         return $this->position ?: 0;
     }
@@ -145,7 +143,7 @@ abstract class AbstractPropertyInfo implements PropertyInfoInterface
     /**
      * @return string
      */
-    public function getGetter()
+    public function getGetter(): string
     {
         return $this->getter ?: '';
     }
@@ -153,7 +151,7 @@ abstract class AbstractPropertyInfo implements PropertyInfoInterface
     /**
      * @return string
      */
-    public function getSetter()
+    public function getSetter(): string
     {
         return $this->setter ?: '';
     }
@@ -161,22 +159,23 @@ abstract class AbstractPropertyInfo implements PropertyInfoInterface
     /**
      * @return array
      */
-    public function getRawAttributes()
+    public function getRawAttributes(): array
     {
         return $this->rawAttributes;
     }
 
     /**
      * @param int $outputLevel
-     * @return boolean
+     *
+     * @return bool
      */
-    public function shouldShow($outputLevel)
+    public function shouldShow(int $outputLevel): bool
     {
-        Assert::integer($outputLevel);
         Assert::greaterThanEq($outputLevel, 0);
         if (!$this->hide && $outputLevel >= $this->outputLevel) {
             return true;
         }
+
         return false;
     }
 
@@ -209,9 +208,10 @@ abstract class AbstractPropertyInfo implements PropertyInfoInterface
 
     /**
      * @param $value
+     *
      * @return \DateTime
      */
-    protected function castDateTime($value)
+    protected function castDateTime($value): \DateTime
     {
         if (is_numeric($value)) {
             return (new \DateTime())->setTimestamp($value);
@@ -222,6 +222,7 @@ abstract class AbstractPropertyInfo implements PropertyInfoInterface
             $dateTime = (new \DateTime())->setTimestamp(0);
         }
         $dateTime->setTimezone($timezone);
+
         return $dateTime;
     }
 }

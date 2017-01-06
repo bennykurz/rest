@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -27,12 +27,10 @@ use N86io\Rest\Exception\InvalidOrderingException;
 use N86io\Rest\Persistence\Constraint\ConstraintFactory;
 use N86io\Rest\Persistence\Ordering\OrderingFactory;
 use N86io\Rest\Persistence\Ordering\OrderingInterface;
-use Webmozart\Assert\Assert;
 
 /**
- * Class QueryUtility
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class QueryUtility implements Singleton
 {
@@ -49,18 +47,18 @@ class QueryUtility implements Singleton
     protected $constraintFactory;
 
     /**
-     * @param string $queryParams
+     * @param string              $queryParams
      * @param EntityInfoInterface $entityInfo
+     *
      * @return array
      */
-    public function resolveQueryParams($queryParams, EntityInfoInterface $entityInfo)
+    public function resolveQueryParams(string $queryParams, EntityInfoInterface $entityInfo): array
     {
-        Assert::string($queryParams);
         parse_str($queryParams, $parsed);
         $parsed = $parsed ?: [];
         $result = [
-            'rowCount' => null,
-            'offset' => null,
+            'rowCount'    => null,
+            'offset'      => null,
             'outputLevel' => 0
         ];
         $constraints = [];
@@ -90,31 +88,40 @@ class QueryUtility implements Singleton
         if (!empty($constraints)) {
             $result['constraints'] = $constraints;
         }
+
         return $result;
     }
 
-    protected function parseOutputLevel($outputLevel)
+    /**
+     * @param string $outputLevel
+     *
+     * @return int
+     */
+    protected function parseOutputLevel(string $outputLevel): int
     {
         $outputLevel = $this->parseNumericValue($outputLevel) ?: 0;
+
         return $outputLevel >= 0 ? $outputLevel : 0;
     }
 
     /**
      * @param string $value
-     * @return int
+     *
+     * @return int|null
      */
-    protected function parseNumericValue($value)
+    protected function parseNumericValue(string $value)
     {
         return is_numeric($value) ? intval($value) : null;
     }
 
     /**
-     * @param string $propNameAndDirection
+     * @param string              $propNameAndDirection
      * @param EntityInfoInterface $entityInfo
+     *
      * @return OrderingInterface
      * @throws InvalidOrderingException
      */
-    protected function createOrdering($propNameAndDirection, EntityInfoInterface $entityInfo)
+    protected function createOrdering(string $propNameAndDirection, EntityInfoInterface $entityInfo): OrderingInterface
     {
         list($propertyName, $direction) = explode('.', $propNameAndDirection);
         if (!$entityInfo->hasPropertyInfo($propertyName)) {
@@ -136,18 +143,18 @@ class QueryUtility implements Singleton
     }
 
     /**
-     * @param array $constraints
+     * @param array               $constraints
      * @param EntityInfoInterface $entityInfo
-     * @param string $propertyName
-     * @param string $operator
-     * @param string $value
+     * @param string              $propertyName
+     * @param string              $operator
+     * @param string              $value
      */
     protected function createConstraint(
         array &$constraints,
         EntityInfoInterface $entityInfo,
-        $propertyName,
-        $operator,
-        $value
+        string $propertyName,
+        string $operator,
+        string $value
     ) {
         if (!$entityInfo->hasPropertyInfo($propertyName)) {
             return;

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -23,34 +23,29 @@ use N86io\Rest\DomainObject\PropertyInfo\RelationOnForeignField;
 use N86io\Rest\UnitTestCase;
 
 /**
- * Class RelationOnForeignFieldTest
- *
  * @author Viktor Firus <v@n86.io>
  */
 class RelationOnForeignFieldTest extends UnitTestCase
 {
     public function test()
     {
+        $type = get_class(\Mockery::mock(AbstractEntity::class));
         $attributes = [
-            'type' => get_class(\Mockery::mock(AbstractEntity::class)),
             'foreignField' => 'some_thing',
         ];
-        $propertyInfo = new RelationOnForeignField('testSomething', $attributes);
+        $propertyInfo = new RelationOnForeignField('testSomething', $type, $attributes);
         $this->assertEquals('some_thing', $propertyInfo->getForeignField());
 
-        $this->assertTrue(RelationOnForeignField::verifyAttributes($attributes));
-        $attributes['type'] .= '[]';
-        $this->assertTrue(RelationOnForeignField::verifyAttributes($attributes));
+        $this->assertTrue(RelationOnForeignField::checkAttributes($type, $attributes));
+        $type .= '[]';
+        $this->assertTrue(RelationOnForeignField::checkAttributes($type, $attributes));
         unset($attributes['foreignField']);
-        $this->assertFalse(RelationOnForeignField::verifyAttributes($attributes));
+        $this->assertFalse(RelationOnForeignField::checkAttributes('', $attributes));
     }
 
     public function testConstructor()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
-        $attributes = [
-            'type' => 'int'
-        ];
-        new RelationOnForeignField('testSomething', $attributes);
+        $this->expectException(\InvalidArgumentException::class);
+        new RelationOnForeignField('testSomething', 'int', []);
     }
 }

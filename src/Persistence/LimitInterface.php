@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -19,19 +19,18 @@
 namespace N86io\Rest\Persistence;
 
 /**
- * Interface LimitInterface
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 interface LimitInterface
 {
     /**
      * @return int
      */
-    public function getOffset();
+    public function getOffset(): int;
 
     /**
      * @return int
      */
-    public function getRowCount();
+    public function getRowCount(): int;
 }

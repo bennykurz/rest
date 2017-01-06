@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -23,9 +23,8 @@ use N86io\Di\Singleton;
 use Webmozart\Assert\Assert;
 
 /**
- * Class Configuration
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class Configuration implements Singleton
 {
@@ -53,14 +52,14 @@ class Configuration implements Singleton
     protected $signer;
 
     /**
-     * @param int $alg
+     * @param int    $alg
      * @param string $signKey
      * @param string $verifyKey
      */
     public function initialize(
-        $alg,
-        $signKey,
-        $verifyKey = ''
+        int $alg,
+        string $signKey,
+        string $verifyKey = ''
     ) {
         $this->setKey($alg, $signKey, $verifyKey);
     }
@@ -68,7 +67,7 @@ class Configuration implements Singleton
     /**
      * @return Signer\Key
      */
-    public function getSignKey()
+    public function getSignKey(): Signer\Key
     {
         return $this->signKey;
     }
@@ -76,7 +75,7 @@ class Configuration implements Singleton
     /**
      * @return Signer\Key
      */
-    public function getVerifyKey()
+    public function getVerifyKey(): Signer\Key
     {
         return $this->verifyKey;
     }
@@ -84,17 +83,17 @@ class Configuration implements Singleton
     /**
      * @return Signer
      */
-    public function getSigner()
+    public function getSigner(): Signer
     {
         return $this->signer;
     }
 
     /**
-     * @param int $alg
+     * @param int    $alg
      * @param string $signKey
      * @param string $verifyKey
      */
-    protected function setKey($alg, $signKey, $verifyKey)
+    protected function setKey(int $alg, string $signKey, string $verifyKey)
     {
         Assert::oneOf(
             $alg,
@@ -111,15 +110,15 @@ class Configuration implements Singleton
             ],
             'Wrong algorithm selected.'
         );
-        Assert::string($signKey);
-        Assert::string($verifyKey);
 
         if (($alg & self::HMAC) !== 0) {
             $this->createHmacSigner($signKey, $alg - self::HMAC);
+
             return;
         }
         if (($alg & self::RSA) !== 0) {
             $this->createRsaSigner($signKey, $verifyKey, $alg - self::RSA);
+
             return;
         }
         $this->createEcdsaSigner($signKey, $verifyKey, $alg - self::ECDSA);
@@ -128,12 +127,10 @@ class Configuration implements Singleton
     /**
      * @param string $signKey
      * @param string $verifyKey
-     * @param int $hash
+     * @param int    $hash
      */
-    protected function createEcdsaSigner($signKey, $verifyKey, $hash)
+    protected function createEcdsaSigner(string $signKey, string $verifyKey, int $hash)
     {
-        Assert::notEmpty(trim($signKey));
-        Assert::notEmpty(trim($verifyKey));
         switch ($hash) {
             case self::SHA256:
                 $this->signer = new Signer\Ecdsa\Sha256;
@@ -151,12 +148,10 @@ class Configuration implements Singleton
     /**
      * @param string $signKey
      * @param string $verifyKey
-     * @param int $hash
+     * @param int    $hash
      */
-    protected function createRsaSigner($signKey, $verifyKey, $hash)
+    protected function createRsaSigner(string $signKey, string $verifyKey, int $hash)
     {
-        Assert::notEmpty(trim($signKey));
-        Assert::notEmpty(trim($verifyKey));
         switch ($hash) {
             case self::SHA256:
                 $this->signer = new Signer\Rsa\Sha256;
@@ -173,11 +168,10 @@ class Configuration implements Singleton
 
     /**
      * @param string $key
-     * @param int $hash
+     * @param int    $hash
      */
-    protected function createHmacSigner($key, $hash)
+    protected function createHmacSigner(string $key, int $hash)
     {
-        Assert::notEmpty(trim($key));
         switch ($hash) {
             case self::SHA256:
                 $this->signer = new Signer\Hmac\Sha256;

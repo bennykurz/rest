@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -22,9 +22,8 @@ use Doctrine\Common\Cache\Cache;
 use N86io\Di\Singleton;
 
 /**
- * Interface EntityInfoStorageCacheInterface
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 interface EntityInfoStorageCacheInterface extends Cache, Singleton
 {

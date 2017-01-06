@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -18,15 +18,13 @@
 
 namespace N86io\Rest\Tests\Unit\Persistence\Ordering;
 
+use N86io\Di\Container;
 use N86io\Rest\DomainObject\PropertyInfo\Common;
-use N86io\Rest\Object\Container;
 use N86io\Rest\Persistence\Ordering\OrderingFactory;
 use N86io\Rest\Persistence\Ordering\OrderingInterface;
 use N86io\Rest\UnitTestCase;
 
 /**
- * Class OrderingFactoryTest
- *
  * @author Viktor Firus <v@n86.io>
  */
 class OrderingFactoryTest extends UnitTestCase
@@ -36,7 +34,7 @@ class OrderingFactoryTest extends UnitTestCase
         $orderingFactory = new OrderingFactory;
         $this->inject($orderingFactory, 'container', $this->createContainerMock());
 
-        $commonMock = \Mockery::mock(Common::class, ['_name_', ['type' => 'int']]);
+        $commonMock = \Mockery::mock(Common::class, ['_name_', 'int', []]);
 
         $ordering = $orderingFactory->ascending($commonMock);
         $this->assertTrue($ordering instanceof OrderingInterface);

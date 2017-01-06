@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -22,8 +22,6 @@ use N86io\Rest\DomainObject\PropertyInfo\Common;
 use N86io\Rest\UnitTestCase;
 
 /**
- * Class CommonTest
- *
  * @author Viktor Firus <v@n86.io>
  */
 class CommonTest extends UnitTestCase
@@ -31,19 +29,20 @@ class CommonTest extends UnitTestCase
     public function test()
     {
         $attributes = [
-            'type' => 'int',
-            'ordering' => true,
-            'uid' => true
+            'ordering'   => true,
+            'uid'        => true,
+            'resourceId' => false,
+            'constraint' => false,
         ];
-        $propertyInfo = new Common('testSomething', $attributes);
+        $propertyInfo = new Common('testSomething', 'int', $attributes);
 
         $this->assertFalse($propertyInfo->isResourceId());
         $this->assertTrue($propertyInfo->isOrdering());
         $this->assertFalse($propertyInfo->isConstraint());
         $this->assertTrue($propertyInfo->isUid());
 
-        $this->assertFalse(Common::verifyAttributes($attributes));
+        $this->assertFalse(Common::checkAttributes('', $attributes));
         $attributes['resourcePropertyName'] = 'prop_name';
-        $this->assertTrue(Common::verifyAttributes($attributes));
+        $this->assertTrue(Common::checkAttributes('', $attributes));
     }
 }

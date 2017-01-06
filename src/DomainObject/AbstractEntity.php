@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -19,9 +19,8 @@
 namespace N86io\Rest\DomainObject;
 
 /**
- * Class AbstractEntity
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 abstract class AbstractEntity implements EntityInterface
 {
@@ -50,17 +49,17 @@ abstract class AbstractEntity implements EntityInterface
      * @param mixed $propertyValue
      * @internal
      */
-    final public function setProperty($propertyName, $propertyValue)
+    final public function setProperty(string $propertyName, $propertyValue)
     {
         $this->{$propertyName} = $propertyValue;
     }
 
     /**
-     * @param $propertyName
+     * @param string $propertyName
      * @return mixed
      * @internal
      */
-    final public function getProperty($propertyName)
+    final public function getProperty(string $propertyName)
     {
         return $this->{$propertyName};
     }
@@ -69,7 +68,7 @@ abstract class AbstractEntity implements EntityInterface
      * @return array
      * @internal
      */
-    final public function getProperties()
+    final public function getProperties(): array
     {
         return get_object_vars($this);
     }

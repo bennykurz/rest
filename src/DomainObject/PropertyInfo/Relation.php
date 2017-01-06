@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -22,9 +22,8 @@ use N86io\Rest\DomainObject\EntityInterface;
 use N86io\Rest\Persistence\Constraint\ConstraintUtility;
 
 /**
- * Class Relation
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class Relation extends AbstractStatic implements RelationInterface
 {
@@ -35,14 +34,14 @@ class Relation extends AbstractStatic implements RelationInterface
     protected $constraintUtility;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $constraint;
 
     /**
-     * @return boolean
+     * @return bool
      */
-    public function isConstraint()
+    public function isConstraint(): bool
     {
         return $this->constraint ?: false;
     }
@@ -57,9 +56,11 @@ class Relation extends AbstractStatic implements RelationInterface
         $type = $isList ? substr($this->type, 0, strlen($this->type) - 2) : $this->type;
         if ($isList && empty(trim($value))) {
             $entity->setProperty($this->getName(), []);
+
             return;
         } elseif (empty(trim($value))) {
             $entity->setProperty($this->getName(), '');
+
             return;
         }
 
@@ -77,6 +78,7 @@ class Relation extends AbstractStatic implements RelationInterface
 
         if ($isList) {
             $entity->setProperty($this->getName(), $result);
+
             return;
         }
 
@@ -85,24 +87,29 @@ class Relation extends AbstractStatic implements RelationInterface
     }
 
     /**
-     * @param array $attributes
-     * @return boolean
+     * @param string $type
+     * @param array  $attributes
+     *
+     * @return bool
      */
-    public static function verifyAttributes(array $attributes)
+    public static function checkAttributes(string $type, array $attributes = []): bool
     {
         if (!empty($attributes['foreignField'])) {
             return false;
         }
-        return self::checkForAbstractEntitySubclass($attributes['type']);
+
+        return self::checkForAbstractEntitySubclass($type);
     }
 
     /**
      * @param string $className
-     * @return boolean
+     *
+     * @return bool
      */
-    protected static function checkForAbstractEntitySubclass($className)
+    protected static function checkForAbstractEntitySubclass(string $className): bool
     {
         $propertyInfoUtility = new PropertyInfoUtility;
+
         return ($propertyInfoUtility->checkForAbstractEntitySubclass($className) ||
             $propertyInfoUtility->checkForAbstractEntitySubclass(
                 substr($className, 0, strlen($className) - 2)

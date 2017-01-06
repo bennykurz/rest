@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -25,9 +25,8 @@ use N86io\Rest\Persistence\Constraint\ConstraintInterface;
 use N86io\Rest\Persistence\Ordering\OrderingInterface;
 
 /**
- * Class AbstractConnector
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 abstract class AbstractConnector implements ConnectorInterface
 {
@@ -58,7 +57,6 @@ abstract class AbstractConnector implements ConnectorInterface
     protected $limit;
 
     /**
-     * AbstractConnector constructor.
      * @param EntityInfoInterface $entityInfo
      */
     public function __construct(EntityInfoInterface $entityInfo)
@@ -69,7 +67,7 @@ abstract class AbstractConnector implements ConnectorInterface
     /**
      * @return EntityInterface[]
      */
-    public function read()
+    public function read(): array
     {
         return $this->entityFactory->buildList(
             $this->entityInfo,
@@ -79,31 +77,37 @@ abstract class AbstractConnector implements ConnectorInterface
 
     /**
      * @param ConstraintInterface $constraints
+     *
      * @return ConnectorInterface
      */
-    public function setConstraints(ConstraintInterface $constraints)
+    public function setConstraints(ConstraintInterface $constraints): ConnectorInterface
     {
         $this->constraints = $constraints;
+
         return $this;
     }
 
     /**
      * @param OrderingInterface $ordering
+     *
      * @return ConnectorInterface
      */
-    public function setOrdering(OrderingInterface $ordering)
+    public function setOrdering(OrderingInterface $ordering): ConnectorInterface
     {
         $this->ordering = $ordering;
+
         return $this;
     }
 
     /**
      * @param LimitInterface $limit
+     *
      * @return ConnectorInterface
      */
-    public function setLimit(LimitInterface $limit)
+    public function setLimit(LimitInterface $limit): ConnectorInterface
     {
         $this->limit = $limit;
+
         return $this;
     }
 }

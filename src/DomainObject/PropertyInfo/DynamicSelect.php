@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -19,19 +19,18 @@
 namespace N86io\Rest\DomainObject\PropertyInfo;
 
 /**
- * Class DynamicSelect
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class DynamicSelect extends AbstractPropertyInfo implements DynamicSelectInterface
 {
     /**
-     * @var boolean
+     * @var bool
      */
     protected $ordering;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $constraint;
 
@@ -46,32 +45,34 @@ class DynamicSelect extends AbstractPropertyInfo implements DynamicSelectInterfa
     protected $isSelectOptional = false;
 
     /**
-     * DynamicSelectPropertyInfo constructor.
      * @param string $name
-     * @param array $attributes
+     * @param string $type
+     * @param array  $attributes
+     *
+     * @throws \InvalidArgumentException
      */
-    public function __construct($name, array $attributes)
+    public function __construct(string $name, string $type, array $attributes)
     {
         if (!$this->isSelectOptional && (empty($attributes['select']) || !is_string($attributes['select']) ||
                 empty(trim($attributes['select'])))
         ) {
             throw new \InvalidArgumentException('Select should not empty string.');
         }
-        parent::__construct($name, $attributes);
+        parent::__construct($name, $type, $attributes);
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
-    public function isOrdering()
+    public function isOrdering(): bool
     {
         return $this->ordering ?: false;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
-    public function isConstraint()
+    public function isConstraint(): bool
     {
         return $this->constraint ?: false;
     }
@@ -79,16 +80,18 @@ class DynamicSelect extends AbstractPropertyInfo implements DynamicSelectInterfa
     /**
      * @return string
      */
-    public function getSelect()
+    public function getSelect(): string
     {
         return $this->select;
     }
 
     /**
-     * @param array $attributes
-     * @return boolean
+     * @param string $type
+     * @param array  $attributes
+     *
+     * @return bool
      */
-    public static function verifyAttributes(array $attributes)
+    public static function checkAttributes(string $type, array $attributes = []): bool
     {
         return isset($attributes['select']);
     }

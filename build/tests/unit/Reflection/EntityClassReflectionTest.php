@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -18,17 +18,15 @@
 
 namespace N86io\Rest\Tests\Unit\Reflection;
 
+use N86io\Di\Container;
 use N86io\Rest\Examples\Example1;
 use N86io\Rest\Examples\Example2;
 use N86io\Rest\Examples\Example3;
-use N86io\Rest\Object\Container;
 use N86io\Rest\Reflection\EntityClassReflection;
 use N86io\Rest\Reflection\MethodNameUtility;
 use N86io\Rest\UnitTestCase;
 
 /**
- * Class EntityClassReflectionTest
- *
  * @author Viktor Firus <v@n86.io>
  */
 class EntityClassReflectionTest extends UnitTestCase

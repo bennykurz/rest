@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -35,9 +35,8 @@ use N86io\Rest\Service\Configuration;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class Controller
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class Controller implements ControllerInterface
 {
@@ -99,13 +98,14 @@ class Controller implements ControllerInterface
 
     /**
      * @param RequestInterface $request
+     *
      * @return ResponseInterface
      * @throws BadRequestException
      * @throws InternalServerErrorException
      * @throws MethodNotAllowedException
      * @throws RequestNotFoundException
      */
-    final public function process(RequestInterface $request)
+    final public function process(RequestInterface $request): ResponseInterface
     {
         $this->request = $request;
         $this->settings = $this->configuration->getApiControllerSettings($request->getApiIdentifier());
@@ -132,6 +132,7 @@ class Controller implements ControllerInterface
             if (count($result) === 0) {
                 throw new RequestNotFoundException;
             }
+
             return $this->responseFactory->createResponse(
                 200,
                 $result,
@@ -145,18 +146,19 @@ class Controller implements ControllerInterface
     /**
      * @return array
      */
-    private function read()
+    private function read(): array
     {
         $this->call('preRead');
         $this->repositoryResult = $this->readFromConnector();
         $this->call('afterRead');
+
         return $this->repositoryResult;
     }
 
     /**
      * @param string $method
      */
-    private function call($method)
+    private function call(string $method)
     {
         if (method_exists($this, $method)) {
             call_user_func([$this, $method]);
@@ -166,7 +168,7 @@ class Controller implements ControllerInterface
     /**
      * @return bool
      */
-    private function isListRequest()
+    private function isListRequest(): bool
     {
         return count($this->request->getResourceIds()) !== 1;
     }
@@ -174,13 +176,14 @@ class Controller implements ControllerInterface
     /**
      * @return array
      */
-    private function readFromConnector()
+    private function readFromConnector(): array
     {
         $entityInfo = $this->entityInfoStorage->get($this->request->getModelClassName());
         $repository = $entityInfo->createRepositoryInstance();
         $this->setConstraints($repository, $entityInfo);
         $this->setOrdering($repository);
         $this->setLimit($repository);
+
         return $repository->read();
     }
 
@@ -189,8 +192,9 @@ class Controller implements ControllerInterface
      */
     protected function setLimit(RepositoryInterface $repository)
     {
-        if (($limit = $this->request->getLimit()) !== null) {
-            $repository->setLimit($limit);
+        if (($this->request->hasLimit())) {
+            $repository->setLimit($this->request->getLimit());
+
             return;
         }
         $rowCount = $this->settings['defaultRowCount'] ? $this->settings['defaultRowCount'] : 10;
@@ -203,7 +207,7 @@ class Controller implements ControllerInterface
      */
     protected function setOrdering(RepositoryInterface $repository)
     {
-        if ($this->request->getOrdering()) {
+        if ($this->request->hasOrdering()) {
             $repository->setOrdering($this->request->getOrdering());
         }
     }
@@ -223,9 +227,10 @@ class Controller implements ControllerInterface
 
     /**
      * @param EntityInfoInterface $entityInfo
+     *
      * @return array
      */
-    protected function getDefaultConstraints(EntityInfoInterface $entityInfo)
+    protected function getDefaultConstraints(EntityInfoInterface $entityInfo): array
     {
         $constraints = [];
         if (!empty($requestConstraints = $this->request->getConstraints())) {
@@ -237,6 +242,7 @@ class Controller implements ControllerInterface
                 $this->request->getResourceIds()
             );
         }
+
         return $constraints;
     }
 }

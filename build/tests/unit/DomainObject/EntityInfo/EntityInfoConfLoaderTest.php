@@ -64,26 +64,28 @@ class EntityInfoConfLoaderTest extends UnitTestCase
     {
         $expected['Model1'] = $this->conf1['Model1'];
         $expected['Model1']['properties'] = [
-            'integer'   => [
+            'integer' => [
                 'constraint'  => false,
                 'resourceId'  => false,
                 'hide'        => false,
                 'outputLevel' => 0,
                 'position'    => 0,
-                'ordering'    => false
+                'ordering'    => false,
+                'uid'         => false
             ]
         ];
 
         $expected['Model2'] = $this->conf2['Model2'];
         $expected['Model2']['properties'] = [
-            'fakeId'    => [
+            'fakeId' => [
                 'resourcePropertyName' => 'uid',
                 'resourceId'           => false,
                 'hide'                 => false,
                 'outputLevel'          => 0,
                 'position'             => 0,
                 'ordering'             => false,
-                'constraint'           => false
+                'constraint'           => false,
+                'uid'                  => false
             ]
         ];
 
@@ -95,7 +97,8 @@ class EntityInfoConfLoaderTest extends UnitTestCase
                 'hide'        => false,
                 'outputLevel' => 0,
                 'position'    => 0,
-                'constraint'  => false
+                'constraint'  => false,
+                'uid'         => false
             ]
         ];
 
@@ -114,30 +117,33 @@ class EntityInfoConfLoaderTest extends UnitTestCase
                 'endTime'   => 'endTime'
             ],
             'properties'   => [
-                'fakeId'    => [
+                'fakeId'  => [
                     'resourcePropertyName' => 'uid',
                     'resourceId'           => false,
                     'hide'                 => false,
                     'outputLevel'          => 0,
                     'position'             => 0,
                     'ordering'             => false,
-                    'constraint'           => false
+                    'constraint'           => false,
+                    'uid'                  => false
                 ],
-                'nothing'   => [
+                'nothing' => [
                     'ordering'    => true,
                     'resourceId'  => false,
                     'hide'        => false,
                     'outputLevel' => 0,
                     'position'    => 0,
-                    'constraint'  => false
+                    'constraint'  => false,
+                    'uid'         => false
                 ],
-                'integer'   => [
+                'integer' => [
                     'constraint'  => false,
                     'resourceId'  => false,
                     'hide'        => false,
                     'outputLevel' => 0,
                     'position'    => 0,
-                    'ordering'    => false
+                    'ordering'    => false,
+                    'uid'         => false
                 ]
             ]
         ];

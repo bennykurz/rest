@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of N86io/Rest.
  *
@@ -19,9 +19,8 @@
 namespace N86io\Rest\Exception;
 
 /**
- * Class InvalidOrderingException
- *
  * @author Viktor Firus <v@n86.io>
+ * @since  0.1.0
  */
 class InvalidOrderingException extends \Exception
 {
