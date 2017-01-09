@@ -49,11 +49,11 @@ class EntityInfoConfLoader implements Singleton
             'type' => '?string'
         ],
         'mode'         => [
-            'type'             => '?unique-list',
+            'type'             => '?uniqueList',
             'allowed-elements' => ['read', 'write']
         ],
         'joins'        => [
-            'type'       => '?conf-list',
+            'type'       => '?confList',
             'definition' => [
                 'table'     => [
                     'type' => 'string'
@@ -81,8 +81,8 @@ class EntityInfoConfLoader implements Singleton
             ]
         ],
         'properties'   => [
-            'type'       => 'conf-list',
-            'definition' => [
+            'type'             => 'confList',
+            'definition'       => [
                 'uid'                  => [
                     'type'    => 'bool',
                     'default' => false
@@ -111,14 +111,20 @@ class EntityInfoConfLoader implements Singleton
                     'type'    => 'int',
                     'default' => 0
                 ],
-                'foreignField'         => [
-                    'type' => '?string'
-                ],
                 'resourcePropertyName' => [
                     'type' => '?string'
+                ]
+            ],
+            "definitionOption" => [
+                "foreignFieldRelation" => [
+                    'foreignField' => [
+                        'type' => '?string'
+                    ]
                 ],
-                'sql'                  => [
-                    'type' => '?string'
+                "dynamicSelect"        => [
+                    'sql' => [
+                        'type' => '?string'
+                    ]
                 ]
             ]
         ]
@@ -151,7 +157,7 @@ class EntityInfoConfLoader implements Singleton
     public function __construct()
     {
         $definition = [
-            'type'       => 'conf-list',
+            'type'       => 'confList',
             'definition' => $this->modelDefinition
         ];
         $arrayConfiguration = new \N86io\ArrayConf\Configuration($definition);

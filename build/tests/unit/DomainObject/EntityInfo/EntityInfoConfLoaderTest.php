@@ -65,15 +65,18 @@ class EntityInfoConfLoaderTest extends UnitTestCase
         $expected['Model1'] = $this->conf1['Model1'];
         $expected['Model1']['properties'] = [
             'integer' => [
-                'constraint'  => false,
-                'resourceId'  => false,
-                'hide'        => false,
-                'outputLevel' => 0,
-                'position'    => 0,
-                'ordering'    => false,
-                'uid'         => false
+                'constraint'           => false,
+                'resourceId'           => false,
+                'hide'                 => false,
+                'outputLevel'          => 0,
+                'position'             => 0,
+                'ordering'             => false,
+                'uid'                  => false,
+                'resourcePropertyName' => \N86io\ArrayConf\Configuration::EMPTY
             ]
         ];
+        $expected['Model1']['connector'] = \N86io\ArrayConf\Configuration::EMPTY;
+        $expected['Model1']['joins'] = \N86io\ArrayConf\Configuration::EMPTY;
 
         $expected['Model2'] = $this->conf2['Model2'];
         $expected['Model2']['properties'] = [
@@ -88,19 +91,28 @@ class EntityInfoConfLoaderTest extends UnitTestCase
                 'uid'                  => false
             ]
         ];
+        $expected['Model2']['connector'] = \N86io\ArrayConf\Configuration::EMPTY;
+        $expected['Model2']['joins'] = \N86io\ArrayConf\Configuration::EMPTY;
+        $expected['Model2']['mode'] = \N86io\ArrayConf\Configuration::EMPTY;
+        $expected['Model2']['enableFields'] = \N86io\ArrayConf\Configuration::EMPTY;
 
         $expected['Model3'] = $this->conf2['Model3'];
         $expected['Model3']['properties'] = [
             'nothing' => [
-                'ordering'    => true,
-                'resourceId'  => false,
-                'hide'        => false,
-                'outputLevel' => 0,
-                'position'    => 0,
-                'constraint'  => false,
-                'uid'         => false
+                'ordering'             => true,
+                'resourceId'           => false,
+                'hide'                 => false,
+                'outputLevel'          => 0,
+                'position'             => 0,
+                'constraint'           => false,
+                'uid'                  => false,
+                'resourcePropertyName' => \N86io\ArrayConf\Configuration::EMPTY
             ]
         ];
+        $expected['Model3']['connector'] = \N86io\ArrayConf\Configuration::EMPTY;
+        $expected['Model3']['joins'] = \N86io\ArrayConf\Configuration::EMPTY;
+        $expected['Model3']['mode'] = \N86io\ArrayConf\Configuration::EMPTY;
+        $expected['Model3']['enableFields'] = \N86io\ArrayConf\Configuration::EMPTY;
 
         $this->assertEquals($expected, $this->getLoader()->loadAll());
     }
@@ -116,6 +128,8 @@ class EntityInfoConfLoaderTest extends UnitTestCase
                 'startTime' => 'startTime',
                 'endTime'   => 'endTime'
             ],
+            'connector'    => \N86io\ArrayConf\Configuration::EMPTY,
+            'joins'        => \N86io\ArrayConf\Configuration::EMPTY,
             'properties'   => [
                 'fakeId'  => [
                     'resourcePropertyName' => 'uid',
@@ -128,22 +142,24 @@ class EntityInfoConfLoaderTest extends UnitTestCase
                     'uid'                  => false
                 ],
                 'nothing' => [
-                    'ordering'    => true,
-                    'resourceId'  => false,
-                    'hide'        => false,
-                    'outputLevel' => 0,
-                    'position'    => 0,
-                    'constraint'  => false,
-                    'uid'         => false
+                    'ordering'             => true,
+                    'resourceId'           => false,
+                    'hide'                 => false,
+                    'outputLevel'          => 0,
+                    'position'             => 0,
+                    'constraint'           => false,
+                    'uid'                  => false,
+                    'resourcePropertyName' => \N86io\ArrayConf\Configuration::EMPTY
                 ],
                 'integer' => [
-                    'constraint'  => false,
-                    'resourceId'  => false,
-                    'hide'        => false,
-                    'outputLevel' => 0,
-                    'position'    => 0,
-                    'ordering'    => false,
-                    'uid'         => false
+                    'constraint'           => false,
+                    'resourceId'           => false,
+                    'hide'                 => false,
+                    'outputLevel'          => 0,
+                    'position'             => 0,
+                    'ordering'             => false,
+                    'uid'                  => false,
+                    'resourcePropertyName' => \N86io\ArrayConf\Configuration::EMPTY
                 ]
             ]
         ];
