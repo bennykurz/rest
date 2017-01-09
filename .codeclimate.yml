@@ -15,7 +15,7 @@ engines:
     enabled: true
     config:
       file_extensions: "php"
-      standard: "PSR2"
+      standard: ".phpcs.xml"
 ratings:
   paths:
   - "src/**"
